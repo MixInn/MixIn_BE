@@ -10,20 +10,17 @@ public class User extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
-    private String phone;
-    private String school;
+    private String userName;
+    private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    private String birth;
-    private String studentNumber;
+    private String studentId;
+    private String university;
     private String major;
-    private String email;
+    private String email; // 아이디로 사용될 이메일
     private String password;
-    private String telecom;
 
-    // Getters and setters
 }
 
