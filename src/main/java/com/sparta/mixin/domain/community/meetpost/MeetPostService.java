@@ -8,6 +8,7 @@ import com.sparta.mixin.global.exception.CustomException;
 import com.sparta.mixin.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +26,7 @@ public class MeetPostService {
 
         meetPostRepository.save(meetPost);
 
+        return new MeetPostResponseDto(meetPost);
     }
 
     public MeetPostResponseDto getMeetPost(Long postId) {
@@ -36,7 +38,18 @@ public class MeetPostService {
         return meetPostResponseDto;
     }
 
-    public MeetPostResponseDto editMeetPost(Long postId) {
+    public MeetPostResponseDto editMeetPost(Long postId, MeetPostRequestDto meetPostRequestDto) {
+        MeetPost meetPost = findById(postId);
+        meetPost.updatePost(meetPostRequestDto);
+        meetPostRepository.save(meetPost);
+
+        return new MeetPostResponseDto(meetPost);
+    }
+
+    @Transactional
+    public void deleteMeetPost(Long postId) {
+        MeetPost meetPost = findById(postId);
+        meetPostRepository.delete(meetPost);
     }
 
     public MeetPost findById(Long postId){

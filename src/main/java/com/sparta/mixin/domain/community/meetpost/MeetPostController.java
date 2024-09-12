@@ -6,6 +6,7 @@ import com.sparta.mixin.global.common.CommonResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,9 +37,16 @@ public class MeetPostController {
     }
 
     @PutMapping("/{postId}")
-    public ResponseEntity<CommonResponse<MeetPostResponseDto>> editMeetPost(@PathVariable(name = "postId")Long postId){
-        MeetPostResponseDto responseDto = meetPostService.editMeetPost(postId);
+    public ResponseEntity<CommonResponse<MeetPostResponseDto>> editMeetPost(@PathVariable(name = "postId")Long postId,@RequestBody MeetPostRequestDto meetPostRequestDto){
+        MeetPostResponseDto responseDto = meetPostService.editMeetPost(postId,meetPostRequestDto);
         CommonResponse response = new CommonResponse<>("밋커뮤니티 글 수정 성공",200,responseDto);
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<CommonResponse> deleteMeetPost(@PathVariable(name = "postId")Long postId){
+        meetPostService.deleteMeetPost(postId);
+        CommonResponse response = new CommonResponse("밋커뮤니티 글 삭제 성공",204,"");
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 }

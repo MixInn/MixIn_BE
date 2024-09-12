@@ -31,4 +31,9 @@ public class MeetPost extends Timestamped {
         this.title= meetPostRequestDto.getTitle();
         this.content= meetPostRequestDto.getContent();
     }
+
+    public void updatePost(MeetPostRequestDto meetPostRequestDto) {
+        this.title= meetPostRequestDto.getTitle();
+        this.content= meetPostRequestDto.getContent();
+    }
 }
