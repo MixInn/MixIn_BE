@@ -3,6 +3,9 @@ package com.sparta.mixin.domain.community.meetpost;
 import com.sparta.mixin.domain.community.meetpost.dto.MeetPostRequestDto;
 import com.sparta.mixin.domain.community.meetpost.dto.MeetPostResponseDto;
 import com.sparta.mixin.domain.community.meetpost.entity.MeetPost;
+import com.sparta.mixin.domain.image.ImageRepository;
+import com.sparta.mixin.domain.image.entity.Image;
+import com.sparta.mixin.domain.meet.MeetService;
 import com.sparta.mixin.domain.meet.entity.Meet;
 import com.sparta.mixin.global.exception.CustomException;
 import com.sparta.mixin.global.exception.ErrorCode;
@@ -21,8 +24,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class MeetPostService {
     private final MeetPostRepository meetPostRepository;
     private final MeetService meetService;
+    private final ImageRepository imageRepository;
 
-    public MeetPostResponseDto createMeetPost(Long meetId, MeetPostRequestDto meetPostRequestDto) {
+    public MeetPostResponseDto createMeetPost(Long meetId, MeetPostRequestDto meetPostRequestDto,
+        List<String> fileUrls) {
         Meet meet = meetService.findById(meetId);
 
         MeetPost meetPost = MeetPost.builder()
@@ -31,6 +36,14 @@ public class MeetPostService {
             .build();
 
         meetPostRepository.save(meetPost);
+
+        for (String fileUrl : fileUrls) {
+            Image image = Image.builder()
+                .imageUrl(fileUrl)
+                .meetPost(meetPost)
+                .build();
+            imageRepository.save(image);
+        }
 
         return new MeetPostResponseDto(meetPost);
     }
@@ -60,8 +73,9 @@ public class MeetPostService {
 
     public Page<MeetPostResponseDto> getAllMeetPost(Long meetId,int page, int size) {
         Pageable pageable = PageRequest.of(page,size, Sort.by(Direction.DESC,"createdAt"));
+        Meet meet = meetService.findById(meetId);
 
-        Page<MeetPost> responseDtos = meetPostRepository.findAllByMeetId(meetId,pageable);
+        Page<MeetPost> responseDtos = meetPostRepository.findAllByMeet(meet,pageable);
 
         return responseDtos.map(MeetPostResponseDto::new);
     }
