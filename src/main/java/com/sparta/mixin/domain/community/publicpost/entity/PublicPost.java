@@ -1,13 +1,11 @@
-package com.sparta.mixin.domain.community.publiccommunity.entity;
+package com.sparta.mixin.domain.community.publicpost.entity;
 
 import com.sparta.mixin.global.Timestamped;
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
-
 @Entity
-@Table(name = "publicCommunity")
-public class PublicCommunity extends Timestamped {
+@Table(name = "PublicPost")
+public class PublicPost extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

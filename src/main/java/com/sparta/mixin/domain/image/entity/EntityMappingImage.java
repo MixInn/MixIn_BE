@@ -1,7 +1,7 @@
 package com.sparta.mixin.domain.image.entity;
 
-import com.sparta.mixin.domain.community.meetcommunity.entity.MeetCommunity;
-import com.sparta.mixin.domain.community.publiccommunity.entity.PublicCommunity;
+import com.sparta.mixin.domain.community.meetpost.entity.MeetPost;
+import com.sparta.mixin.domain.community.publicpost.entity.PublicPost;
 import com.sparta.mixin.global.Timestamped;
 import jakarta.persistence.*;
 
@@ -19,11 +19,11 @@ public class EntityMappingImage extends Timestamped {
 
     @ManyToOne
     @JoinColumn(name = "publicCommunity_id", nullable = false)
-    private PublicCommunity publicCommunity;
+    private PublicPost publicPost;
 
     @ManyToOne
     @JoinColumn(name = "meetCommunity_id", nullable = false)
-    private MeetCommunity meetCommunity;
+    private MeetPost meetPost;
 
     // Getters and setters
 }
