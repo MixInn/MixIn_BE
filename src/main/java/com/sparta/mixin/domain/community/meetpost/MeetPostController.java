@@ -3,7 +3,9 @@ package com.sparta.mixin.domain.community.meetpost;
 import com.sparta.mixin.domain.community.meetpost.dto.MeetPostRequestDto;
 import com.sparta.mixin.domain.community.meetpost.dto.MeetPostResponseDto;
 import com.sparta.mixin.global.common.CommonResponse;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -47,6 +50,15 @@ public class MeetPostController {
     public ResponseEntity<CommonResponse> deleteMeetPost(@PathVariable(name = "postId")Long postId){
         meetPostService.deleteMeetPost(postId);
         CommonResponse response = new CommonResponse("밋커뮤니티 글 삭제 성공",204,"");
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+    @GetMapping("/{meetId}")
+    public ResponseEntity<CommonResponse<Page<MeetPostResponseDto>>> getAllMeetPost(@PathVariable(name = "meetId")Long meetId,
+        @RequestParam(defaultValue = "1")int page,
+        @RequestParam(defaultValue = "10")int size){
+        Page<MeetPostResponseDto> responseDtos = meetPostService.getAllMeetPost(meetId,page-1,size);
+        CommonResponse response = new CommonResponse("밋커뮤니티 글 전체 조회 성공",200,responseDtos);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 }
