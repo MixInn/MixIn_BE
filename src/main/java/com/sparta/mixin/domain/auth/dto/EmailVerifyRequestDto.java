@@ -4,6 +4,5 @@ import lombok.Getter;
 
 @Getter
 public class EmailVerifyRequestDto {
-
 	private String email;
 }

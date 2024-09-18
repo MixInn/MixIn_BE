@@ -4,7 +4,6 @@ import lombok.Getter;
 
 @Getter
 public class UniversityInfoRequestDto {
-
 	private String studentId;
 	private String university;
 	private String major;
