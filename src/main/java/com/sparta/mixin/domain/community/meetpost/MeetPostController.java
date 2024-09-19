@@ -3,17 +3,11 @@ package com.sparta.mixin.domain.community.meetpost;
 import com.sparta.mixin.domain.community.meetpost.dto.MeetPostRequestDto;
 import com.sparta.mixin.domain.community.meetpost.dto.MeetPostResponseDto;
 import com.sparta.mixin.domain.image.ImageService;
+import com.sparta.mixin.domain.image.dto.ImageResponseDto;
 import com.sparta.mixin.global.common.CommonResponse;
-import com.sparta.mixin.global.exception.CustomException;
-import com.sparta.mixin.global.exception.ErrorCode;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -82,6 +76,13 @@ public class MeetPostController {
         @RequestParam(defaultValue = "10")int size){
         Page<MeetPostResponseDto> responseDtos = meetPostService.getAllMeetPost(meetId,page-1,size);
         CommonResponse response = new CommonResponse("밋커뮤니티 글 전체 조회 성공",200,responseDtos);
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+    @GetMapping("/{postId}/image")
+    public ResponseEntity<CommonResponse<List<ImageResponseDto>>> getAllPostImages(@PathVariable(name = "postId")Long postId){
+        List<ImageResponseDto> responseDtos = meetPostService.getAllPostImages(postId);
+        CommonResponse response = new CommonResponse("밋커뮤니티 글 이미지 조회 성공",200,responseDtos);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 }

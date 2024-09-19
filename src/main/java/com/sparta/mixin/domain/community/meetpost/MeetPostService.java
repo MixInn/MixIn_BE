@@ -4,11 +4,13 @@ import com.sparta.mixin.domain.community.meetpost.dto.MeetPostRequestDto;
 import com.sparta.mixin.domain.community.meetpost.dto.MeetPostResponseDto;
 import com.sparta.mixin.domain.community.meetpost.entity.MeetPost;
 import com.sparta.mixin.domain.image.ImageRepository;
+import com.sparta.mixin.domain.image.dto.ImageResponseDto;
 import com.sparta.mixin.domain.image.entity.Image;
 import com.sparta.mixin.domain.meet.MeetService;
 import com.sparta.mixin.domain.meet.entity.Meet;
 import com.sparta.mixin.global.exception.CustomException;
 import com.sparta.mixin.global.exception.ErrorCode;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -78,6 +80,17 @@ public class MeetPostService {
         Page<MeetPost> responseDtos = meetPostRepository.findAllByMeet(meet,pageable);
 
         return responseDtos.map(MeetPostResponseDto::new);
+    }
+
+    public List<ImageResponseDto> getAllPostImages(Long postId) {
+        MeetPost meetPost = findById(postId);
+        List<Image> imageList = imageRepository.findAllByMeetPost(meetPost.getId());
+        List<ImageResponseDto> imageResponseDtos = new ArrayList<>();
+        for (Image image : imageList) {
+            ImageResponseDto imageResponseDto = new ImageResponseDto(image);
+            imageResponseDtos.add(imageResponseDto);
+        }
+        return imageResponseDtos;
     }
 
     public MeetPost findById(Long postId){
