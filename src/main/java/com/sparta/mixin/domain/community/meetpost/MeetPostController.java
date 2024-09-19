@@ -7,7 +7,6 @@ import com.sparta.mixin.domain.image.dto.ImageResponseDto;
 import com.sparta.mixin.global.common.CommonResponse;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -57,7 +56,8 @@ public class MeetPostController {
     }
 
     @PutMapping("/{postId}")
-    public ResponseEntity<CommonResponse<MeetPostResponseDto>> editMeetPost(@PathVariable(name = "postId")Long postId,@RequestBody MeetPostRequestDto meetPostRequestDto){
+    public ResponseEntity<CommonResponse<MeetPostResponseDto>> editMeetPost(@PathVariable(name = "postId")Long postId,@RequestBody MeetPostRequestDto meetPostRequestDto,
+        @RequestPart("files") List<MultipartFile> files){
         MeetPostResponseDto responseDto = meetPostService.editMeetPost(postId,meetPostRequestDto);
         CommonResponse response = new CommonResponse<>("밋커뮤니티 글 수정 성공",200,responseDto);
         return new ResponseEntity<>(response,HttpStatus.OK);
@@ -84,5 +84,13 @@ public class MeetPostController {
         List<ImageResponseDto> responseDtos = meetPostService.getAllPostImages(postId);
         CommonResponse response = new CommonResponse("밋커뮤니티 글 이미지 조회 성공",200,responseDtos);
         return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{postId}/image/{imageId}")
+    public ResponseEntity<CommonResponse> deletePostImage(@PathVariable(name = "postId")Long postId,@PathVariable(name = "imageId")Long imageId){
+        meetPostService.deletePostImage(postId,imageId);
+        CommonResponse response = new CommonResponse("밋커뮤니티 글 이미지 단건 삭제 성공",204,"");
+        return new ResponseEntity<>(response,HttpStatus.OK);
+
     }
 }

@@ -69,5 +69,19 @@ public class ImageService {
             return "File upload failed.";
         }
     }
+
+    public String deleteFile(String fileUrl) {
+        try {
+            // 서버의 실제 경로 (DB에 저장된 경로를 기반으로 함)
+            Path filePath = Paths.get(fileUrl);
+
+            // 파일이 존재하는지 확인 후 삭제
+            Files.deleteIfExists(filePath);
+
+            return "File deleted successfully.";
+        } catch (IOException e) {
+            return "File deletion failed: " + e.getMessage();
+        }
+    }
 }
 

@@ -4,6 +4,7 @@ import com.sparta.mixin.domain.community.meetpost.dto.MeetPostRequestDto;
 import com.sparta.mixin.domain.community.meetpost.dto.MeetPostResponseDto;
 import com.sparta.mixin.domain.community.meetpost.entity.MeetPost;
 import com.sparta.mixin.domain.image.ImageRepository;
+import com.sparta.mixin.domain.image.ImageService;
 import com.sparta.mixin.domain.image.dto.ImageResponseDto;
 import com.sparta.mixin.domain.image.entity.Image;
 import com.sparta.mixin.domain.meet.MeetService;
@@ -12,6 +13,7 @@ import com.sparta.mixin.global.exception.CustomException;
 import com.sparta.mixin.global.exception.ErrorCode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,6 +29,7 @@ public class MeetPostService {
     private final MeetPostRepository meetPostRepository;
     private final MeetService meetService;
     private final ImageRepository imageRepository;
+    private final ImageService imageService;
 
     public MeetPostResponseDto createMeetPost(Long meetId, MeetPostRequestDto meetPostRequestDto,
         List<String> fileUrls) {
@@ -91,6 +94,17 @@ public class MeetPostService {
             imageResponseDtos.add(imageResponseDto);
         }
         return imageResponseDtos;
+    }
+
+    public void deletePostImage(Long postId, Long imageId) {
+        Image image = imageRepository.findById(imageId).orElseThrow(
+            ()->new CustomException(ErrorCode.BAD_REQUEST)
+        );
+        // 서버에 저장된 이미지 삭제
+        imageService.deleteFile(image.getImageUrl());
+
+        // DB에 저장된 이미지 삭제
+        imageRepository.delete(image);
     }
 
     public MeetPost findById(Long postId){
