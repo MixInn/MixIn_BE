@@ -41,26 +41,12 @@ public class MeetPostController {
     public ResponseEntity<CommonResponse<MeetPostResponseDto>> createMeetPost(@PathVariable(name = "meetId") Long meetId,
         @RequestBody MeetPostRequestDto meetPostRequestDto,
         @RequestPart("files") List<MultipartFile> files){
-        String uploadDirectory = "uploads/images/";  // 파일을 저장할 디렉토리
         List<String> fileUrls = new ArrayList<>();
 
         for (MultipartFile file : files) {
             imageService.validateFile(file);
-            try {
-                // 파일명을 고유하게 생성
-                String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-                Path filePath = Paths.get(uploadDirectory + fileName);
-
-                // 파일을 해당 경로에 저장
-                Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
-                // 저장된 파일의 경로 또는 URL을 리스트에 추가
-                String fileUrl = "/uploads/images/" + fileName;  // 서버에서 접근 가능한 경로
-                fileUrls.add(fileUrl);
-
-            } catch (IOException e) {
-                return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
-            }
+            String fileUrl = imageService.getFileUrl(file);
+            fileUrls.add(fileUrl);
         }
 
         MeetPostResponseDto responseDto = meetPostService.createMeetPost(meetId,

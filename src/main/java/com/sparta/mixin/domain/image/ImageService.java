@@ -2,8 +2,15 @@ package com.sparta.mixin.domain.image;
 
 import com.sparta.mixin.global.exception.CustomException;
 import com.sparta.mixin.global.exception.ErrorCode;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -42,6 +49,25 @@ public class ImageService {
             throw new CustomException(ErrorCode.INCORRECT_EXTENSION);
         }
         return filename.substring(dotIndex + 1);
+    }
+
+    public String getFileUrl(@RequestPart("files") MultipartFile file){
+        try {
+            // 저장할 경로를 설정
+            String uploadDirectory = "uploads/images/";
+            String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+            Path filePath = Paths.get(uploadDirectory + fileName);
+
+            // 파일 저장
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+            // 파일 경로를 DB에 저장 (로직은 아래에서 설명)
+            String fileUrl = "/uploads/images/" + fileName;
+
+            return fileUrl;
+        } catch (IOException e) {
+            return "File upload failed.";
+        }
     }
 }
 
