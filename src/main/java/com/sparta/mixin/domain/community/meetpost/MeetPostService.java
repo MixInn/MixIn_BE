@@ -13,7 +13,6 @@ import com.sparta.mixin.global.exception.CustomException;
 import com.sparta.mixin.global.exception.ErrorCode;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -43,10 +42,7 @@ public class MeetPostService {
         meetPostRepository.save(meetPost);
 
         for (String fileUrl : fileUrls) {
-            Image image = Image.builder()
-                .imageUrl(fileUrl)
-                .meetPost(meetPost)
-                .build();
+            Image image = new Image(fileUrl,meetPost);
             imageRepository.save(image);
         }
 

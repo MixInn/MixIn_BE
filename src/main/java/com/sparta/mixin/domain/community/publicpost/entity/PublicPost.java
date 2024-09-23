@@ -1,10 +1,16 @@
 package com.sparta.mixin.domain.community.publicpost.entity;
 
+import com.sparta.mixin.domain.community.publicpost.dto.PublicPostRequestDto;
 import com.sparta.mixin.global.Timestamped;
 import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Entity
+@Getter
 @Table(name = "PublicPost")
+@RequiredArgsConstructor
 public class PublicPost extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -12,6 +18,12 @@ public class PublicPost extends Timestamped {
 
     private String title;
     private String content;
+
+    @Builder
+    public PublicPost(PublicPostRequestDto publicPostRequestDto) {
+        this.title=publicPostRequestDto.getTitle();
+        this.content= publicPostRequestDto.getContent();
+    }
 
     // Getters and setters
 }

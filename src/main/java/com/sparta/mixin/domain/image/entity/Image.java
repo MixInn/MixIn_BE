@@ -35,10 +35,14 @@ public class Image extends Timestamped {
     @JoinColumn(name = "meetNotice_id")
     private MeetNotice meetNotice;
 
-    @Builder
     public Image(String imageUrl,MeetPost meetPost){
         this.imageUrl=imageUrl;
         this.entityType=EntityType.MEETPOST;
         this.meetPost=meetPost;
+    }
+    public Image(String imageUrl,PublicPost publicPost){
+        this.imageUrl=imageUrl;
+        this.entityType=EntityType.PUBLICPOST;
+        this.publicPost=publicPost;
     }
 }
