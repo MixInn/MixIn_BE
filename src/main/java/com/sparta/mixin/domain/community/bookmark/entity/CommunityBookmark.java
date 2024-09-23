@@ -19,9 +19,9 @@ import lombok.RequiredArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "bookmark")
+@Table(name = "community_bookmark")
 @RequiredArgsConstructor
-public class Bookmark extends Timestamped {
+public class CommunityBookmark extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,12 +42,12 @@ public class Bookmark extends Timestamped {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public Bookmark(PublicPost publicPost) {
+    public CommunityBookmark(PublicPost publicPost) {
         this.publicPost = publicPost;
         this.communityType = CommunityType.PUBLICPOST;
     }
 
-    public Bookmark(MeetPost meetPost) {
+    public CommunityBookmark(MeetPost meetPost) {
         this.meetPost = meetPost;
         this.communityType = CommunityType.MEETPOST;
     }

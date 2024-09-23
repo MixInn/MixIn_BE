@@ -1,6 +1,6 @@
 package com.sparta.mixin.domain.community.bookmark;
 
-import com.sparta.mixin.domain.community.bookmark.entity.Bookmark;
+import com.sparta.mixin.domain.community.bookmark.entity.CommunityBookmark;
 import com.sparta.mixin.domain.community.meetpost.MeetPostService;
 import com.sparta.mixin.domain.community.meetpost.entity.MeetPost;
 import com.sparta.mixin.domain.community.publicpost.PublicPostService;
@@ -20,35 +20,35 @@ public class BookmarkService {
 
     public void postPublicBookmark(Long postId) {
         PublicPost publicPost = publicPostService.findById(postId);
-        Bookmark bookmark = bookmarkRepository.findByPublicPost(publicPost);
-        if (bookmark != null) {
+        CommunityBookmark communityBookmark = bookmarkRepository.findByPublicPost(publicPost);
+        if (communityBookmark != null) {
             throw new CustomException(ErrorCode.BAD_REQUEST);
         }
-        Bookmark newBookmark = new Bookmark(publicPost);
-        bookmarkRepository.save(newBookmark);
+        CommunityBookmark newCommunityBookmark = new CommunityBookmark(publicPost);
+        bookmarkRepository.save(newCommunityBookmark);
     }
 
     public void deletePublicBookmark(Long bookmarkId) {
-        Bookmark bookmark = findById(bookmarkId);
-        bookmarkRepository.delete(bookmark);
+        CommunityBookmark communityBookmark = findById(bookmarkId);
+        bookmarkRepository.delete(communityBookmark);
     }
 
     public void postMeetBookmark(Long postId) {
         MeetPost meetPost = meetPostService.findById(postId);
-        Bookmark bookmark = bookmarkRepository.findByMeetPost(meetPost);
-        if (bookmark != null) {
+        CommunityBookmark communityBookmark = bookmarkRepository.findByMeetPost(meetPost);
+        if (communityBookmark != null) {
             throw new CustomException(ErrorCode.BAD_REQUEST);
         }
-        Bookmark newBookmark = new Bookmark(meetPost);
-        bookmarkRepository.save(newBookmark);
+        CommunityBookmark newCommunityBookmark = new CommunityBookmark(meetPost);
+        bookmarkRepository.save(newCommunityBookmark);
     }
 
     public void deleteMeetBookmark(Long bookmarkId) {
-        Bookmark bookmark = findById(bookmarkId);
-        bookmarkRepository.delete(bookmark);
+        CommunityBookmark communityBookmark = findById(bookmarkId);
+        bookmarkRepository.delete(communityBookmark);
     }
 
-    public Bookmark findById(Long bookmarkId) {
+    public CommunityBookmark findById(Long bookmarkId) {
         return bookmarkRepository.findById(bookmarkId).orElseThrow(
             () -> new CustomException(ErrorCode.BAD_REQUEST)
         );
