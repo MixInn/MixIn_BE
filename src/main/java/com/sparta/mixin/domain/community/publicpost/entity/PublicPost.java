@@ -25,5 +25,8 @@ public class PublicPost extends Timestamped {
         this.content= publicPostRequestDto.getContent();
     }
 
-    // Getters and setters
+    public void updatePost(PublicPostRequestDto publicPostRequestDto) {
+        this.title= publicPostRequestDto.getTitle();
+        this.content= publicPostRequestDto.getContent();
+    }
 }

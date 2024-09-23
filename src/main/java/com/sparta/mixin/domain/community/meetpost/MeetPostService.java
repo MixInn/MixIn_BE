@@ -76,9 +76,9 @@ public class MeetPostService {
         Pageable pageable = PageRequest.of(page,size, Sort.by(Direction.DESC,"createdAt"));
         Meet meet = meetService.findById(meetId);
 
-        Page<MeetPost> responseDtos = meetPostRepository.findAllByMeet(meet,pageable);
+        Page<MeetPost> responsePage = meetPostRepository.findAllByMeet(meet,pageable);
 
-        return responseDtos.map(MeetPostResponseDto::new);
+        return responsePage.map(MeetPostResponseDto::new);
     }
 
     public List<ImageResponseDto> getAllPostImages(Long postId) {
