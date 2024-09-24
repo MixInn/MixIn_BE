@@ -83,7 +83,7 @@ public class MeetPostService {
 
     public List<ImageResponseDto> getAllPostImages(Long postId) {
         MeetPost meetPost = findById(postId);
-        List<Image> imageList = imageRepository.findAllByMeetPost(meetPost.getId());
+        List<Image> imageList = imageRepository.findAllByMeetPost(meetPost);
         List<ImageResponseDto> imageResponseDtos = new ArrayList<>();
         for (Image image : imageList) {
             ImageResponseDto imageResponseDto = new ImageResponseDto(image);
