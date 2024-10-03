@@ -1,79 +1,39 @@
 package com.sparta.mixin.domain.auth.service;
 
-import com.sparta.mixin.domain.auth.dto.MajorResponseDto;
-import com.sparta.mixin.domain.auth.dto.UniversityResponseDto;
+import java.net.URI;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
 
-    @Value("${api.url}")
-    private String apiUrl;
-
-    @Value("${university.api.key}")
-    private String universityApiKey;
-
-    @Value("${major.api.key}")
-    private String majorApiKey;
-
     private final RestTemplate restTemplate;
 
-    public List<UniversityResponseDto> searchUniversities(String universityName) {
-        Map<String, String> queryParams = new HashMap<>();
-        queryParams.put("searchSchulNm", universityName);
+    @Value("${OPEN_API_BASE_URL}")
+    private String BASE_URL;
 
-        String url = buildUrl("SCHOOL", universityApiKey, queryParams);
+    @Value("${OPEN_API_SERVICE_KEY}")
+    private String SERVICE_KEY;
 
-        Map<String, Object> response = restTemplate.getForObject(url, Map.class);
-        Map<String, Object> dataSearch = (Map<String, Object>) response.get("dataSearch");
+    public String getUniversities(int page, int perPage) {
+        try {
+            String encodedServiceKey = URLEncoder.encode(SERVICE_KEY, StandardCharsets.UTF_8.toString());
+            String urlString = String.format("%s?page=%d&perPage=%d&serviceKey=%s",
+                BASE_URL, page, perPage, encodedServiceKey);
 
-        return ((List<Map<String, Object>>) dataSearch.get("content"))
-                .stream()
-                .map(item -> new UniversityResponseDto(
-                        (String) item.get("schoolName"),
-                        (String) item.get("adres")
-                ))
-                .toList();
-    }
+            URI uri = new URI(urlString);
+            System.out.println("requestURL: " + uri.toString());
 
-    public List<MajorResponseDto> searchMajor(String major) {
-        Map<String, String> queryParams = new HashMap<>();
-        queryParams.put("searchTitle", major);
-
-        String url = buildUrl("MAJOR", majorApiKey, queryParams);
-
-        Map<String, Object> response = restTemplate.getForObject(url, Map.class);
-        Map<String, Object> dataSearch = (Map<String, Object>) response.get("dataSearch");
-
-        return ((List<Map<String, Object>>) dataSearch.get("content"))
-                .stream()
-                .map(item -> new MajorResponseDto(
-                        (String) item.get("lClass"),
-                        (String) item.get("mClass")
-                ))
-                .toList();
-    }
-
-    private String buildUrl(String serviceCode, String apiKey, Map<String, String> queryParams) {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(apiUrl)
-                .queryParam("apiKey", apiKey)
-                .queryParam("svcType", "api")
-                .queryParam("svcCode", serviceCode)
-                .queryParam("contentType", "json")
-                .queryParam("gubun", "univ_list");
-
-        queryParams.forEach(builder::queryParam);
-
-        return builder.build().toUriString();
+            String response = restTemplate.getForObject(uri, String.class);
+            return response;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
-
