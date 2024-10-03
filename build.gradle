@@ -30,6 +30,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter'
 	implementation 'org.springframework:spring-web'
+	// SMTP
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	// nurigo SMS인증
 	implementation 'net.nurigo:sdk:4.3.0'
 	// redis

@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 @RequiredArgsConstructor
-public class AuthService {
+public class UniversityInfoService {
 
     private final RestTemplate restTemplate;
 
