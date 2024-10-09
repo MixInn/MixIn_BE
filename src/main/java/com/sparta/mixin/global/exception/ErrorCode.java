@@ -33,13 +33,17 @@ public enum ErrorCode {
 	USER_NOT_FOUND(HttpStatus.BAD_REQUEST, "등록되지 않은 사용자입니다."),
 	HEADER_NOT_FOUND_REFRESH(HttpStatus.BAD_REQUEST,"헤더에 리프레쉬 토큰이 누락되었습니다."),
 
-	// SMS 인증
+	// SMS
 	INCORRECT_CERTIFICATIONCODE(HttpStatus.BAD_REQUEST, "인증번호가 일치하지 않습니다."),
 
-	// Email 인증
+	// Email
 	INCORRECT_AUTHCODE(HttpStatus.UNAUTHORIZED, "인증번호가 일치하지 않습니다."),
 	DUPLICATE_AUTHCODE(HttpStatus.BAD_REQUEST,"인증번호가 존재합니다."),
 	DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, "이미 아이디가 존재하는 이메일 입니다."),
+
+	// User
+	NOT_FOUND_USER(HttpStatus.NOT_FOUND, "NOT FOUND USER"),
+	SAME_USER_PRODUCT(HttpStatus.BAD_REQUEST, "SAME USER PRODUCT"),
 
 	// Image
 	NOT_ALLOW_IMAGE_SIZE(HttpStatus.BAD_REQUEST,"이미지 파일은 최대 10MB까지 업로드 가능합니다"),
