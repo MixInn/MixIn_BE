@@ -22,7 +22,7 @@ public class MeetAnnouncmentService {
     private final MeetService meetService;
 
     public void createMeetAnnouncment(Long meetId, MeetAnnouncementRequestDto requestDto) {
-        Meet meet = meetService.findMeetById(meetId);
+        Meet meet = meetService.findById(meetId);
 
         // 임시 유저
         User currentUser = new User();

@@ -4,11 +4,13 @@ import com.sparta.mixin.domain.meet.dto.MeetRequestDto;
 import com.sparta.mixin.global.Timestamped;
 import jakarta.persistence.*;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "Meet")
 @NoArgsConstructor
+@Getter
 public class Meet extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

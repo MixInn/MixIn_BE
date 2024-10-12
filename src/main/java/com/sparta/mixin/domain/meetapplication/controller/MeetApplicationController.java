@@ -2,6 +2,7 @@ package com.sparta.mixin.domain.meetapplication.controller;
 
 import com.sparta.mixin.domain.meetapplication.dto.MeetApplicationRequestDto;
 import com.sparta.mixin.domain.meetapplication.service.MeetApplicationService;
+import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.global.common.CommonResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,7 @@ public class MeetApplicationController {
 
     @DeleteMapping("/{meetApplicationId}")
     public ResponseEntity<CommonResponse> deleteMeetApplication(@PathVariable(name = "meetApplicationId") Long meetApplicationId) {
-        meetApplicationService.deleteMeetApplication(meetApplicationId);
+        meetApplicationService.deleteMeetApplication(meetApplicationId,new User());
         CommonResponse response = new CommonResponse<>("모임 가입 신청 삭제 성공", 201, "");
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }

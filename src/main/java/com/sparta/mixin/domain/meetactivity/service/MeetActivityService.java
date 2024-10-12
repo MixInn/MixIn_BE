@@ -1,6 +1,5 @@
 package com.sparta.mixin.domain.meetactivity.service;
 
-import com.sparta.mixin.domain.meet.dto.MeetRequestDto;
 import com.sparta.mixin.domain.meet.entity.AuthorizationLevel;
 import com.sparta.mixin.domain.meet.entity.Meet;
 import com.sparta.mixin.domain.meet.service.MeetAuthorizationService;
@@ -24,7 +23,7 @@ public class MeetActivityService {
     // 모임 활동 생성
     public void createMeetActivity(Long meetId, MeetActivityRequestDto requestDto, User user) {
         // 권한 확인 (리더, 부리더만 생성 가능)
-        Meet meet = meetService.findMeetById(meetId); // 해당 모임 가져오기
+        Meet meet = meetService.findById(meetId); // 해당 모임 가져오기
         AuthorizationLevel userRole = meetAuthorizationService.getUserRole(meet, user);
 
         // 권한이 리더 또는 부리더인지 확인

@@ -5,12 +5,9 @@ import com.sparta.mixin.domain.meet.entity.Meet;
 import com.sparta.mixin.domain.meet.entity.MeetAuthorization;
 import com.sparta.mixin.domain.meet.service.MeetAuthorizationService;
 import com.sparta.mixin.domain.meet.service.MeetService;
-import com.sparta.mixin.domain.meetactivity.dto.MeetActivityRequestDto;
-import com.sparta.mixin.domain.meetactivity.service.MeetActivityService;
 import com.sparta.mixin.domain.meetapplication.dto.MeetApplicationRequestDto;
 import com.sparta.mixin.domain.meetapplication.entity.MeetApplication;
 import com.sparta.mixin.domain.meetapplication.entity.MeetApplicationRepository;
-import com.sparta.mixin.domain.meetapplication.entity.ResultEnum;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.global.exception.CustomException;
 import com.sparta.mixin.global.exception.ErrorCode;
@@ -26,7 +23,7 @@ public class MeetApplicationService {
 
     public void createMeetApplication(MeetApplicationRequestDto requestDto) {
         // 모임 지원서
-        Meet meet = meetService.findMeetById(requestDto.getMeetId());
+        Meet meet = meetService.findById(requestDto.getMeetId());
 
         User user = new User();
 
@@ -41,7 +38,7 @@ public class MeetApplicationService {
 
     public void updateMeetApplication(MeetApplicationRequestDto requestDto) {
         // 지원서에서 수정할 수 있는 내용은 지원 내용밖에 없음
-        Meet meet = meetService.findMeetById(requestDto.getMeetId());
+        Meet meet = meetService.findById(requestDto.getMeetId());
 
         User user = new User();
 
