@@ -3,9 +3,14 @@ package com.sparta.mixin.domain.meet.entity;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.global.Timestamped;
 import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "meetAuthorization")
+@NoArgsConstructor
+@Getter
 public class MeetAuthorization extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,8 +24,18 @@ public class MeetAuthorization extends Timestamped {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Getter
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private AuthorizationLevel authorization;
 
-    // Getters and setters
+
+
+    @Builder
+    public MeetAuthorization( Meet meet, User user, AuthorizationLevel authorization) {
+        this.meet = meet;
+        this.user = user;
+        this.authorization = authorization;
+    }
+
 }
