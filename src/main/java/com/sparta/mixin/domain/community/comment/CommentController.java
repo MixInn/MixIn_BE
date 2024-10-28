@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("community/comment")
+@RequestMapping("/comment")
 public class CommentController {
 
     private final CommentService commentService;
@@ -29,7 +29,7 @@ public class CommentController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{commentId}")
+    @DeleteMapping("/public/{commentId}")
     public ResponseEntity<CommonResponse> deletePublicComment(
         @PathVariable(name = "commentId") Long commentId) {
         commentService.deletePublicComment(commentId);
@@ -46,7 +46,7 @@ public class CommentController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{commentId}")
+    @DeleteMapping("/meet/{commentId}")
     public ResponseEntity<CommonResponse> deleteMeetComment(
         @PathVariable(name = "commentId") Long commentId) {
         commentService.deleteMeetComment(commentId);
