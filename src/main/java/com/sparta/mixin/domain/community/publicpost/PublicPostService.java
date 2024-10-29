@@ -54,7 +54,7 @@ public class PublicPostService {
     }
 
     public PublicPostResponseDto editPublicPost(Long postId,
-        PublicPostRequestDto publicPostRequestDto, User user) {
+        PublicPostRequestDto publicPostRequestDto, List<String> fileUrls, User user) {
         PublicPost publicPost = findById(postId);
         User loginUser = authService.findByUsername(user.getUsername());
 
@@ -63,6 +63,11 @@ public class PublicPostService {
         }
         publicPost.updatePost(publicPostRequestDto);
         publicPostRepository.save(publicPost);
+
+        for (String fileUrl : fileUrls) {
+            Image image = new Image(fileUrl,publicPost);
+            imageRepository.save(image);
+        }
 
         return new PublicPostResponseDto(publicPost);
     }

@@ -73,10 +73,17 @@ public class PublicPostController {
     @PutMapping("/{postId}")
     public ResponseEntity<CommonResponse<PublicPostResponseDto>> editPublicPost(
         @PathVariable(name = "postId") Long postId,
-        @RequestBody PublicPostRequestDto publicPostRequestDto,
-        @RequestPart("files") List<MultipartFile> files,
+        @RequestPart("requestDto") PublicPostRequestDto publicPostRequestDto,
+        @RequestPart(value = "files",required = false) List<MultipartFile> files,
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        PublicPostResponseDto responseDto = publicPostService.editPublicPost(postId,publicPostRequestDto,userDetails.getUser());
+        List<String> fileUrls = new ArrayList<>();
+
+        for (MultipartFile file : files) {
+            imageService.validateFile(file);
+            String fileUrl = imageService.getFileUrl(file);
+            fileUrls.add(fileUrl);
+        }
+        PublicPostResponseDto responseDto = publicPostService.editPublicPost(postId,publicPostRequestDto,fileUrls,userDetails.getUser());
         CommonResponse response = new CommonResponse("공용커뮤니티 글 수정 성공", 200, responseDto);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
