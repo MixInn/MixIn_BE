@@ -28,11 +28,11 @@ public class BookmarkController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @DeleteMapping("/public/{bookmarkId}")
+    @DeleteMapping("/public/{postId}")
     public ResponseEntity<CommonResponse> deletePublicBookmark(
-        @PathVariable(name = "bookmarkId") Long bookmarkId, @AuthenticationPrincipal
+        @PathVariable(name = "postId") Long postId, @AuthenticationPrincipal
     UserDetailsImpl userDetails) {
-        bookmarkService.deletePublicBookmark(bookmarkId, userDetails.getUser());
+        bookmarkService.deletePublicBookmark(postId, userDetails.getUser());
         CommonResponse response = new CommonResponse("공용커뮤니티 북마크 취소 성공", 204, "");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -46,11 +46,11 @@ public class BookmarkController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @DeleteMapping("/meet/{bookmarkId}")
+    @DeleteMapping("/meet/{postId}")
     public ResponseEntity<CommonResponse> deleteMeetBookmark(
-        @PathVariable(name = "bookmarkId") Long bookmarkId, @AuthenticationPrincipal
+        @PathVariable(name = "postId") Long postId, @AuthenticationPrincipal
     UserDetailsImpl userDetails) {
-        bookmarkService.deleteMeetBookmark(bookmarkId, userDetails.getUser());
+        bookmarkService.deleteMeetBookmark(postId, userDetails.getUser());
         CommonResponse response = new CommonResponse("밋커뮤니티 북마크 취소 성공", 204, "");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

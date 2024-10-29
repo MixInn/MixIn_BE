@@ -43,15 +43,15 @@ public class CommunityBookmark extends Timestamped {
     private User user;
 
 
-    public CommunityBookmark(PublicPost publicPost, User findUser) {
+    public CommunityBookmark(PublicPost publicPost, User loginUser) {
         this.publicPost = publicPost;
         this.communityType = CommunityType.PUBLICPOST;
-        this.user=findUser;
+        this.user = loginUser;
     }
 
-    public CommunityBookmark(MeetPost meetPost, User findUser) {
+    public CommunityBookmark(MeetPost meetPost, User loginUser) {
         this.meetPost = meetPost;
         this.communityType = CommunityType.MEETPOST;
-        this.user=findUser;
+        this.user = loginUser;
     }
 }

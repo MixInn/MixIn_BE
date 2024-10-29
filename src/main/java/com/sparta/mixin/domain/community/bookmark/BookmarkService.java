@@ -25,46 +25,52 @@ public class BookmarkService {
         PublicPost publicPost = publicPostService.findById(postId);
         User loginUser = authService.findByUsername(user.getUsername());
 
-        CommunityBookmark communityBookmark = bookmarkRepository.findByPublicPostAndUser(publicPost,loginUser);
+        CommunityBookmark communityBookmark = bookmarkRepository.findByPublicPostAndUser(publicPost,
+            loginUser);
         if (communityBookmark != null) {
             throw new CustomException(ErrorCode.BAD_REQUEST);
         }
-        CommunityBookmark newCommunityBookmark = new CommunityBookmark(publicPost,loginUser);
+        CommunityBookmark newCommunityBookmark = new CommunityBookmark(publicPost, loginUser);
         bookmarkRepository.save(newCommunityBookmark);
     }
 
-    public void deletePublicBookmark(Long bookmarkId, User user) {
-        CommunityBookmark communityBookmark = findById(bookmarkId);
+    public void deletePublicBookmark(Long postId, User user) {
+        PublicPost publicPost = publicPostService.findById(postId);
         User loginUser = authService.findByUsername(user.getUsername());
 
-        if(communityBookmark.getUser()!=loginUser){
-            throw new CustomException(ErrorCode.NOT_SAME_USER);
+        CommunityBookmark publicBookmark = bookmarkRepository.findByPublicPostAndUser(publicPost,
+            loginUser);
+        if (publicBookmark == null) {
+            throw new CustomException(ErrorCode.BAD_REQUEST);
         }
 
-        bookmarkRepository.delete(communityBookmark);
+        bookmarkRepository.delete(publicBookmark);
     }
 
     public void postMeetBookmark(Long postId, User user) {
         MeetPost meetPost = meetPostService.findById(postId);
         User loginUser = authService.findByUsername(user.getUsername());
 
-        CommunityBookmark communityBookmark = bookmarkRepository.findByMeetPostAndUser(meetPost,loginUser);
+        CommunityBookmark communityBookmark = bookmarkRepository.findByMeetPostAndUser(meetPost,
+            loginUser);
         if (communityBookmark != null) {
             throw new CustomException(ErrorCode.BAD_REQUEST);
         }
-        CommunityBookmark newCommunityBookmark = new CommunityBookmark(meetPost,loginUser);
+        CommunityBookmark newCommunityBookmark = new CommunityBookmark(meetPost, loginUser);
         bookmarkRepository.save(newCommunityBookmark);
     }
 
-    public void deleteMeetBookmark(Long bookmarkId, User user) {
-        CommunityBookmark communityBookmark = findById(bookmarkId);
+    public void deleteMeetBookmark(Long postId, User user) {
+        MeetPost meetPost = meetPostService.findById(postId);
         User loginUser = authService.findByUsername(user.getUsername());
 
-        if(communityBookmark.getUser()!=loginUser){
-            throw new CustomException(ErrorCode.NOT_SAME_USER);
+        CommunityBookmark meetBookmark = bookmarkRepository.findByMeetPostAndUser(meetPost,
+            loginUser);
+        if (meetBookmark == null) {
+            throw new CustomException(ErrorCode.BAD_REQUEST);
         }
 
-        bookmarkRepository.delete(communityBookmark);
+        bookmarkRepository.delete(meetBookmark);
     }
 
     public CommunityBookmark findById(Long bookmarkId) {
