@@ -8,8 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BookmarkRepository extends JpaRepository<CommunityBookmark,Long> {
 
-    CommunityBookmark findByIdAndUser(Long bookmarkId, User user);
-
     CommunityBookmark findByPublicPostAndUser(PublicPost publicPost, User findUser);
 
     CommunityBookmark findByMeetPostAndUser(MeetPost meetPost, User findUser);
