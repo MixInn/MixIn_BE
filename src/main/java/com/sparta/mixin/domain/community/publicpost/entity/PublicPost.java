@@ -24,12 +24,6 @@ public class PublicPost extends Timestamped {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Builder
-    public PublicPost(PublicPostRequestDto publicPostRequestDto) {
-        this.title=publicPostRequestDto.getTitle();
-        this.content= publicPostRequestDto.getContent();
-    }
-
     public PublicPost(PublicPostRequestDto publicPostRequestDto, User loginUser) {
         this.title=publicPostRequestDto.getTitle();
         this.content= publicPostRequestDto.getContent();
