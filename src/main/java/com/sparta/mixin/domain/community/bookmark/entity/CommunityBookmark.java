@@ -28,11 +28,11 @@ public class CommunityBookmark extends Timestamped {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "publicPost_id")
+    @JoinColumn(name = "public_post_id")
     private PublicPost publicPost;
 
     @ManyToOne
-    @JoinColumn(name = "meetPost_id")
+    @JoinColumn(name = "meet_post_id")
     private MeetPost meetPost;
 
     @Enumerated(EnumType.STRING)
@@ -42,15 +42,16 @@ public class CommunityBookmark extends Timestamped {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public CommunityBookmark(PublicPost publicPost) {
+
+    public CommunityBookmark(PublicPost publicPost, User findUser) {
         this.publicPost = publicPost;
         this.communityType = CommunityType.PUBLICPOST;
+        this.user=findUser;
     }
 
-    public CommunityBookmark(MeetPost meetPost) {
+    public CommunityBookmark(MeetPost meetPost, User findUser) {
         this.meetPost = meetPost;
         this.communityType = CommunityType.MEETPOST;
+        this.user=findUser;
     }
-
-    // Getters and setters
 }
