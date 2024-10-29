@@ -47,18 +47,18 @@ public class CommunityComment extends Timestamped {
     @Column
     private String comment;
 
-    public CommunityComment(PublicPost publicPost, CommentRequestDto commentRequestDto) {
+
+    public CommunityComment(PublicPost publicPost, CommentRequestDto commentRequestDto, User findUser) {
         this.comment= commentRequestDto.getComment();
         this.publicPost=publicPost;
         this.communityType=CommunityType.PUBLICPOST;
-
+        this.user=findUser;
     }
 
-    public CommunityComment(MeetPost meetPost, CommentRequestDto commentRequestDto) {
+    public CommunityComment(MeetPost meetPost, CommentRequestDto commentRequestDto, User findUser) {
         this.comment= commentRequestDto.getComment();
         this.meetPost=meetPost;
         this.communityType=CommunityType.MEETPOST;
+        this.user=findUser;
     }
-
-    // Getters and setters
 }
