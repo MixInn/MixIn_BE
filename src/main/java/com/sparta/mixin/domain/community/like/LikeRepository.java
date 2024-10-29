@@ -3,11 +3,12 @@ package com.sparta.mixin.domain.community.like;
 import com.sparta.mixin.domain.community.like.entity.CommunityLike;
 import com.sparta.mixin.domain.community.meetpost.entity.MeetPost;
 import com.sparta.mixin.domain.community.publicpost.entity.PublicPost;
+import com.sparta.mixin.domain.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface LikeRepository extends JpaRepository<CommunityLike,Long> {
+public interface LikeRepository extends JpaRepository<CommunityLike, Long> {
 
-    CommunityLike findByPublicPost(PublicPost publicPost);
+    CommunityLike findByPublicPostAndUser(PublicPost publicPost, User loginUser);
 
-    CommunityLike findByMeetPost(MeetPost meetPost);
+    CommunityLike findByMeetPostAndUser(MeetPost meetPost, User loginUser);
 }
