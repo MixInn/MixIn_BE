@@ -34,8 +34,8 @@ public class PublicPostController {
 
     @PostMapping
     public ResponseEntity<CommonResponse<PublicPostResponseDto>> createPublicPost(
-        @RequestBody PublicPostRequestDto publicPostRequestDto,
-        @RequestPart("files") List<MultipartFile> files,
+        @RequestPart("requestDto") PublicPostRequestDto publicPostRequestDto,
+        @RequestPart(value = "files",required = false) List<MultipartFile> files,
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
         List<String> fileUrls = new ArrayList<>();
 
