@@ -93,7 +93,7 @@ public class MeetPostController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/{meetId}")
+    @GetMapping("/{meetId}/all")
     public ResponseEntity<CommonResponse<Page<MeetPostResponseDto>>> getAllMeetPost(
         @PathVariable(name = "meetId") Long meetId,
         @RequestParam(defaultValue = "1") int page,
