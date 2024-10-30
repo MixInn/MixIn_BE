@@ -44,6 +44,7 @@ public enum ErrorCode {
 	// User
 	NOT_FOUND_USER(HttpStatus.NOT_FOUND, "NOT FOUND USER"),
 	SAME_USER_PRODUCT(HttpStatus.BAD_REQUEST, "SAME USER PRODUCT"),
+	NOT_SAME_USER(HttpStatus.BAD_REQUEST, "동일한 사용자가 아닙니다."),
 
 	// Image
 	NOT_ALLOW_IMAGE_SIZE(HttpStatus.BAD_REQUEST,"이미지 파일은 최대 10MB까지 업로드 가능합니다"),

@@ -1,10 +1,12 @@
 package com.sparta.mixin.domain.community.publicpost;
 
+import com.sparta.mixin.domain.auth.service.AuthService;
 import com.sparta.mixin.domain.community.publicpost.dto.PublicPostRequestDto;
 import com.sparta.mixin.domain.community.publicpost.dto.PublicPostResponseDto;
 import com.sparta.mixin.domain.community.publicpost.entity.PublicPost;
 import com.sparta.mixin.domain.image.ImageRepository;
 import com.sparta.mixin.domain.image.entity.Image;
+import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.global.exception.CustomException;
 import com.sparta.mixin.global.exception.ErrorCode;
 import java.util.List;
@@ -21,9 +23,12 @@ import org.springframework.stereotype.Service;
 public class PublicPostService {
     private final PublicPostRepository publicPostRepository;
     private final ImageRepository imageRepository;
+    private final AuthService authService;
 
-    public PublicPostResponseDto createPublicPost(PublicPostRequestDto publicPostRequestDto, List<String> fileUrls) {
-        PublicPost publicPost = new PublicPost(publicPostRequestDto);
+    public PublicPostResponseDto createPublicPost(PublicPostRequestDto publicPostRequestDto, List<String> fileUrls,
+        User user) {
+        User loginUser = authService.findByUsername(user.getUsername());
+        PublicPost publicPost = new PublicPost(publicPostRequestDto,loginUser);
         publicPostRepository.save(publicPost);
 
         for (String fileUrl : fileUrls) {
@@ -33,30 +38,47 @@ public class PublicPostService {
         return new PublicPostResponseDto(publicPost);
     }
 
-    public Page<PublicPostResponseDto> getAllPublicPost(int page, int size) {
+    public Page<PublicPostResponseDto> getAllPublicPost(int page, int size, User user) {
         Pageable pageable = PageRequest.of(page,size, Sort.by(Direction.DESC,"createdAt"));
+        User loginUser = authService.findByUsername(user.getUsername());
 
-        Page<PublicPost> responsePage = publicPostRepository.findAll(pageable);
+        Page<PublicPost> responsePage = publicPostRepository.findAllByUser_UniversityAndUser_Major(loginUser.getUniversity(),loginUser.getMajor(),pageable);
 
         return responsePage.map(PublicPostResponseDto::new);
     }
 
-    public PublicPostResponseDto getPublicPost(Long postId) {
+    public PublicPostResponseDto getPublicPost(Long postId, User user) {
+        authService.findByUsername(user.getUsername());
         PublicPost publicPost = findById(postId);
         return new PublicPostResponseDto(publicPost);
     }
 
     public PublicPostResponseDto editPublicPost(Long postId,
-        PublicPostRequestDto publicPostRequestDto) {
+        PublicPostRequestDto publicPostRequestDto, List<String> fileUrls, User user) {
         PublicPost publicPost = findById(postId);
+        User loginUser = authService.findByUsername(user.getUsername());
+
+        if(publicPost.getUser()!=loginUser){
+            throw new CustomException(ErrorCode.NOT_SAME_USER);
+        }
         publicPost.updatePost(publicPostRequestDto);
         publicPostRepository.save(publicPost);
+
+        for (String fileUrl : fileUrls) {
+            Image image = new Image(fileUrl,publicPost);
+            imageRepository.save(image);
+        }
 
         return new PublicPostResponseDto(publicPost);
     }
 
-    public void deletePublicPost(Long postId) {
+    public void deletePublicPost(Long postId, User user) {
         PublicPost publicPost = findById(postId);
+        User loginUser = authService.findByUsername(user.getUsername());
+
+        if(publicPost.getUser()!=loginUser){
+            throw new CustomException(ErrorCode.NOT_SAME_USER);
+        }
         publicPostRepository.delete(publicPost);
     }
 
