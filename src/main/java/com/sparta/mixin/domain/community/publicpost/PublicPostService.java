@@ -42,7 +42,7 @@ public class PublicPostService {
         Pageable pageable = PageRequest.of(page,size, Sort.by(Direction.DESC,"createdAt"));
         User loginUser = authService.findByUsername(user.getUsername());
 
-        Page<PublicPost> responsePage = publicPostRepository.findAllByUser_UniversityAndUser_Major(loginUser.getUniversity(),loginUser.getMajor(),pageable);
+        Page<PublicPost> responsePage = publicPostRepository.findAllByUser_University(loginUser.getUniversity(),pageable);
 
         return responsePage.map(PublicPostResponseDto::new);
     }

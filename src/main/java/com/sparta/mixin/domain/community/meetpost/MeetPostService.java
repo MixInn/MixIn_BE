@@ -60,7 +60,12 @@ public class MeetPostService {
     public MeetPostResponseDto getMeetPost(Long postId, User user) {
 
         MeetPost meetPost = findById(postId);
-        authService.findByUsername(user.getUsername());
+        User loginUser = authService.findByUsername(user.getUsername());
+
+        Meet meet = meetService.findById(meetPost.getMeet().getId());
+        if(meetAuthorizationService.findByMeetAndUser(meet,loginUser)==null){
+            throw new CustomException(ErrorCode.INCORRECT_MEET_USER);
+        }
 
         return new MeetPostResponseDto(meetPost);
     }
@@ -98,7 +103,11 @@ public class MeetPostService {
     public Page<MeetPostResponseDto> getAllMeetPost(Long meetId, int page, int size, User user) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Direction.DESC, "createdAt"));
         Meet meet = meetService.findById(meetId);
-        authService.findByUsername(user.getUsername());
+        User loginUser = authService.findByUsername(user.getUsername());
+
+        if(meetAuthorizationService.findByMeetAndUser(meet,loginUser)==null){
+            throw new CustomException(ErrorCode.INCORRECT_MEET_USER);
+        }
 
         Page<MeetPost> responsePage = meetPostRepository.findAllByMeet(meet, pageable);
 

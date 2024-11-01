@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PublicPostRepository extends JpaRepository<PublicPost,Long> {
 
-    Page<PublicPost> findAllByUser_UniversityAndUser_Major(String university, String major, Pageable pageable);
+    Page<PublicPost> findAllByUser_University(String university, Pageable pageable);
 }
