@@ -7,6 +7,7 @@ import com.sparta.mixin.domain.community.meetpost.entity.MeetPost;
 import com.sparta.mixin.domain.image.ImageRepository;
 import com.sparta.mixin.domain.image.entity.Image;
 import com.sparta.mixin.domain.meet.entity.Meet;
+import com.sparta.mixin.domain.meet.service.MeetAuthorizationService;
 import com.sparta.mixin.domain.meet.service.MeetService;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.global.exception.CustomException;
@@ -29,11 +30,16 @@ public class MeetPostService {
     private final MeetService meetService;
     private final ImageRepository imageRepository;
     private final AuthService authService;
+    private final MeetAuthorizationService meetAuthorizationService;
 
     public MeetPostResponseDto createMeetPost(Long meetId, MeetPostRequestDto meetPostRequestDto,
         List<String> fileUrls, User user) {
         Meet meet = meetService.findById(meetId);
         User loginUser = authService.findByUsername(user.getUsername());
+
+        if(meetAuthorizationService.findByMeetAndUser(meet,loginUser)==null){
+            throw new CustomException(ErrorCode.INCORRECT_MEET_USER);
+        }
 
         MeetPost meetPost = MeetPost.builder()
             .meetPostRequestDto(meetPostRequestDto)

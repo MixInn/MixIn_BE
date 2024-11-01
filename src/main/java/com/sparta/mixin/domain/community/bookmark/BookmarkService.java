@@ -6,6 +6,11 @@ import com.sparta.mixin.domain.community.meetpost.MeetPostService;
 import com.sparta.mixin.domain.community.meetpost.entity.MeetPost;
 import com.sparta.mixin.domain.community.publicpost.PublicPostService;
 import com.sparta.mixin.domain.community.publicpost.entity.PublicPost;
+import com.sparta.mixin.domain.meet.entity.Meet;
+import com.sparta.mixin.domain.meet.entity.MeetAuthorization;
+import com.sparta.mixin.domain.meet.entity.MeetAuthorizationRepository;
+import com.sparta.mixin.domain.meet.service.MeetAuthorizationService;
+import com.sparta.mixin.domain.meet.service.MeetService;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.global.exception.CustomException;
 import com.sparta.mixin.global.exception.ErrorCode;
@@ -20,6 +25,8 @@ public class BookmarkService {
     private final MeetPostService meetPostService;
     private final PublicPostService publicPostService;
     private final AuthService authService;
+    private final MeetService meetService;
+    private final MeetAuthorizationService meetAuthorizationService;
 
     public void postPublicBookmark(Long postId, User user) {
         PublicPost publicPost = publicPostService.findById(postId);
@@ -50,6 +57,11 @@ public class BookmarkService {
     public void postMeetBookmark(Long postId, User user) {
         MeetPost meetPost = meetPostService.findById(postId);
         User loginUser = authService.findByUsername(user.getUsername());
+
+        Meet meet = meetService.findById(meetPost.getMeet().getId());
+        if(meetAuthorizationService.findByMeetAndUser(meet,loginUser)==null){
+            throw new CustomException(ErrorCode.INCORRECT_MEET_USER);
+        }
 
         CommunityBookmark communityBookmark = bookmarkRepository.findByMeetPostAndUser(meetPost,
             loginUser);
