@@ -2,7 +2,7 @@ package com.sparta.mixin.domain.auth.service;
 
 import com.sparta.mixin.domain.auth.dto.SignupRequestDto;
 import com.sparta.mixin.domain.auth.dto.TokenResponseDto;
-import com.sparta.mixin.domain.auth.repository.UserRepository;
+import com.sparta.mixin.domain.user.entity.UserRepository;
 import com.sparta.mixin.domain.jwt.JwtUtil;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.domain.user.entity.UserRoleEnum;
@@ -26,6 +26,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
+    @Transactional
     public void signup(SignupRequestDto requestDto) {
         String username = requestDto.getUsername();
         String password = passwordEncoder.encode(requestDto.getPassword());

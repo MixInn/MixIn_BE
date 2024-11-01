@@ -1,4 +1,4 @@
-package com.sparta.mixin.domain.auth.repository;
+package com.sparta.mixin.domain.auth.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
