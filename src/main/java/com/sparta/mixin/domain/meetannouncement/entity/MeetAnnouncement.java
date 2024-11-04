@@ -33,13 +33,11 @@ public class MeetAnnouncement extends Timestamped {
     private ApprovalType approvalType; // 승인여부
     private String applicationForm;
 
-
-    // Getters and setters
-
     @Builder
     public MeetAnnouncement(Meet meet, String recruitmentPeriod, String gender, int numberOfPeople, String preferences, String meetingFrequency,String approvalType, String applicationForm){
         this.meet = meet;
         this.recruitmentPeriod = LocalDateTime.parse(recruitmentPeriod);
+        this.gender = GenderRestriction.fromString(gender);
         this.numberOfPeople = numberOfPeople;
         this.preferences = preferences;
         this.meetingFrequency = meetingFrequency;
@@ -52,7 +50,7 @@ public class MeetAnnouncement extends Timestamped {
             this.recruitmentPeriod = LocalDateTime.parse(requestDto.getRecruitmentPeriod());
         }
         if(requestDto.getGender() != null){
-//            this.gender = requestDto.getGender();
+            this.gender = GenderRestriction.fromString(requestDto.getGender());
         }
         if(requestDto.getNumberOfPeople() != null){
             this.numberOfPeople = requestDto.getNumberOfPeople();
