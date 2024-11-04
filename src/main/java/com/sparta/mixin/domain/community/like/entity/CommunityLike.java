@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 @Table(name = "community_like")
 @RequiredArgsConstructor
 public class CommunityLike extends Timestamped {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,12 +34,16 @@ public class CommunityLike extends Timestamped {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public CommunityLike(PublicPost publicPost) {
-        this.publicPost=publicPost;
-        this.communityType=CommunityType.PUBLICPOST;
+
+    public CommunityLike(PublicPost publicPost, User loginUser) {
+        this.publicPost = publicPost;
+        this.communityType = CommunityType.PUBLICPOST;
+        this.user = loginUser;
     }
-    public CommunityLike(MeetPost meetPost) {
-        this.meetPost=meetPost;
-        this.communityType=CommunityType.MEETPOST;
+
+    public CommunityLike(MeetPost meetPost, User loginUser) {
+        this.meetPost = meetPost;
+        this.communityType = CommunityType.MEETPOST;
+        this.user = loginUser;
     }
 }

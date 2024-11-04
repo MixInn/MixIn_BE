@@ -38,4 +38,10 @@ public class MeetAuthorizationService {
                 .map(MeetAuthorization::getUser) // 각 MeetAuthorization에서 User를 추출
                 .collect(Collectors.toList());
     }
+
+    public MeetAuthorization findByMeetAndUser(Meet meet, User user){
+        return meetAuthorizationRepository.findByMeetAndUser(meet, user).orElseThrow(
+            ()->new CustomException(ErrorCode.NOT_FOUND)
+        );
+    }
 }

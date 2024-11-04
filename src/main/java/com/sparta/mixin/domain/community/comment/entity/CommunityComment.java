@@ -6,6 +6,7 @@ import com.sparta.mixin.domain.community.meetpost.entity.MeetPost;
 import com.sparta.mixin.domain.community.publicpost.entity.PublicPost;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.global.Timestamped;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -29,11 +30,11 @@ public class CommunityComment extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "publicPost_id")
     private PublicPost publicPost;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "meetPost_id")
     private MeetPost meetPost;
 
@@ -47,18 +48,20 @@ public class CommunityComment extends Timestamped {
     @Column
     private String comment;
 
-    public CommunityComment(PublicPost publicPost, CommentRequestDto commentRequestDto) {
-        this.comment= commentRequestDto.getComment();
-        this.publicPost=publicPost;
-        this.communityType=CommunityType.PUBLICPOST;
 
+    public CommunityComment(PublicPost publicPost, CommentRequestDto commentRequestDto,
+        User loginUser) {
+        this.comment = commentRequestDto.getComment();
+        this.publicPost = publicPost;
+        this.communityType = CommunityType.PUBLICPOST;
+        this.user = loginUser;
     }
 
-    public CommunityComment(MeetPost meetPost, CommentRequestDto commentRequestDto) {
-        this.comment= commentRequestDto.getComment();
-        this.meetPost=meetPost;
-        this.communityType=CommunityType.MEETPOST;
+    public CommunityComment(MeetPost meetPost, CommentRequestDto commentRequestDto,
+        User loginUser) {
+        this.comment = commentRequestDto.getComment();
+        this.meetPost = meetPost;
+        this.communityType = CommunityType.MEETPOST;
+        this.user = loginUser;
     }
-
-    // Getters and setters
 }

@@ -1,6 +1,6 @@
 package com.sparta.mixin.domain.auth.config;
 
-import com.sparta.mixin.domain.auth.repository.UserRepository;
+import com.sparta.mixin.domain.user.entity.UserRepository;
 import com.sparta.mixin.domain.auth.security.JwtAuthenticationFilter;
 import com.sparta.mixin.domain.auth.security.JwtAuthorizationFilter;
 import com.sparta.mixin.domain.auth.security.UserDetailsServiceImpl;

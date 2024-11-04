@@ -2,7 +2,6 @@ package com.sparta.mixin.domain.auth.service;
 
 import com.sparta.mixin.domain.auth.dto.SmsCertificationRequestDto;
 import com.sparta.mixin.domain.auth.dto.SmsRequestDto;
-import com.sparta.mixin.domain.auth.repository.SmsCertification;
 import com.sparta.mixin.global.exception.CustomException;
 import com.sparta.mixin.global.exception.ErrorCode;
 import jakarta.annotation.PostConstruct;
