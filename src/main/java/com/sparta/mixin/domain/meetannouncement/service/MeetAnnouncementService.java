@@ -52,6 +52,10 @@ public class MeetAnnouncementService {
             throw new CustomException(ErrorCode.FORBIDDEN);
         }
 
+        if (meetAnnouncementRepository.findByMeetId(meetId).isPresent()) {
+            throw new CustomException(ErrorCode.NOT_FOUND);
+        }
+
         MeetAnnouncement meetAnnouncement = MeetAnnouncement.builder()
                 .meet(meet)
                 .recruitmentPeriod(requestDto.getRecruitmentPeriod())
