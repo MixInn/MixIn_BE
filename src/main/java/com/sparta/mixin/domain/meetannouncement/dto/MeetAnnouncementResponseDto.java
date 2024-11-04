@@ -14,12 +14,12 @@ public class MeetAnnouncementResponseDto {
     private String applicationForm;
 
     public MeetAnnouncementResponseDto(MeetAnnouncement meetAnnouncement) {
-        this.recruitmentPeriod = meetAnnouncement.getRecruitmentPeriod();
-        this.gender = meetAnnouncement.getGender();
+        this.recruitmentPeriod = meetAnnouncement.getRecruitmentPeriod().toString();
+        this.gender = meetAnnouncement.getGender().getDescription();
         this.numberOfPeople = meetAnnouncement.getNumberOfPeople();
         this.preferences = meetAnnouncement.getPreferences();
         this.meetingFrequency = meetAnnouncement.getMeetingFrequency();
-        this.approvalType = meetAnnouncement.getApprovalType();
+        this.approvalType = meetAnnouncement.getApprovalType().getDescription();
         this.applicationForm = meetAnnouncement.getApplicationForm();
     }
 }

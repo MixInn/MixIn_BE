@@ -7,7 +7,7 @@ import com.sparta.mixin.domain.meet.service.MeetService;
 import com.sparta.mixin.domain.meetannouncement.dto.MeetAnnouncementRequestDto;
 import com.sparta.mixin.domain.meetannouncement.dto.MeetAnnouncementResponseDto;
 import com.sparta.mixin.domain.meetannouncement.entity.MeetAnnouncement;
-import com.sparta.mixin.domain.meetannouncement.entity.MeetAnnouncmentRepository;
+import com.sparta.mixin.domain.meetannouncement.entity.MeetAnnouncementRepository;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.global.exception.CustomException;
 import com.sparta.mixin.global.exception.ErrorCode;
@@ -16,16 +16,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class MeetAnnouncmentService {
-    private final MeetAnnouncmentRepository meetAnnouncmentRepository;
+public class MeetAnnouncementService {
+    private final MeetAnnouncementRepository meetAnnouncmentRepository;
     private final MeetAuthorizationService meetAuthorizationService;
     private final MeetService meetService;
 
-    public void createMeetAnnouncment(Long meetId, MeetAnnouncementRequestDto requestDto) {
+    public void createMeetAnnouncement(Long meetId, MeetAnnouncementRequestDto requestDto, User currentUser) {
         Meet meet = meetService.findById(meetId);
-
-        // 임시 유저
-        User currentUser = new User();
 
         AuthorizationLevel userRole = meetAuthorizationService.getUserRole(meet, currentUser);
 
@@ -50,11 +47,8 @@ public class MeetAnnouncmentService {
 
     }
 
-    public void updateMeetAnnouncment(Long meetId, MeetAnnouncementRequestDto requestDto) {
+    public void updateMeetAnnouncement(Long meetId, MeetAnnouncementRequestDto requestDto, User currentUser) {
         MeetAnnouncement meetAnnouncement = meetAnnouncmentRepository.findByMeetId(meetId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
-
-        // 임시 유저
-        User currentUser = new User();
 
         AuthorizationLevel userRole = meetAuthorizationService.getUserRole(meetAnnouncement.getMeet(), currentUser);
 
@@ -67,7 +61,7 @@ public class MeetAnnouncmentService {
         meetAnnouncement.updateMeetAnnouncement(requestDto);
     }
 
-    public MeetAnnouncementResponseDto readMeetAnnouncment(Long meetId) {
+    public MeetAnnouncementResponseDto readMeetAnnouncement(Long meetId) {
         MeetAnnouncement meetAnnouncement = findByMeetId(meetId);
         MeetAnnouncementResponseDto responseDto = new MeetAnnouncementResponseDto(meetAnnouncement);
         return responseDto;
