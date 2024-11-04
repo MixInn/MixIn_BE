@@ -51,7 +51,10 @@ public enum ErrorCode {
 	NOT_ALLOW_VIDEO_SIZE(HttpStatus.BAD_REQUEST,"비디오 및 GIF 파일은 최대 200MB까지 업로드 가능합니다."),
 	NOT_ALLOW_FORMAT(HttpStatus.BAD_REQUEST,"허용되지 않는 파일 형식입니다."),
 	INCORRECT_FILE_NAME(HttpStatus.BAD_REQUEST,"파일 이름이 유효하지 않습니다."),
-	INCORRECT_EXTENSION(HttpStatus.BAD_REQUEST,"파일 확장자를 찾을 수 없습니다.");
+	INCORRECT_EXTENSION(HttpStatus.BAD_REQUEST,"파일 확장자를 찾을 수 없습니다."),
+
+	// 밋권한 관련
+	INCORRECT_MEET_USER(HttpStatus.UNAUTHORIZED, "해당 밋에 소속된 사용자가 아닙니다.");
 
     private final HttpStatus status;
 	private final String message;

@@ -2,7 +2,9 @@ package com.sparta.mixin.domain.image.dto;
 
 import com.sparta.mixin.domain.image.entity.EntityType;
 import com.sparta.mixin.domain.image.entity.Image;
+import lombok.Getter;
 
+@Getter
 public class ImageResponseDto {
     private Long id;
     private String imageUrl;
@@ -13,6 +15,10 @@ public class ImageResponseDto {
         this.id= image.getId();
         this.imageUrl= image.getImageUrl();
         this.entityType=image.getEntityType();
-        this.entityId=image.getMeetPost().getId(); // 밋 커뮤니티의 경우
+        if(image.getMeetPost()!=null){
+            this.entityId=image.getMeetPost().getId();
+        }if(image.getPublicPost()!=null){
+            this.entityId=image.getPublicPost().getId();
+        }
     }
 }

@@ -56,7 +56,7 @@ public class MeetService {
 
     public void updateMeet(Long meetId, MeetRequestDto requestDto) {
         // 유저 권한 확인
-        Meet meet = findMeetById(meetId);
+        Meet meet = findById(meetId);
 
         // 임시 유저
         User currentUser = new User();
@@ -91,7 +91,7 @@ public class MeetService {
         meetRepository.deleteById(meetId);
     }
 
-    public Meet findMeetById(Long meetId) {
+    public Meet findById(Long meetId) {
         return meetRepository.findById(meetId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
     }
 }

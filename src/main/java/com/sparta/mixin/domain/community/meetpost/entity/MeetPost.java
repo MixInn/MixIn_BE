@@ -31,10 +31,11 @@ public class MeetPost extends Timestamped {
     private User user;
 
     @Builder
-    public MeetPost(MeetPostRequestDto meetPostRequestDto,Meet meet){
+    public MeetPost(MeetPostRequestDto meetPostRequestDto,Meet meet,User user){
         this.meet=meet;
         this.title= meetPostRequestDto.getTitle();
         this.content= meetPostRequestDto.getContent();
+        this.user=user;
     }
 
     public void updatePost(MeetPostRequestDto meetPostRequestDto) {

@@ -23,15 +23,15 @@ public class Image extends Timestamped {
     @Enumerated(EnumType.STRING)
     private EntityType entityType;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "publicPost_id")
     private PublicPost publicPost;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "meetPost_id")
     private MeetPost meetPost;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "meetNotice_id")
     private MeetNotice meetNotice;
 
