@@ -3,7 +3,7 @@ package com.sparta.mixin.domain.auth.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.mixin.domain.auth.dto.LoginRequestDto;
 import com.sparta.mixin.domain.auth.dto.TokenResponseDto;
-import com.sparta.mixin.domain.auth.repository.UserRepository;
+import com.sparta.mixin.domain.user.entity.UserRepository;
 import com.sparta.mixin.domain.jwt.JwtUtil;
 import com.sparta.mixin.domain.user.entity.UserRoleEnum;
 import com.sparta.mixin.global.common.CommonResponse;

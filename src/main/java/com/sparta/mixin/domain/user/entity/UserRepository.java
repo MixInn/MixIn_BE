@@ -1,6 +1,5 @@
-package com.sparta.mixin.domain.auth.repository;
+package com.sparta.mixin.domain.user.entity;
 
-import com.sparta.mixin.domain.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
