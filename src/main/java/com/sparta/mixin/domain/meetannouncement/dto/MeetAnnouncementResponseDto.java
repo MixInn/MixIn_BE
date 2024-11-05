@@ -5,6 +5,8 @@ import lombok.Getter;
 
 @Getter
 public class MeetAnnouncementResponseDto {
+    private Long meetId;
+    private Long meetAnnouncementId;
     private String recruitmentPeriod; // 모집기간
     private String gender; // 성별
     private Integer numberOfPeople; // 인원수
@@ -14,12 +16,14 @@ public class MeetAnnouncementResponseDto {
     private String applicationForm;
 
     public MeetAnnouncementResponseDto(MeetAnnouncement meetAnnouncement) {
-        this.recruitmentPeriod = meetAnnouncement.getRecruitmentPeriod();
-        this.gender = meetAnnouncement.getGender();
+        this.meetId = meetAnnouncement.getMeet().getId();
+        this.meetAnnouncementId = meetAnnouncement.getId();
+        this.recruitmentPeriod = meetAnnouncement.getRecruitmentPeriod().toString();
+        this.gender = meetAnnouncement.getGender().getDescription();
         this.numberOfPeople = meetAnnouncement.getNumberOfPeople();
         this.preferences = meetAnnouncement.getPreferences();
         this.meetingFrequency = meetAnnouncement.getMeetingFrequency();
-        this.approvalType = meetAnnouncement.getApprovalType();
+        this.approvalType = meetAnnouncement.getApprovalType().getDescription();
         this.applicationForm = meetAnnouncement.getApplicationForm();
     }
 }

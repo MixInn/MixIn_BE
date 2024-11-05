@@ -22,14 +22,15 @@ public class MeetApplication extends Timestamped {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "meet_id", nullable = false)
-    private Meet meet;
+    @JoinColumn(name = "meetannouncement_id", nullable = false)
+    private MeetAnnouncement meetAnnouncement;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     private String content;
+
     @Enumerated(EnumType.STRING)
     private ResultEnum resultEnum;
 
@@ -38,8 +39,8 @@ public class MeetApplication extends Timestamped {
 
     // Getters and setters
     @Builder
-    public MeetApplication(Meet meet, User user, String content) {
-        this.meet = meet;
+    public MeetApplication(MeetAnnouncement meetAnnouncement, User user, String content) {
+        this.meetAnnouncement = meetAnnouncement;
         this.user = user;
         this.content = content;
         this.resultEnum = ResultEnum.PENDING;

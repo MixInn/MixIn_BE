@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "MeetAnnouncement")
 @NoArgsConstructor
@@ -22,36 +24,33 @@ public class MeetAnnouncement extends Timestamped {
     private Meet meet;
 
 
-    private String recruitmentPeriod; // 모집기간
-    private String gender; // 성별
+    private LocalDateTime recruitmentPeriod; // 모집기간
+    // 성별 enum으로 바꿔서 관리
+    private GenderRestriction gender; // 성별
     private int numberOfPeople; // 인원수
     private String preferences; // 우대사항
     private String meetingFrequency; // 모임주기
-    private String approvalType; // 승인여부
-
+    private ApprovalType approvalType; // 승인여부
     private String applicationForm;
-
-
-    // Getters and setters
 
     @Builder
     public MeetAnnouncement(Meet meet, String recruitmentPeriod, String gender, int numberOfPeople, String preferences, String meetingFrequency,String approvalType, String applicationForm){
         this.meet = meet;
-        this.recruitmentPeriod = recruitmentPeriod;
-        this.gender = gender;
+        this.recruitmentPeriod = LocalDateTime.parse(recruitmentPeriod);
+        this.gender = GenderRestriction.fromString(gender);
         this.numberOfPeople = numberOfPeople;
         this.preferences = preferences;
         this.meetingFrequency = meetingFrequency;
-        this.approvalType = approvalType;
+        this.approvalType = ApprovalType.fromString(approvalType);
         this.applicationForm = applicationForm;
     }
 
     public void updateMeetAnnouncement(MeetAnnouncementRequestDto requestDto){
         if(requestDto.getRecruitmentPeriod() != null){
-            this.recruitmentPeriod = requestDto.getRecruitmentPeriod();
+            this.recruitmentPeriod = LocalDateTime.parse(requestDto.getRecruitmentPeriod());
         }
         if(requestDto.getGender() != null){
-            this.gender = requestDto.getGender();
+            this.gender = GenderRestriction.fromString(requestDto.getGender());
         }
         if(requestDto.getNumberOfPeople() != null){
             this.numberOfPeople = requestDto.getNumberOfPeople();
@@ -63,7 +62,7 @@ public class MeetAnnouncement extends Timestamped {
             this.meetingFrequency = requestDto.getMeetingFrequency();
         }
         if(requestDto.getApprovalType() != null){
-            this.approvalType = requestDto.getApprovalType();
+            this.approvalType = ApprovalType.fromString(requestDto.getApprovalType());
         }
         if(requestDto.getApplicationForm() != null){
             this.applicationForm = requestDto.getApplicationForm();
