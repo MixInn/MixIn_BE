@@ -94,4 +94,8 @@ public class MeetAnnouncementService {
     public MeetAnnouncement findByMeetId(Long meetId) {
         return meetAnnouncementRepository.findByMeetId(meetId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
     }
+
+    public MeetAnnouncement findById(Long meetAnnouncementId) {
+        return meetAnnouncementRepository.findById(meetAnnouncementId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
+    }
 }

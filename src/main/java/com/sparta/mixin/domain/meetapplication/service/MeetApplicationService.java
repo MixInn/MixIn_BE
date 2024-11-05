@@ -5,6 +5,8 @@ import com.sparta.mixin.domain.meet.entity.Meet;
 import com.sparta.mixin.domain.meet.entity.MeetAuthorization;
 import com.sparta.mixin.domain.meet.service.MeetAuthorizationService;
 import com.sparta.mixin.domain.meet.service.MeetService;
+import com.sparta.mixin.domain.meetannouncement.entity.MeetAnnouncement;
+import com.sparta.mixin.domain.meetannouncement.service.MeetAnnouncementService;
 import com.sparta.mixin.domain.meetapplication.dto.MeetApplicationRequestDto;
 import com.sparta.mixin.domain.meetapplication.entity.MeetApplication;
 import com.sparta.mixin.domain.meetapplication.entity.MeetApplicationRepository;
@@ -20,15 +22,14 @@ public class MeetApplicationService {
     private final MeetApplicationRepository meetApplicationRepository;
     private final MeetService meetService;
     private final MeetAuthorizationService meetAuthorizationService;
+    private final MeetAnnouncementService meetAnnouncementService;
 
-    public void createMeetApplication(MeetApplicationRequestDto requestDto) {
+    public void createMeetApplication(Long meetAnnouncementId,MeetApplicationRequestDto requestDto,User user) {
         // 모임 지원서
-        Meet meet = meetService.findById(requestDto.getMeetId());
-
-        User user = new User();
+        MeetAnnouncement meetAnnouncement = meetAnnouncementService.findById(meetAnnouncementId);
 
         MeetApplication meetApplication = MeetApplication.builder()
-                .meet(meet)
+                .meetAnnouncement(meetAnnouncement)
                 .user(user)
                 .content(requestDto.getContent())
                 .build();
@@ -36,35 +37,38 @@ public class MeetApplicationService {
         meetApplicationRepository.save(meetApplication);
     }
 
-    public void updateMeetApplication(MeetApplicationRequestDto requestDto) {
-        // 지원서에서 수정할 수 있는 내용은 지원 내용밖에 없음
-        Meet meet = meetService.findById(requestDto.getMeetId());
+    public void updateMeetApplication(Long meetApplicationId, MeetApplicationRequestDto requestDto,User user) {
+        MeetApplication meetApplication = findById(meetApplicationId);
 
-        User user = new User();
+        if (!meetApplication.getUser().equals(user)) {
+            throw new CustomException(ErrorCode.FORBIDDEN);
+        }
 
-        MeetApplication meetApplication = meetApplicationRepository.findByMeet(meet);
-
-        // 모임 지원서 수정
         meetApplication.updateContent(requestDto.getContent());
-    }
 
+        meetApplicationRepository.save(meetApplication);
+    }
 
 
     public void deleteMeetApplication(Long meetApplicationId,User user) {
 
-        MeetApplication meetApplication = getMeetApplication(meetApplicationId);
+        MeetApplication meetApplication = findById(meetApplicationId);
+
+        if (!meetApplication.getUser().equals(user)) {
+            throw new CustomException(ErrorCode.FORBIDDEN);
+        }
 
         meetApplicationRepository.delete(meetApplication);
     }
 
     public void acceptMeetApplication(Long meetApplicationId) {
-        MeetApplication meetApplication = getMeetApplication(meetApplicationId);
+        MeetApplication meetApplication = findById(meetApplicationId);
 
         // 수락 상태로 변경
         meetApplication.acceptApplication();
 
         // 신청이 수락되면 MeetAuthorization에 추가
-        Meet meet = meetApplication.getMeet();
+        Meet meet = meetApplication.getMeetAnnouncement().getMeet();
         User user = meetApplication.getUser();
 
         // 기본 권한을 MEMBER로 설정 (필요에 따라 LEADER 등으로 설정할 수 있음)
@@ -83,7 +87,7 @@ public class MeetApplicationService {
     }
 
     public void rejectMeetApplication(Long meetApplicationId,String reason) {
-        MeetApplication meetApplication = getMeetApplication(meetApplicationId);
+        MeetApplication meetApplication = findById(meetApplicationId);
 
         // 거절 상태로 변경
         meetApplication.rejectApplication(reason);
@@ -92,7 +96,7 @@ public class MeetApplicationService {
         meetApplicationRepository.save(meetApplication);
     }
 
-    public MeetApplication getMeetApplication(Long meetApplicationId) {
+    public MeetApplication findById(Long meetApplicationId) {
         return meetApplicationRepository.findById(meetApplicationId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
     }
 }
