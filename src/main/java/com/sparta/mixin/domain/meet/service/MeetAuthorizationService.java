@@ -44,4 +44,9 @@ public class MeetAuthorizationService {
             ()->new CustomException(ErrorCode.NOT_FOUND)
         );
     }
+
+    public boolean isUserMemberOfMeet(Meet meet, User user) {
+        // Check if there's an authorization entry linking the user to the meet
+        return meetAuthorizationRepository.existsByMeetAndUser(meet, user);
+    }
 }

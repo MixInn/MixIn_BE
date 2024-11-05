@@ -11,4 +11,6 @@ public interface MeetAuthorizationRepository extends JpaRepository<MeetAuthoriza
     List<MeetAuthorization> findByMeet(Meet meet);
 
     Optional<MeetAuthorization> findByMeetAndUser(Meet meet, User user);
+
+    boolean existsByMeetAndUser(Meet meet, User user);
 }
