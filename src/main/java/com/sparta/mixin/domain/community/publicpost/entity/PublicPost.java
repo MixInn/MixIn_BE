@@ -1,10 +1,10 @@
 package com.sparta.mixin.domain.community.publicpost.entity;
 
-import com.sparta.mixin.domain.community.publicpost.dto.PublicPostRequestDto;
+import com.sparta.mixin.domain.post.dto.PostRequestDto;
+import com.sparta.mixin.domain.post.entity.Post;
 import com.sparta.mixin.domain.user.entity.User;
-import com.sparta.mixin.global.Timestamped;
-import jakarta.persistence.*;
-import lombok.Builder;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -12,26 +12,12 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @Table(name = "PublicPost")
 @RequiredArgsConstructor
-public class PublicPost extends Timestamped {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class PublicPost extends Post {
 
-    private String title;
-    private String content;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    public PublicPost(PublicPostRequestDto publicPostRequestDto, User loginUser) {
-        this.title=publicPostRequestDto.getTitle();
-        this.content= publicPostRequestDto.getContent();
-        this.user=loginUser;
+    public PublicPost(PostRequestDto postRequestDto, User user) {
+        super(postRequestDto,user);
     }
-
-    public void updatePost(PublicPostRequestDto publicPostRequestDto) {
-        this.title= publicPostRequestDto.getTitle();
-        this.content= publicPostRequestDto.getContent();
+    public void updatePost(PostRequestDto postRequestDto) {
+        super.updatePost(postRequestDto);
     }
 }

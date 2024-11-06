@@ -1,11 +1,13 @@
 package com.sparta.mixin.domain.community.meetpost.entity;
 
-import com.sparta.mixin.domain.community.meetpost.dto.MeetPostRequestDto;
 import com.sparta.mixin.domain.meet.entity.Meet;
+import com.sparta.mixin.domain.post.dto.PostRequestDto;
+import com.sparta.mixin.domain.post.entity.Post;
 import com.sparta.mixin.domain.user.entity.User;
-import com.sparta.mixin.global.Timestamped;
-import jakarta.persistence.*;
-
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -14,32 +16,19 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @Table(name = "MeetPost")
 @RequiredArgsConstructor
-public class MeetPost extends Timestamped {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class MeetPost extends Post {
 
     @ManyToOne
     @JoinColumn(name = "meet_id", nullable = false)
     private Meet meet;
 
-    private String title;
-    private String content;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
     @Builder
-    public MeetPost(MeetPostRequestDto meetPostRequestDto,Meet meet,User user){
+    public MeetPost(PostRequestDto postRequestDto,User user,Meet meet){
+        super(postRequestDto,user);
         this.meet=meet;
-        this.title= meetPostRequestDto.getTitle();
-        this.content= meetPostRequestDto.getContent();
-        this.user=user;
     }
 
-    public void updatePost(MeetPostRequestDto meetPostRequestDto) {
-        this.title= meetPostRequestDto.getTitle();
-        this.content= meetPostRequestDto.getContent();
+    public void updatePost(PostRequestDto postRequestDto) {
+        super.updatePost(postRequestDto);
     }
 }
