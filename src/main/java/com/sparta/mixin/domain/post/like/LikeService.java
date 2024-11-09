@@ -1,7 +1,8 @@
-package com.sparta.mixin.domain.community.like;
+package com.sparta.mixin.domain.post.like;
 
 import com.sparta.mixin.domain.auth.service.AuthService;
-import com.sparta.mixin.domain.community.like.entity.CommunityLike;
+import com.sparta.mixin.domain.post.like.LikeRepository;
+import com.sparta.mixin.domain.post.like.entity.PostLike;
 import com.sparta.mixin.domain.post.meetpost.MeetPostService;
 import com.sparta.mixin.domain.post.entity.MeetPost;
 import com.sparta.mixin.domain.post.publicpost.PublicPostService;
@@ -30,19 +31,19 @@ public class LikeService {
         PublicPost publicPost = publicPostService.findById(postId);
         User loginUser = authService.findByUsername(user.getUsername());
 
-        CommunityLike communityLike = likeRepository.findByPublicPostAndUser(publicPost, loginUser);
-        if (communityLike != null) {
+        PostLike postLike = likeRepository.findByPublicPostAndUser(publicPost, loginUser);
+        if (postLike != null) {
             throw new CustomException(ErrorCode.BAD_REQUEST);
         }
-        CommunityLike newCommunityLike = new CommunityLike(publicPost, loginUser);
-        likeRepository.save(newCommunityLike);
+        PostLike newPostLike = new PostLike(publicPost, loginUser);
+        likeRepository.save(newPostLike);
     }
 
     public void deletePublicLike(Long postId, User user) {
         PublicPost publicPost = publicPostService.findById(postId);
         User loginUser = authService.findByUsername(user.getUsername());
 
-        CommunityLike publicLike = likeRepository.findByPublicPostAndUser(publicPost, loginUser);
+        PostLike publicLike = likeRepository.findByPublicPostAndUser(publicPost, loginUser);
         if (publicLike == null) {
             throw new CustomException(ErrorCode.BAD_REQUEST);
         }
@@ -58,26 +59,26 @@ public class LikeService {
             throw new CustomException(ErrorCode.INCORRECT_MEET_USER);
         }
 
-        CommunityLike communityLike = likeRepository.findByMeetPostAndUser(meetPost, loginUser);
-        if (communityLike != null) {
+        PostLike postLike = likeRepository.findByMeetPostAndUser(meetPost, loginUser);
+        if (postLike != null) {
             throw new CustomException(ErrorCode.BAD_REQUEST);
         }
-        CommunityLike newCommunityLike = new CommunityLike(meetPost, loginUser);
-        likeRepository.save(newCommunityLike);
+        PostLike newPostLike = new PostLike(meetPost, loginUser);
+        likeRepository.save(newPostLike);
     }
 
     public void deleteMeetLike(Long postId, User user) {
         MeetPost meetPost = meetPostService.findById(postId);
         User loginUser = authService.findByUsername(user.getUsername());
 
-        CommunityLike meetLike = likeRepository.findByMeetPostAndUser(meetPost, loginUser);
+        PostLike meetLike = likeRepository.findByMeetPostAndUser(meetPost, loginUser);
         if (meetLike == null) {
             throw new CustomException(ErrorCode.BAD_REQUEST);
         }
         likeRepository.delete(meetLike);
     }
 
-    public CommunityLike findById(Long likeId) {
+    public PostLike findById(Long likeId) {
         return likeRepository.findById(likeId).orElseThrow(
             () -> new CustomException(ErrorCode.BAD_REQUEST)
         );

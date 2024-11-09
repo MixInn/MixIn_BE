@@ -1,10 +1,13 @@
-package com.sparta.mixin.domain.post.bookmark.entity;
+package com.sparta.mixin.domain.post.comment.entity;
 
-import com.sparta.mixin.domain.community.CommunityType;
+import com.sparta.mixin.domain.community.comment.dto.CommentRequestDto;
+import com.sparta.mixin.domain.post.CommunityType;
 import com.sparta.mixin.domain.post.entity.MeetPost;
 import com.sparta.mixin.domain.post.entity.PublicPost;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.global.Timestamped;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -19,20 +22,20 @@ import lombok.RequiredArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "community_bookmark")
+@Table(name = "community_comment")
 @RequiredArgsConstructor
-public class CommunityBookmark extends Timestamped {
+public class PostComment extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "public_post_id")
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "publicPost_id")
     private PublicPost publicPost;
 
-    @ManyToOne
-    @JoinColumn(name = "meet_post_id")
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "meetPost_id")
     private MeetPost meetPost;
 
     @Enumerated(EnumType.STRING)
@@ -42,14 +45,21 @@ public class CommunityBookmark extends Timestamped {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column
+    private String comment;
 
-    public CommunityBookmark(PublicPost publicPost, User loginUser) {
+
+    public PostComment(PublicPost publicPost, CommentRequestDto commentRequestDto,
+        User loginUser) {
+        this.comment = commentRequestDto.getComment();
         this.publicPost = publicPost;
         this.communityType = CommunityType.PUBLICPOST;
         this.user = loginUser;
     }
 
-    public CommunityBookmark(MeetPost meetPost, User loginUser) {
+    public PostComment(MeetPost meetPost, CommentRequestDto commentRequestDto,
+        User loginUser) {
+        this.comment = commentRequestDto.getComment();
         this.meetPost = meetPost;
         this.communityType = CommunityType.MEETPOST;
         this.user = loginUser;

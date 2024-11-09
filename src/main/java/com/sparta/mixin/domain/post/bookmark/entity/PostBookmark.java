@@ -1,30 +1,38 @@
-package com.sparta.mixin.domain.community.like.entity;
+package com.sparta.mixin.domain.post.bookmark.entity;
 
-import com.sparta.mixin.domain.community.CommunityType;
+import com.sparta.mixin.domain.post.CommunityType;
 import com.sparta.mixin.domain.post.entity.MeetPost;
 import com.sparta.mixin.domain.post.entity.PublicPost;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.global.Timestamped;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "community_like")
+@Table(name = "community_bookmark")
 @RequiredArgsConstructor
-public class CommunityLike extends Timestamped {
+public class PostBookmark extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "publicPost_id")
+    @JoinColumn(name = "public_post_id")
     private PublicPost publicPost;
 
     @ManyToOne
-    @JoinColumn(name = "meetPost_id")
+    @JoinColumn(name = "meet_post_id")
     private MeetPost meetPost;
 
     @Enumerated(EnumType.STRING)
@@ -35,13 +43,13 @@ public class CommunityLike extends Timestamped {
     private User user;
 
 
-    public CommunityLike(PublicPost publicPost, User loginUser) {
+    public PostBookmark(PublicPost publicPost, User loginUser) {
         this.publicPost = publicPost;
         this.communityType = CommunityType.PUBLICPOST;
         this.user = loginUser;
     }
 
-    public CommunityLike(MeetPost meetPost, User loginUser) {
+    public PostBookmark(MeetPost meetPost, User loginUser) {
         this.meetPost = meetPost;
         this.communityType = CommunityType.MEETPOST;
         this.user = loginUser;

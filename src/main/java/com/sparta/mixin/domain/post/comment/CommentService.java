@@ -1,16 +1,16 @@
-package com.sparta.mixin.domain.community.comment;
+package com.sparta.mixin.domain.post.comment;
 
 import com.sparta.mixin.domain.auth.service.AuthService;
 import com.sparta.mixin.domain.community.comment.dto.CommentRequestDto;
-import com.sparta.mixin.domain.community.comment.dto.CommentResponseDto;
-import com.sparta.mixin.domain.community.comment.entity.CommunityComment;
-import com.sparta.mixin.domain.post.meetpost.MeetPostService;
-import com.sparta.mixin.domain.post.entity.MeetPost;
-import com.sparta.mixin.domain.post.publicpost.PublicPostService;
-import com.sparta.mixin.domain.post.entity.PublicPost;
 import com.sparta.mixin.domain.meet.entity.Meet;
 import com.sparta.mixin.domain.meet.service.MeetAuthorizationService;
 import com.sparta.mixin.domain.meet.service.MeetService;
+import com.sparta.mixin.domain.post.comment.dto.CommentResponseDto;
+import com.sparta.mixin.domain.post.comment.entity.PostComment;
+import com.sparta.mixin.domain.post.entity.MeetPost;
+import com.sparta.mixin.domain.post.entity.PublicPost;
+import com.sparta.mixin.domain.post.meetpost.MeetPostService;
+import com.sparta.mixin.domain.post.publicpost.PublicPostService;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.global.exception.CustomException;
 import com.sparta.mixin.global.exception.ErrorCode;
@@ -33,27 +33,27 @@ public class CommentService {
         PublicPost publicPost = publicPostService.findById(postId);
         User loginUser = authService.findByUsername(user.getUsername());
 
-        CommunityComment communityComment = new CommunityComment(publicPost,commentRequestDto,loginUser);
+        PostComment communityComment = new PostComment(publicPost,commentRequestDto,loginUser);
         commentRepository.save(communityComment);
         return new CommentResponseDto(communityComment);
     }
 
     public void deletePublicComment(Long commentId, User user) {
-        CommunityComment communityComment = findById(commentId);
+        PostComment postComment = findById(commentId);
         User loginUser = authService.findByUsername(user.getUsername());
 
-        if(communityComment.getUser()!=loginUser){
+        if(postComment.getUser()!=loginUser){
             throw new CustomException(ErrorCode.NOT_SAME_USER);
         }
 
-        commentRepository.delete(communityComment);
+        commentRepository.delete(postComment);
     }
 
     public List<CommentResponseDto> getPublicComment(Long postId, User user) {
         PublicPost publicPost = publicPostService.findById(postId);
         authService.findByUsername(user.getUsername());
 
-        List<CommunityComment> publicCommentList = commentRepository.findAllByPublicPost(publicPost);
+        List<PostComment> publicCommentList = commentRepository.findAllByPublicPost(publicPost);
 
         return publicCommentList.stream().map(CommentResponseDto::new).toList();
     }
@@ -68,13 +68,13 @@ public class CommentService {
             throw new CustomException(ErrorCode.INCORRECT_MEET_USER);
         }
 
-        CommunityComment communityComment = new CommunityComment(meetPost,commentRequestDto,loginUser);
+        PostComment communityComment = new PostComment(meetPost,commentRequestDto,loginUser);
         commentRepository.save(communityComment);
         return new CommentResponseDto(communityComment);
     }
 
     public void deleteMeetComment(Long commentId, User user) {
-        CommunityComment communityComment = findById(commentId);
+        PostComment communityComment = findById(commentId);
         User loginUser = authService.findByUsername(user.getUsername());
 
         if(communityComment.getUser()!=loginUser){
@@ -87,12 +87,12 @@ public class CommentService {
         MeetPost meetPost = meetPostService.findById(postId);
         authService.findByUsername(user.getUsername());
 
-        List<CommunityComment> meetCommentList = commentRepository.findAllByMeetPost(meetPost);
+        List<PostComment> meetCommentList = commentRepository.findAllByMeetPost(meetPost);
 
         return meetCommentList.stream().map(CommentResponseDto::new).toList();
     }
 
-    public CommunityComment findById(Long commentId){
+    public PostComment findById(Long commentId){
         return commentRepository.findById(commentId).orElseThrow(
             ()->new CustomException(ErrorCode.BAD_REQUEST)
         );

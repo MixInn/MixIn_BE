@@ -1,4 +1,4 @@
-package com.sparta.mixin.domain.community.like;
+package com.sparta.mixin.domain.post.like;
 
 import com.sparta.mixin.domain.auth.security.UserDetailsImpl;
 import com.sparta.mixin.global.common.CommonResponse;

@@ -1,8 +1,7 @@
-package com.sparta.mixin.domain.community.comment;
+package com.sparta.mixin.domain.post.comment;
 
 import com.sparta.mixin.domain.auth.security.UserDetailsImpl;
-import com.sparta.mixin.domain.community.comment.dto.CommentRequestDto;
-import com.sparta.mixin.domain.community.comment.dto.CommentResponseDto;
+import com.sparta.mixin.domain.post.comment.dto.CommentResponseDto;
 import com.sparta.mixin.global.common.CommonResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +26,7 @@ public class CommentController {
     @PostMapping("/public/{postId}")
     public ResponseEntity<CommonResponse<CommentResponseDto>> postPublicComment(
         @PathVariable(name = "postId") Long postId, @RequestBody
-    CommentRequestDto commentRequestDto,@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    com.sparta.mixin.domain.community.comment.dto.CommentRequestDto commentRequestDto,@AuthenticationPrincipal UserDetailsImpl userDetails) {
         CommentResponseDto responseDto = commentService.postPublicComment(postId,commentRequestDto,userDetails.getUser());
         CommonResponse response = new CommonResponse("공용커뮤니티에 댓글 작성 성공", 200, responseDto);
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -51,7 +50,7 @@ public class CommentController {
     @PostMapping("/meet/{postId}")
     public ResponseEntity<CommonResponse<CommentResponseDto>> postMeetComment(
         @PathVariable(name = "postId") Long postId, @RequestBody
-    CommentRequestDto commentRequestDto,@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    com.sparta.mixin.domain.community.comment.dto.CommentRequestDto commentRequestDto,@AuthenticationPrincipal UserDetailsImpl userDetails) {
         CommentResponseDto responseDto = commentService.postMeetComment(postId,commentRequestDto,userDetails.getUser());
         CommonResponse response = new CommonResponse("밋커뮤니티에 댓글 작성 성공", 200, responseDto);
         return new ResponseEntity<>(response, HttpStatus.OK);

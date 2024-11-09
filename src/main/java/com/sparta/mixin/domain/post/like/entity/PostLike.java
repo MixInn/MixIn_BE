@@ -1,13 +1,10 @@
-package com.sparta.mixin.domain.community.comment.entity;
+package com.sparta.mixin.domain.post.like.entity;
 
-import com.sparta.mixin.domain.community.CommunityType;
-import com.sparta.mixin.domain.community.comment.dto.CommentRequestDto;
+import com.sparta.mixin.domain.post.CommunityType;
 import com.sparta.mixin.domain.post.entity.MeetPost;
 import com.sparta.mixin.domain.post.entity.PublicPost;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.global.Timestamped;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -22,19 +19,19 @@ import lombok.RequiredArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "community_comment")
+@Table(name = "community_like")
 @RequiredArgsConstructor
-public class CommunityComment extends Timestamped {
+public class PostLike extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     @JoinColumn(name = "publicPost_id")
     private PublicPost publicPost;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     @JoinColumn(name = "meetPost_id")
     private MeetPost meetPost;
 
@@ -45,21 +42,14 @@ public class CommunityComment extends Timestamped {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column
-    private String comment;
 
-
-    public CommunityComment(PublicPost publicPost, CommentRequestDto commentRequestDto,
-        User loginUser) {
-        this.comment = commentRequestDto.getComment();
+    public PostLike(PublicPost publicPost, User loginUser) {
         this.publicPost = publicPost;
         this.communityType = CommunityType.PUBLICPOST;
         this.user = loginUser;
     }
 
-    public CommunityComment(MeetPost meetPost, CommentRequestDto commentRequestDto,
-        User loginUser) {
-        this.comment = commentRequestDto.getComment();
+    public PostLike(MeetPost meetPost, User loginUser) {
         this.meetPost = meetPost;
         this.communityType = CommunityType.MEETPOST;
         this.user = loginUser;

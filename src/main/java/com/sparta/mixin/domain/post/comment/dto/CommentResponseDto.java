@@ -1,8 +1,7 @@
-package com.sparta.mixin.domain.community.comment.dto;
+package com.sparta.mixin.domain.post.comment.dto;
 
-import com.sparta.mixin.domain.community.CommunityType;
-import com.sparta.mixin.domain.community.comment.entity.CommunityComment;
-import com.sparta.mixin.global.Timestamped;
+import com.sparta.mixin.domain.post.CommunityType;
+import com.sparta.mixin.domain.post.comment.entity.PostComment;
 import java.time.LocalDateTime;
 import lombok.Getter;
 
@@ -16,18 +15,18 @@ public class CommentResponseDto {
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
-    public CommentResponseDto(CommunityComment communityComment) {
-        this.id= communityComment.getId();
-        this.comment= communityComment.getComment();
-        this.userId=communityComment.getUser().getId();
-        this.communityType=communityComment.getCommunityType();
+    public CommentResponseDto(PostComment postComment) {
+        this.id= postComment.getId();
+        this.comment= postComment.getComment();
+        this.userId= postComment.getUser().getId();
+        this.communityType= postComment.getCommunityType();
 
-        if (communityComment.getCommunityType() == CommunityType.MEETPOST) {
-            this.postId = communityComment.getMeetPost().getId();
-        } else if (communityComment.getCommunityType() == CommunityType.PUBLICPOST) {
-            this.postId = communityComment.getPublicPost().getId();
+        if (postComment.getCommunityType() == CommunityType.MEETPOST) {
+            this.postId = postComment.getMeetPost().getId();
+        } else if (postComment.getCommunityType() == CommunityType.PUBLICPOST) {
+            this.postId = postComment.getPublicPost().getId();
         }
-        this.createdAt=communityComment.getCreatedAt();
-        this.modifiedAt=communityComment.getModifiedAt();
+        this.createdAt= postComment.getCreatedAt();
+        this.modifiedAt= postComment.getModifiedAt();
     }
 }
