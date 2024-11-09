@@ -1,5 +1,6 @@
 package com.sparta.mixin.domain.post.entity;
 
+import com.sparta.mixin.domain.meet.entity.Meet;
 import com.sparta.mixin.domain.post.dto.PostRequestDto;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.global.Timestamped;
