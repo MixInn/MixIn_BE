@@ -1,4 +1,4 @@
-package com.sparta.mixin.domain.community.bookmark.entity;
+package com.sparta.mixin.domain.post.bookmark.entity;
 
 import com.sparta.mixin.domain.community.CommunityType;
 import com.sparta.mixin.domain.post.entity.MeetPost;

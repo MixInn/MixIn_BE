@@ -1,6 +1,7 @@
 package com.sparta.mixin.domain.meetnoticebookmark;
 
 import com.sparta.mixin.domain.meetannouncement.entity.MeetAnnouncement;
+import com.sparta.mixin.domain.post.entity.MeetNotice;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.global.Timestamped;
 import jakarta.persistence.*;
@@ -16,8 +17,8 @@ public class NoticeBookmark extends Timestamped {
 
 
     @ManyToOne
-    @JoinColumn(name = "announcement_id", nullable = false)
-    private MeetAnnouncement announcement;
+    @JoinColumn(name = "meetNotice_id", nullable = false)
+    private MeetNotice meetNotice;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
