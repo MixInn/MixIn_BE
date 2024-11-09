@@ -1,29 +1,25 @@
-package com.sparta.mixin.domain.community.meetpost.entity;
+package com.sparta.mixin.domain.post.entity;
 
 import com.sparta.mixin.domain.meet.entity.Meet;
 import com.sparta.mixin.domain.post.dto.PostRequestDto;
-import com.sparta.mixin.domain.post.entity.Post;
 import com.sparta.mixin.domain.user.entity.User;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "MeetPost")
+@Table(name = "meetNotice")
 @RequiredArgsConstructor
-public class MeetPost extends Post {
-
+@DiscriminatorValue("MEETNOTICE")
+public class MeetNotice extends Post {
     @ManyToOne
     @JoinColumn(name = "meet_id", nullable = false)
     private Meet meet;
 
     @Builder
-    public MeetPost(PostRequestDto postRequestDto,User user,Meet meet){
+    public MeetNotice(PostRequestDto postRequestDto, User user,Meet meet){
         super(postRequestDto,user);
         this.meet=meet;
     }
@@ -32,3 +28,4 @@ public class MeetPost extends Post {
         super.updatePost(postRequestDto);
     }
 }
+

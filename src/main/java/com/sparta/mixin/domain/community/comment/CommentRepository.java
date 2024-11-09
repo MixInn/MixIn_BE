@@ -1,9 +1,8 @@
 package com.sparta.mixin.domain.community.comment;
 
 import com.sparta.mixin.domain.community.comment.entity.CommunityComment;
-import com.sparta.mixin.domain.community.meetpost.entity.MeetPost;
-import com.sparta.mixin.domain.community.publicpost.entity.PublicPost;
-import com.sparta.mixin.domain.user.entity.User;
+import com.sparta.mixin.domain.post.entity.MeetPost;
+import com.sparta.mixin.domain.post.entity.PublicPost;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 

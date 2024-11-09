@@ -1,11 +1,17 @@
 package com.sparta.mixin.domain.image.entity;
 
-import com.sparta.mixin.domain.community.meetpost.entity.MeetPost;
-import com.sparta.mixin.domain.community.publicpost.entity.PublicPost;
-import com.sparta.mixin.domain.meetnotice.entity.MeetNotice;
+import com.sparta.mixin.domain.post.entity.Post;
 import com.sparta.mixin.global.Timestamped;
-import jakarta.persistence.*;
-import lombok.Builder;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -24,25 +30,12 @@ public class Image extends Timestamped {
     private EntityType entityType;
 
     @ManyToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "publicPost_id")
-    private PublicPost publicPost;
+    @JoinColumn(name = "post_id")
+    private Post post;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "meetPost_id")
-    private MeetPost meetPost;
-
-    @ManyToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "meetNotice_id")
-    private MeetNotice meetNotice;
-
-    public Image(String imageUrl,MeetPost meetPost){
-        this.imageUrl=imageUrl;
-        this.entityType=EntityType.MEETPOST;
-        this.meetPost=meetPost;
-    }
-    public Image(String imageUrl,PublicPost publicPost){
-        this.imageUrl=imageUrl;
-        this.entityType=EntityType.PUBLICPOST;
-        this.publicPost=publicPost;
+    public Image(String imageUrl, Post post) {
+        this.imageUrl = imageUrl;
+        this.post = post;
+        this.entityType = EntityType.valueOf(post.getClass().getSimpleName().toUpperCase());
     }
 }

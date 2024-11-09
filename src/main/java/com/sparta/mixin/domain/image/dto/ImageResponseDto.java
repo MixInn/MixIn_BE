@@ -15,10 +15,6 @@ public class ImageResponseDto {
         this.id= image.getId();
         this.imageUrl= image.getImageUrl();
         this.entityType=image.getEntityType();
-        if(image.getMeetPost()!=null){
-            this.entityId=image.getMeetPost().getId();
-        }if(image.getPublicPost()!=null){
-            this.entityId=image.getPublicPost().getId();
-        }
+        this.entityId=image.getPost().getId();
     }
 }

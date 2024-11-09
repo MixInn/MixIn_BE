@@ -1,8 +1,8 @@
-package com.sparta.mixin.domain.community.publicpost.entity;
+package com.sparta.mixin.domain.post.entity;
 
 import com.sparta.mixin.domain.post.dto.PostRequestDto;
-import com.sparta.mixin.domain.post.entity.Post;
 import com.sparta.mixin.domain.user.entity.User;
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @Table(name = "PublicPost")
 @RequiredArgsConstructor
+@DiscriminatorValue("PUBLICPOST")
 public class PublicPost extends Post {
 
     public PublicPost(PostRequestDto postRequestDto, User user) {

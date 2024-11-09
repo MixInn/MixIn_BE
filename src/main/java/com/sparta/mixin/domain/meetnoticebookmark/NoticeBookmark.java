@@ -1,4 +1,4 @@
-package com.sparta.mixin.domain.meetnotice.entity;
+package com.sparta.mixin.domain.meetnoticebookmark;
 
 import com.sparta.mixin.domain.meetannouncement.entity.MeetAnnouncement;
 import com.sparta.mixin.domain.user.entity.User;

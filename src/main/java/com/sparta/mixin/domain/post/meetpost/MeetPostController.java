@@ -1,10 +1,9 @@
-package com.sparta.mixin.domain.community.meetpost;
+package com.sparta.mixin.domain.post.meetpost;
 
 import com.sparta.mixin.domain.auth.security.UserDetailsImpl;
-import com.sparta.mixin.domain.community.meetpost.dto.MeetPostRequestDto;
-import com.sparta.mixin.domain.community.meetpost.dto.MeetPostResponseDto;
 import com.sparta.mixin.domain.image.ImageService;
-import com.sparta.mixin.domain.image.dto.ImageResponseDto;
+import com.sparta.mixin.domain.post.dto.PostRequestDto;
+import com.sparta.mixin.domain.post.dto.PostResponseDto;
 import com.sparta.mixin.global.common.CommonResponse;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -34,9 +32,9 @@ public class MeetPostController {
     private final ImageService imageService;
 
     @PostMapping("/{meetId}")
-    public ResponseEntity<CommonResponse<MeetPostResponseDto>> createMeetPost(
+    public ResponseEntity<CommonResponse<PostResponseDto>> createMeetPost(
         @PathVariable(name = "meetId") Long meetId,
-        @RequestPart("requestDto") MeetPostRequestDto meetPostRequestDto,
+        @RequestPart("requestDto") PostRequestDto postRequestDto,
         @RequestPart(value = "files", required = false) List<MultipartFile> files,
         @AuthenticationPrincipal
         UserDetailsImpl userDetails) {
@@ -48,25 +46,24 @@ public class MeetPostController {
             fileUrls.add(fileUrl);
         }
 
-        MeetPostResponseDto responseDto = meetPostService.createMeetPost(meetId,
-            meetPostRequestDto, fileUrls, userDetails.getUser());
+        PostResponseDto responseDto = meetPostService.createPost(postRequestDto, "MEETPOST",fileUrls, userDetails.getUser(),meetId);
         CommonResponse response = new CommonResponse("밋커뮤니티에 글 작성 성공", 201, responseDto);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<CommonResponse<MeetPostResponseDto>> getMeetPost(
+    public ResponseEntity<CommonResponse<PostResponseDto>> getMeetPost(
         @PathVariable(name = "postId") Long postId,@AuthenticationPrincipal
     UserDetailsImpl userDetails) {
-        MeetPostResponseDto responseDto = meetPostService.getMeetPost(postId,userDetails.getUser());
+        PostResponseDto responseDto = meetPostService.getPost(postId,userDetails.getUser());
         CommonResponse response = new CommonResponse<>("밋커뮤니티 단건 글 조회 성공", 200, responseDto);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PutMapping("/{postId}")
-    public ResponseEntity<CommonResponse<MeetPostResponseDto>> editMeetPost(
+    public ResponseEntity<CommonResponse<PostResponseDto>> editMeetPost(
         @PathVariable(name = "postId") Long postId,
-        @RequestPart("requestDto") MeetPostRequestDto meetPostRequestDto,
+        @RequestPart("requestDto") PostRequestDto postRequestDto,
         @RequestPart(value = "files", required = false) List<MultipartFile> files,
         @AuthenticationPrincipal
         UserDetailsImpl userDetails) {
@@ -78,7 +75,7 @@ public class MeetPostController {
             fileUrls.add(fileUrl);
         }
 
-        MeetPostResponseDto responseDto = meetPostService.editMeetPost(postId, meetPostRequestDto,fileUrls,userDetails.getUser());
+        PostResponseDto responseDto = meetPostService.editPost(postId, postRequestDto,fileUrls,userDetails.getUser());
         CommonResponse response = new CommonResponse<>("밋커뮤니티 글 수정 성공", 200, responseDto);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -88,20 +85,20 @@ public class MeetPostController {
         @PathVariable(name = "postId") Long postId,
         @AuthenticationPrincipal
         UserDetailsImpl userDetails) {
-        meetPostService.deleteMeetPost(postId,userDetails.getUser());
+        meetPostService.deletePost(postId,userDetails.getUser());
         CommonResponse response = new CommonResponse("밋커뮤니티 글 삭제 성공", 204, "");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/{meetId}/all")
-    public ResponseEntity<CommonResponse<Page<MeetPostResponseDto>>> getAllMeetPost(
+    public ResponseEntity<CommonResponse<Page<PostResponseDto>>> getAllMeetPost(
         @PathVariable(name = "meetId") Long meetId,
         @RequestParam(defaultValue = "1") int page,
         @RequestParam(defaultValue = "10") int size,
         @AuthenticationPrincipal
         UserDetailsImpl userDetails) {
-        Page<MeetPostResponseDto> responseDtos = meetPostService.getAllMeetPost(meetId, page - 1,
-            size,userDetails.getUser());
+        Page<PostResponseDto> responseDtos = meetPostService.getAllPost(page - 1,
+            size,"MEETPOST",userDetails.getUser(),meetId);
         CommonResponse response = new CommonResponse("밋커뮤니티 글 전체 조회 성공", 200, responseDtos);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

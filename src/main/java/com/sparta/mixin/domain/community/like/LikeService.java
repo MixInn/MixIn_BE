@@ -2,10 +2,10 @@ package com.sparta.mixin.domain.community.like;
 
 import com.sparta.mixin.domain.auth.service.AuthService;
 import com.sparta.mixin.domain.community.like.entity.CommunityLike;
-import com.sparta.mixin.domain.community.meetpost.MeetPostService;
-import com.sparta.mixin.domain.community.meetpost.entity.MeetPost;
-import com.sparta.mixin.domain.community.publicpost.PublicPostService;
-import com.sparta.mixin.domain.community.publicpost.entity.PublicPost;
+import com.sparta.mixin.domain.post.meetpost.MeetPostService;
+import com.sparta.mixin.domain.post.entity.MeetPost;
+import com.sparta.mixin.domain.post.publicpost.PublicPostService;
+import com.sparta.mixin.domain.post.entity.PublicPost;
 import com.sparta.mixin.domain.meet.entity.Meet;
 import com.sparta.mixin.domain.meet.service.MeetAuthorizationService;
 import com.sparta.mixin.domain.meet.service.MeetService;

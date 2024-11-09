@@ -1,6 +1,6 @@
-package com.sparta.mixin.domain.community.meetpost;
+package com.sparta.mixin.domain.post.meetpost;
 
-import com.sparta.mixin.domain.community.meetpost.entity.MeetPost;
+import com.sparta.mixin.domain.post.entity.MeetPost;
 import com.sparta.mixin.domain.meet.entity.Meet;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

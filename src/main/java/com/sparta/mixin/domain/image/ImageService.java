@@ -1,10 +1,10 @@
 package com.sparta.mixin.domain.image;
 
 import com.sparta.mixin.domain.auth.service.AuthService;
-import com.sparta.mixin.domain.community.meetpost.MeetPostService;
-import com.sparta.mixin.domain.community.meetpost.entity.MeetPost;
-import com.sparta.mixin.domain.community.publicpost.PublicPostService;
-import com.sparta.mixin.domain.community.publicpost.entity.PublicPost;
+import com.sparta.mixin.domain.post.meetpost.MeetPostService;
+import com.sparta.mixin.domain.post.entity.MeetPost;
+import com.sparta.mixin.domain.post.publicpost.PublicPostService;
+import com.sparta.mixin.domain.post.entity.PublicPost;
 import com.sparta.mixin.domain.image.dto.ImageResponseDto;
 import com.sparta.mixin.domain.image.entity.EntityType;
 import com.sparta.mixin.domain.image.entity.Image;
@@ -115,7 +115,7 @@ public class ImageService {
 
         if(entityType.equals("MEETPOST")){
             MeetPost meetPost = meetPostService.findById(postId);
-            List<Image> imageList = imageRepository.findAllByMeetPost(meetPost);
+            List<Image> imageList = imageRepository.findAllByPost(meetPost);
 
             for (Image image : imageList) {
                 ImageResponseDto imageResponseDto = new ImageResponseDto(image);
@@ -124,7 +124,7 @@ public class ImageService {
 
         }if(entityType.equals("PUBLICPOST")){
             PublicPost publicPost = publicPostService.findById(postId);
-            List<Image> imageList = imageRepository.findAllByPublicPost(publicPost);
+            List<Image> imageList = imageRepository.findAllByPost(publicPost);
 
             for (Image image : imageList) {
                 ImageResponseDto imageResponseDto = new ImageResponseDto(image);
@@ -141,12 +141,12 @@ public class ImageService {
         User loginUser = authService.findByUsername(user.getUsername());
 
         if(image.getEntityType().equals(EntityType.MEETPOST)){
-            MeetPost meetPost = meetPostService.findById(image.getMeetPost().getId());
+            MeetPost meetPost = meetPostService.findById(image.getPost().getId());
             if(meetPost.getUser()!=loginUser){
                 throw new CustomException(ErrorCode.NOT_SAME_USER);
             }
         }if(image.getEntityType().equals(EntityType.PUBLICPOST)){
-            PublicPost publicPost = publicPostService.findById(image.getPublicPost().getId());
+            PublicPost publicPost = publicPostService.findById(image.getPost().getId());
             if(publicPost.getUser()!=loginUser){
                 throw new CustomException(ErrorCode.NOT_SAME_USER);
             }

@@ -1,6 +1,6 @@
-package com.sparta.mixin.domain.community.publicpost;
+package com.sparta.mixin.domain.post.publicpost;
 
-import com.sparta.mixin.domain.community.publicpost.entity.PublicPost;
+import com.sparta.mixin.domain.post.entity.PublicPost;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

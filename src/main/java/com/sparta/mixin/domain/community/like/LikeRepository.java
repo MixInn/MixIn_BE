@@ -1,8 +1,8 @@
 package com.sparta.mixin.domain.community.like;
 
 import com.sparta.mixin.domain.community.like.entity.CommunityLike;
-import com.sparta.mixin.domain.community.meetpost.entity.MeetPost;
-import com.sparta.mixin.domain.community.publicpost.entity.PublicPost;
+import com.sparta.mixin.domain.post.entity.MeetPost;
+import com.sparta.mixin.domain.post.entity.PublicPost;
 import com.sparta.mixin.domain.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 

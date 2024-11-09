@@ -2,8 +2,8 @@ package com.sparta.mixin.domain.community.comment.entity;
 
 import com.sparta.mixin.domain.community.CommunityType;
 import com.sparta.mixin.domain.community.comment.dto.CommentRequestDto;
-import com.sparta.mixin.domain.community.meetpost.entity.MeetPost;
-import com.sparta.mixin.domain.community.publicpost.entity.PublicPost;
+import com.sparta.mixin.domain.post.entity.MeetPost;
+import com.sparta.mixin.domain.post.entity.PublicPost;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.global.Timestamped;
 import jakarta.persistence.CascadeType;
