@@ -1,6 +1,5 @@
 package com.sparta.mixin.domain.auth.dto;
 
-import com.sparta.mixin.domain.user.entity.Gender;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -37,7 +36,5 @@ public class SignupRequestDto {
     @NotBlank(message = "휴대폰 번호를 입력하세요.")
     private String phoneNumber;
 
-    @NotNull(message = "성별을 입력해주세요.")
-    private Gender gender;
 
 }

@@ -73,25 +73,5 @@ public class AuthController {
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 
-	@PostMapping("/logout")
-	public ResponseEntity<CommonResponse<String>> logout(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-		authService.logout(userDetails.getUser());
-		CommonResponse<String> response = new CommonResponse<>("로그아웃이 완료되었습니다.", 200, null);
-		return new ResponseEntity<>(response, HttpStatus.OK);
-	}
-
-	@PostMapping("/withdraw")
-	public ResponseEntity<CommonResponse<String>> withdraw(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-		authService.withdraw(userDetails.getUser());
-		CommonResponse<String> response = new CommonResponse<>("회원탈퇴가 완료되었습니다.", 200, null);
-		return new ResponseEntity<>(response, HttpStatus.OK);
-	}
-
-	@PostMapping("/refresh")
-	public ResponseEntity<CommonResponse<TokenResponseDto>> refreshToken(HttpServletRequest request) {
-		TokenResponseDto token = authService.refreshToken(request);
-		CommonResponse<TokenResponseDto> response = new CommonResponse<>("리프레쉬 토큰 발급이 완료되었습니다.", 200, token);
-		return new ResponseEntity<>(response, HttpStatus.OK);
-	}
 
 }
