@@ -24,9 +24,9 @@ public class MeetPost extends Post {
     private Meet meet;
 
     @Builder
-    public MeetPost(PostRequestDto postRequestDto,User user,Meet meet){
-        super(postRequestDto,user);
-        this.meet=meet;
+    public MeetPost(PostRequestDto postRequestDto, User user, Meet meet) {
+        super(postRequestDto, user);
+        this.meet = meet;
     }
 
     public void updatePost(PostRequestDto postRequestDto) {

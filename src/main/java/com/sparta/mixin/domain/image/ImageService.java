@@ -1,15 +1,12 @@
 package com.sparta.mixin.domain.image;
 
 import com.sparta.mixin.domain.auth.service.AuthService;
-import com.sparta.mixin.domain.post.PostService;
-import com.sparta.mixin.domain.post.PostType;
-import com.sparta.mixin.domain.post.entity.Post;
-import com.sparta.mixin.domain.post.meetpost.MeetPostService;
-import com.sparta.mixin.domain.post.entity.MeetPost;
-import com.sparta.mixin.domain.post.publicpost.PublicPostService;
-import com.sparta.mixin.domain.post.entity.PublicPost;
 import com.sparta.mixin.domain.image.dto.ImageResponseDto;
 import com.sparta.mixin.domain.image.entity.Image;
+import com.sparta.mixin.domain.post.PostService;
+import com.sparta.mixin.domain.post.entity.Post;
+import com.sparta.mixin.domain.post.meetpost.MeetPostService;
+import com.sparta.mixin.domain.post.publicpost.PublicPostService;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.global.exception.CustomException;
 import com.sparta.mixin.global.exception.ErrorCode;
@@ -75,7 +72,7 @@ public class ImageService {
         return filename.substring(dotIndex + 1);
     }
 
-    public String getFileUrl(@RequestPart("files") MultipartFile file){
+    public String getFileUrl(@RequestPart("files") MultipartFile file) {
         try {
             String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
             Path filePath = Paths.get(uploadDirectory + fileName);
@@ -132,7 +129,7 @@ public class ImageService {
         User loginUser = authService.findByUsername(user.getUsername());
         Post post = postService.findById(image.getPost().getId());
 
-        if(post.getUser()!=loginUser){
+        if (post.getUser() != loginUser) {
             throw new CustomException(ErrorCode.NOT_SAME_USER);
         }
 
@@ -143,9 +140,9 @@ public class ImageService {
         imageRepository.delete(image);
     }
 
-    public Image findById(Long imageId){
+    public Image findById(Long imageId) {
         return imageRepository.findById(imageId).orElseThrow(
-            ()->new CustomException(ErrorCode.BAD_REQUEST)
+            () -> new CustomException(ErrorCode.BAD_REQUEST)
         );
     }
 }

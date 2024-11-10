@@ -46,16 +46,17 @@ public class MeetNoticeController {
             fileUrls.add(fileUrl);
         }
 
-        PostResponseDto responseDto = meetNoticeService.createPost(postRequestDto, "MEETNOTICE",fileUrls, userDetails.getUser(),meetId);
+        PostResponseDto responseDto = meetNoticeService.createPost(postRequestDto, "MEETNOTICE",
+            fileUrls, userDetails.getUser(), meetId);
         CommonResponse response = new CommonResponse("밋공지에 글 작성 성공", 201, responseDto);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/{postId}")
     public ResponseEntity<CommonResponse<PostResponseDto>> getMeetPost(
-        @PathVariable(name = "postId") Long postId,@AuthenticationPrincipal
+        @PathVariable(name = "postId") Long postId, @AuthenticationPrincipal
     UserDetailsImpl userDetails) {
-        PostResponseDto responseDto = meetNoticeService.getPost(postId,userDetails.getUser());
+        PostResponseDto responseDto = meetNoticeService.getPost(postId, userDetails.getUser());
         CommonResponse response = new CommonResponse<>("밋공지 단건 글 조회 성공", 200, responseDto);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -75,7 +76,8 @@ public class MeetNoticeController {
             fileUrls.add(fileUrl);
         }
 
-        PostResponseDto responseDto = meetNoticeService.editPost(postId, postRequestDto,fileUrls,userDetails.getUser());
+        PostResponseDto responseDto = meetNoticeService.editPost(postId, postRequestDto, fileUrls,
+            userDetails.getUser());
         CommonResponse response = new CommonResponse<>("밋공지 글 수정 성공", 200, responseDto);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -85,7 +87,7 @@ public class MeetNoticeController {
         @PathVariable(name = "postId") Long postId,
         @AuthenticationPrincipal
         UserDetailsImpl userDetails) {
-        meetNoticeService.deletePost(postId,userDetails.getUser());
+        meetNoticeService.deletePost(postId, userDetails.getUser());
         CommonResponse response = new CommonResponse("밋공지 글 삭제 성공", 204, "");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -98,7 +100,7 @@ public class MeetNoticeController {
         @AuthenticationPrincipal
         UserDetailsImpl userDetails) {
         Page<PostResponseDto> responseDtos = meetNoticeService.getAllPost(page - 1,
-            size,"MEETNOTICE",userDetails.getUser(),meetId);
+            size, "MEETNOTICE", userDetails.getUser(), meetId);
         CommonResponse response = new CommonResponse("밋공지 글 전체 조회 성공", 200, responseDtos);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

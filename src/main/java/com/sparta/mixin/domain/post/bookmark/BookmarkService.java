@@ -9,8 +9,6 @@ import com.sparta.mixin.domain.post.bookmark.entity.PostBookmark;
 import com.sparta.mixin.domain.post.entity.MeetNotice;
 import com.sparta.mixin.domain.post.entity.MeetPost;
 import com.sparta.mixin.domain.post.entity.Post;
-import com.sparta.mixin.domain.post.meetpost.MeetPostService;
-import com.sparta.mixin.domain.post.publicpost.PublicPostService;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.global.exception.CustomException;
 import com.sparta.mixin.global.exception.ErrorCode;
@@ -33,14 +31,14 @@ public class BookmarkService {
 
         if (post instanceof MeetPost) {
             Meet meet = meetService.findById(((MeetPost) post).getMeet().getId());
-            if(meetAuthorizationService.findByMeetAndUser(meet,loginUser)==null){
+            if (meetAuthorizationService.findByMeetAndUser(meet, loginUser) == null) {
                 throw new CustomException(ErrorCode.INCORRECT_MEET_USER);
             }
         }
 
         if (post instanceof MeetNotice) {
             Meet meet = meetService.findById(((MeetNotice) post).getMeet().getId());
-            if(meetAuthorizationService.findByMeetAndUser(meet,loginUser)==null){
+            if (meetAuthorizationService.findByMeetAndUser(meet, loginUser) == null) {
                 throw new CustomException(ErrorCode.INCORRECT_MEET_USER);
             }
         }

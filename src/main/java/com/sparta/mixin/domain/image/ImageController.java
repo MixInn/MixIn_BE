@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -27,7 +26,8 @@ public class ImageController {
         @PathVariable(name = "postId") Long postId,
         @AuthenticationPrincipal
         UserDetailsImpl userDetails) {
-        List<ImageResponseDto> responseDtos = imageService.getAllPostImages(postId,userDetails.getUser());
+        List<ImageResponseDto> responseDtos = imageService.getAllPostImages(postId,
+            userDetails.getUser());
         CommonResponse response = new CommonResponse("글 이미지 조회 성공", 200, responseDtos);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -37,8 +37,8 @@ public class ImageController {
         @PathVariable(name = "imageId") Long imageId,
         @AuthenticationPrincipal
         UserDetailsImpl userDetails) {
-        imageService.deletePostImage(imageId,userDetails.getUser());
-        CommonResponse response = new CommonResponse("커글 이미지 단건 삭제 성공", 204, "");
+        imageService.deletePostImage(imageId, userDetails.getUser());
+        CommonResponse response = new CommonResponse("글 이미지 단건 삭제 성공", 204, "");
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }

@@ -34,7 +34,7 @@ public class PublicPostController {
     @PostMapping
     public ResponseEntity<CommonResponse<PostResponseDto>> createPublicPost(
         @RequestPart("requestDto") PostRequestDto postRequestDto,
-        @RequestPart(value = "files",required = false) List<MultipartFile> files,
+        @RequestPart(value = "files", required = false) List<MultipartFile> files,
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
         List<String> fileUrls = new ArrayList<>();
 
@@ -44,7 +44,7 @@ public class PublicPostController {
             fileUrls.add(fileUrl);
         }
         PostResponseDto responseDto = publicPostService.createPost(postRequestDto, "PUBLICPOST",
-            fileUrls,userDetails.getUser(),null);
+            fileUrls, userDetails.getUser(), null);
         CommonResponse response = new CommonResponse("공용커뮤니티에 글 작성 성공", 201, responseDto);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -55,7 +55,7 @@ public class PublicPostController {
         @RequestParam(defaultValue = "10") int size,
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
         Page<PostResponseDto> responseDtos = publicPostService.getAllPost(page - 1,
-            size,"PUBLICPOST", userDetails.getUser(),null);
+            size, "PUBLICPOST", userDetails.getUser(), null);
         CommonResponse response = new CommonResponse("공용커뮤니티 글 전체 조회 성공", 200, responseDtos);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -64,7 +64,7 @@ public class PublicPostController {
     public ResponseEntity<CommonResponse<PostResponseDto>> getPublicPost(
         @PathVariable(name = "postId") Long postId,
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        PostResponseDto responseDto = publicPostService.getPost(postId,userDetails.getUser());
+        PostResponseDto responseDto = publicPostService.getPost(postId, userDetails.getUser());
         CommonResponse response = new CommonResponse("공용커뮤니티 단건 글 조회 성공", 200, responseDto);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -73,7 +73,7 @@ public class PublicPostController {
     public ResponseEntity<CommonResponse<PostResponseDto>> editPublicPost(
         @PathVariable(name = "postId") Long postId,
         @RequestPart("requestDto") PostRequestDto postRequestDto,
-        @RequestPart(value = "files",required = false) List<MultipartFile> files,
+        @RequestPart(value = "files", required = false) List<MultipartFile> files,
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
         List<String> fileUrls = new ArrayList<>();
 
@@ -82,7 +82,8 @@ public class PublicPostController {
             String fileUrl = imageService.getFileUrl(file);
             fileUrls.add(fileUrl);
         }
-        PostResponseDto responseDto = publicPostService.editPost(postId,postRequestDto,fileUrls,userDetails.getUser());
+        PostResponseDto responseDto = publicPostService.editPost(postId, postRequestDto, fileUrls,
+            userDetails.getUser());
         CommonResponse response = new CommonResponse("공용커뮤니티 글 수정 성공", 200, responseDto);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -91,7 +92,7 @@ public class PublicPostController {
     public ResponseEntity<CommonResponse> deletePublicPost(
         @PathVariable(name = "postId") Long postId,
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        publicPostService.deletePost(postId,userDetails.getUser());
+        publicPostService.deletePost(postId, userDetails.getUser());
         CommonResponse response = new CommonResponse("공용커뮤니티 글 삭제 성공", 204, "");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

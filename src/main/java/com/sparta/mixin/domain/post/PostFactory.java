@@ -12,7 +12,8 @@ import com.sparta.mixin.global.exception.ErrorCode;
 
 public class PostFactory {
 
-    public static Post createPost(PostRequestDto postRequestDto, User user, String postType, Meet meet) {
+    public static Post createPost(PostRequestDto postRequestDto, User user, String postType,
+        Meet meet) {
         switch (postType) {
             case "PUBLICPOST":
                 return new PublicPost(postRequestDto, user);

@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class CommentService {
+
     private final CommentRepository commentRepository;
     private final PostService postService;
     private final AuthService authService;
@@ -34,19 +35,19 @@ public class CommentService {
 
         if (post instanceof MeetPost) {
             Meet meet = meetService.findById(((MeetPost) post).getMeet().getId());
-            if(meetAuthorizationService.findByMeetAndUser(meet,loginUser)==null){
+            if (meetAuthorizationService.findByMeetAndUser(meet, loginUser) == null) {
                 throw new CustomException(ErrorCode.INCORRECT_MEET_USER);
             }
         }
 
         if (post instanceof MeetNotice) {
             Meet meet = meetService.findById(((MeetNotice) post).getMeet().getId());
-            if(meetAuthorizationService.findByMeetAndUser(meet,loginUser)==null){
+            if (meetAuthorizationService.findByMeetAndUser(meet, loginUser) == null) {
                 throw new CustomException(ErrorCode.INCORRECT_MEET_USER);
             }
         }
 
-        PostComment communityComment = new PostComment(post,loginUser,commentRequestDto);
+        PostComment communityComment = new PostComment(post, loginUser, commentRequestDto);
         commentRepository.save(communityComment);
         return new CommentResponseDto(communityComment);
     }
@@ -55,7 +56,7 @@ public class CommentService {
         PostComment postComment = findById(commentId);
         User loginUser = authService.findByUsername(user.getUsername());
 
-        if(postComment.getUser()!=loginUser){
+        if (postComment.getUser() != loginUser) {
             throw new CustomException(ErrorCode.NOT_SAME_USER);
         }
 
@@ -68,14 +69,14 @@ public class CommentService {
 
         if (post instanceof MeetPost) {
             Meet meet = meetService.findById(((MeetPost) post).getMeet().getId());
-            if(meetAuthorizationService.findByMeetAndUser(meet,loginUser)==null){
+            if (meetAuthorizationService.findByMeetAndUser(meet, loginUser) == null) {
                 throw new CustomException(ErrorCode.INCORRECT_MEET_USER);
             }
         }
 
         if (post instanceof MeetNotice) {
             Meet meet = meetService.findById(((MeetNotice) post).getMeet().getId());
-            if(meetAuthorizationService.findByMeetAndUser(meet,loginUser)==null){
+            if (meetAuthorizationService.findByMeetAndUser(meet, loginUser) == null) {
                 throw new CustomException(ErrorCode.INCORRECT_MEET_USER);
             }
         }
@@ -85,9 +86,9 @@ public class CommentService {
         return publicCommentList.stream().map(CommentResponseDto::new).toList();
     }
 
-    public PostComment findById(Long commentId){
+    public PostComment findById(Long commentId) {
         return commentRepository.findById(commentId).orElseThrow(
-            ()->new CustomException(ErrorCode.BAD_REQUEST)
+            () -> new CustomException(ErrorCode.BAD_REQUEST)
         );
     }
 }

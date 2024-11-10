@@ -1,6 +1,5 @@
 package com.sparta.mixin.domain.post.entity;
 
-import com.sparta.mixin.domain.meet.entity.Meet;
 import com.sparta.mixin.domain.post.dto.PostRequestDto;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.global.Timestamped;
@@ -13,7 +12,6 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import javax.xml.crypto.dsig.Manifest;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -40,8 +38,9 @@ public abstract class Post extends Timestamped {
         this.content = postRequestDto.getContent();
         this.user = user;
     }
+
     public void updatePost(PostRequestDto postRequestDto) {
-        this.title= postRequestDto.getTitle();
-        this.content= postRequestDto.getContent();
+        this.title = postRequestDto.getTitle();
+        this.content = postRequestDto.getContent();
     }
 }

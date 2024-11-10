@@ -38,9 +38,9 @@ public class PostLike extends Timestamped {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public PostLike(Post post, User user){
-        this.post=post;
-        this.user=user;
+    public PostLike(Post post, User user) {
+        this.post = post;
+        this.user = user;
         this.postType = PostType.valueOf(post.getClass().getSimpleName().toUpperCase());
     }
 }

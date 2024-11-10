@@ -7,6 +7,7 @@ import lombok.Getter;
 
 @Getter
 public class CommentResponseDto {
+
     private Long id;
     private Long postId;
     private PostType postType;
@@ -16,12 +17,12 @@ public class CommentResponseDto {
     private LocalDateTime modifiedAt;
 
     public CommentResponseDto(PostComment postComment) {
-        this.id= postComment.getId();
-        this.comment= postComment.getComment();
-        this.userId= postComment.getUser().getId();
-        this.postType= postComment.getPostType();
-        this.postId=postComment.getPost().getId();
-        this.createdAt= postComment.getCreatedAt();
-        this.modifiedAt= postComment.getModifiedAt();
+        this.id = postComment.getId();
+        this.comment = postComment.getComment();
+        this.userId = postComment.getUser().getId();
+        this.postType = postComment.getPostType();
+        this.postId = postComment.getPost().getId();
+        this.createdAt = postComment.getCreatedAt();
+        this.modifiedAt = postComment.getModifiedAt();
     }
 }

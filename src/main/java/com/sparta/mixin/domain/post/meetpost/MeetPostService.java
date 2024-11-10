@@ -19,8 +19,9 @@ public class MeetPostService extends PostService<MeetPost> {
     private final MeetAuthorizationService meetAuthorizationService;
 
     public MeetPostService(PostRepository<MeetPost> postRepository, ImageRepository imageRepository,
-        AuthService authService, MeetAuthorizationService meetAuthorizationService, MeetService meetService) {
-        super(postRepository, imageRepository, authService,meetService);
+        AuthService authService, MeetAuthorizationService meetAuthorizationService,
+        MeetService meetService) {
+        super(postRepository, imageRepository, authService, meetService);
         this.meetAuthorizationService = meetAuthorizationService;
     }
 

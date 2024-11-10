@@ -46,16 +46,17 @@ public class MeetPostController {
             fileUrls.add(fileUrl);
         }
 
-        PostResponseDto responseDto = meetPostService.createPost(postRequestDto, "MEETPOST",fileUrls, userDetails.getUser(),meetId);
+        PostResponseDto responseDto = meetPostService.createPost(postRequestDto, "MEETPOST",
+            fileUrls, userDetails.getUser(), meetId);
         CommonResponse response = new CommonResponse("밋커뮤니티에 글 작성 성공", 201, responseDto);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/{postId}")
     public ResponseEntity<CommonResponse<PostResponseDto>> getMeetPost(
-        @PathVariable(name = "postId") Long postId,@AuthenticationPrincipal
+        @PathVariable(name = "postId") Long postId, @AuthenticationPrincipal
     UserDetailsImpl userDetails) {
-        PostResponseDto responseDto = meetPostService.getPost(postId,userDetails.getUser());
+        PostResponseDto responseDto = meetPostService.getPost(postId, userDetails.getUser());
         CommonResponse response = new CommonResponse<>("밋커뮤니티 단건 글 조회 성공", 200, responseDto);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -75,7 +76,8 @@ public class MeetPostController {
             fileUrls.add(fileUrl);
         }
 
-        PostResponseDto responseDto = meetPostService.editPost(postId, postRequestDto,fileUrls,userDetails.getUser());
+        PostResponseDto responseDto = meetPostService.editPost(postId, postRequestDto, fileUrls,
+            userDetails.getUser());
         CommonResponse response = new CommonResponse<>("밋커뮤니티 글 수정 성공", 200, responseDto);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -85,7 +87,7 @@ public class MeetPostController {
         @PathVariable(name = "postId") Long postId,
         @AuthenticationPrincipal
         UserDetailsImpl userDetails) {
-        meetPostService.deletePost(postId,userDetails.getUser());
+        meetPostService.deletePost(postId, userDetails.getUser());
         CommonResponse response = new CommonResponse("밋커뮤니티 글 삭제 성공", 204, "");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -98,7 +100,7 @@ public class MeetPostController {
         @AuthenticationPrincipal
         UserDetailsImpl userDetails) {
         Page<PostResponseDto> responseDtos = meetPostService.getAllPost(page - 1,
-            size,"MEETPOST",userDetails.getUser(),meetId);
+            size, "MEETPOST", userDetails.getUser(), meetId);
         CommonResponse response = new CommonResponse("밋커뮤니티 글 전체 조회 성공", 200, responseDtos);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

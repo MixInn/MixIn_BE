@@ -1,7 +1,7 @@
 package com.sparta.mixin.domain.post.comment.entity;
 
-import com.sparta.mixin.domain.post.comment.dto.CommentRequestDto;
 import com.sparta.mixin.domain.post.PostType;
+import com.sparta.mixin.domain.post.comment.dto.CommentRequestDto;
 import com.sparta.mixin.domain.post.entity.Post;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.global.Timestamped;
@@ -43,10 +43,10 @@ public class PostComment extends Timestamped {
     @Column
     private String comment;
 
-    public PostComment(Post post, User user, CommentRequestDto commentRequestDto){
-        this.post=post;
-        this.user=user;
+    public PostComment(Post post, User user, CommentRequestDto commentRequestDto) {
+        this.post = post;
+        this.user = user;
         this.postType = PostType.valueOf(post.getClass().getSimpleName().toUpperCase());
-        this.comment=commentRequestDto.getComment();
+        this.comment = commentRequestDto.getComment();
     }
 }

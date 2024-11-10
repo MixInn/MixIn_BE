@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 @Table(name = "post_image")
 @RequiredArgsConstructor
 public class Image extends Timestamped {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

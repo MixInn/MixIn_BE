@@ -16,8 +16,9 @@ import lombok.RequiredArgsConstructor;
 public class PublicPost extends Post {
 
     public PublicPost(PostRequestDto postRequestDto, User user) {
-        super(postRequestDto,user);
+        super(postRequestDto, user);
     }
+
     public void updatePost(PostRequestDto postRequestDto) {
         super.updatePost(postRequestDto);
     }

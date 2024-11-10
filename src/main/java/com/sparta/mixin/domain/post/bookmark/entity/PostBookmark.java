@@ -39,8 +39,8 @@ public class PostBookmark extends Timestamped {
     private User user;
 
     public PostBookmark(Post post, User user) {
-        this.post=post;
-        this.user=user;
+        this.post = post;
+        this.user = user;
         this.postType = PostType.valueOf(post.getClass().getSimpleName().toUpperCase());
     }
 }

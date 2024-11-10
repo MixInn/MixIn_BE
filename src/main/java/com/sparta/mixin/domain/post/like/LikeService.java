@@ -31,14 +31,14 @@ public class LikeService {
 
         if (post instanceof MeetPost) {
             Meet meet = meetService.findById(((MeetPost) post).getMeet().getId());
-            if(meetAuthorizationService.findByMeetAndUser(meet,loginUser)==null){
+            if (meetAuthorizationService.findByMeetAndUser(meet, loginUser) == null) {
                 throw new CustomException(ErrorCode.INCORRECT_MEET_USER);
             }
         }
 
         if (post instanceof MeetNotice) {
             Meet meet = meetService.findById(((MeetNotice) post).getMeet().getId());
-            if(meetAuthorizationService.findByMeetAndUser(meet,loginUser)==null){
+            if (meetAuthorizationService.findByMeetAndUser(meet, loginUser) == null) {
                 throw new CustomException(ErrorCode.INCORRECT_MEET_USER);
             }
         }
