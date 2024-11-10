@@ -1,10 +1,10 @@
 package com.sparta.mixin.domain.post.bookmark.entity;
 
-import com.sparta.mixin.domain.post.CommunityType;
-import com.sparta.mixin.domain.post.entity.MeetPost;
-import com.sparta.mixin.domain.post.entity.PublicPost;
+import com.sparta.mixin.domain.post.PostType;
+import com.sparta.mixin.domain.post.entity.Post;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.global.Timestamped;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "community_bookmark")
+@Table(name = "post_bookmark")
 @RequiredArgsConstructor
 public class PostBookmark extends Timestamped {
 
@@ -27,31 +27,20 @@ public class PostBookmark extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "public_post_id")
-    private PublicPost publicPost;
-
-    @ManyToOne
-    @JoinColumn(name = "meet_post_id")
-    private MeetPost meetPost;
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "post_id")
+    private Post post;
 
     @Enumerated(EnumType.STRING)
-    private CommunityType communityType;
+    private PostType postType;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-
-    public PostBookmark(PublicPost publicPost, User loginUser) {
-        this.publicPost = publicPost;
-        this.communityType = CommunityType.PUBLICPOST;
-        this.user = loginUser;
-    }
-
-    public PostBookmark(MeetPost meetPost, User loginUser) {
-        this.meetPost = meetPost;
-        this.communityType = CommunityType.MEETPOST;
-        this.user = loginUser;
+    public PostBookmark(Post post, User user) {
+        this.post=post;
+        this.user=user;
+        this.postType = PostType.valueOf(post.getClass().getSimpleName().toUpperCase());
     }
 }

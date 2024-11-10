@@ -1,14 +1,16 @@
 package com.sparta.mixin.domain.post.bookmark;
 
 import com.sparta.mixin.domain.auth.service.AuthService;
-import com.sparta.mixin.domain.post.bookmark.entity.PostBookmark;
-import com.sparta.mixin.domain.post.meetpost.MeetPostService;
-import com.sparta.mixin.domain.post.entity.MeetPost;
-import com.sparta.mixin.domain.post.publicpost.PublicPostService;
-import com.sparta.mixin.domain.post.entity.PublicPost;
 import com.sparta.mixin.domain.meet.entity.Meet;
 import com.sparta.mixin.domain.meet.service.MeetAuthorizationService;
 import com.sparta.mixin.domain.meet.service.MeetService;
+import com.sparta.mixin.domain.post.PostService;
+import com.sparta.mixin.domain.post.bookmark.entity.PostBookmark;
+import com.sparta.mixin.domain.post.entity.MeetNotice;
+import com.sparta.mixin.domain.post.entity.MeetPost;
+import com.sparta.mixin.domain.post.entity.Post;
+import com.sparta.mixin.domain.post.meetpost.MeetPostService;
+import com.sparta.mixin.domain.post.publicpost.PublicPostService;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.global.exception.CustomException;
 import com.sparta.mixin.global.exception.ErrorCode;
@@ -20,67 +22,49 @@ import org.springframework.stereotype.Service;
 public class BookmarkService {
 
     private final BookmarkRepository bookmarkRepository;
-    private final MeetPostService meetPostService;
-    private final PublicPostService publicPostService;
+    private final PostService postService;
     private final AuthService authService;
     private final MeetService meetService;
     private final MeetAuthorizationService meetAuthorizationService;
 
-    public void postPublicBookmark(Long postId, User user) {
-        PublicPost publicPost = publicPostService.findById(postId);
+    public void postBookmark(Long postId, User user) {
+        Post post = postService.findById(postId);
         User loginUser = authService.findByUsername(user.getUsername());
 
-        PostBookmark postBookmark = bookmarkRepository.findByPublicPostAndUser(publicPost,
+        if (post instanceof MeetPost) {
+            Meet meet = meetService.findById(((MeetPost) post).getMeet().getId());
+            if(meetAuthorizationService.findByMeetAndUser(meet,loginUser)==null){
+                throw new CustomException(ErrorCode.INCORRECT_MEET_USER);
+            }
+        }
+
+        if (post instanceof MeetNotice) {
+            Meet meet = meetService.findById(((MeetNotice) post).getMeet().getId());
+            if(meetAuthorizationService.findByMeetAndUser(meet,loginUser)==null){
+                throw new CustomException(ErrorCode.INCORRECT_MEET_USER);
+            }
+        }
+
+        PostBookmark postBookmark = bookmarkRepository.findByPostAndUser(post,
             loginUser);
         if (postBookmark != null) {
-            throw new CustomException(ErrorCode.BAD_REQUEST);
+            throw new CustomException(ErrorCode.ALREADY_REGISTERED_BOOKMARK);
         }
-        PostBookmark newPostBookmark = new PostBookmark(publicPost, loginUser);
+        PostBookmark newPostBookmark = new PostBookmark(post, loginUser);
         bookmarkRepository.save(newPostBookmark);
     }
 
-    public void deletePublicBookmark(Long postId, User user) {
-        PublicPost publicPost = publicPostService.findById(postId);
+    public void deleteBookmark(Long postId, User user) {
+        Post post = postService.findById(postId);
         User loginUser = authService.findByUsername(user.getUsername());
 
-        PostBookmark publicBookmark = bookmarkRepository.findByPublicPostAndUser(publicPost,
+        PostBookmark publicBookmark = bookmarkRepository.findByPostAndUser(post,
             loginUser);
         if (publicBookmark == null) {
-            throw new CustomException(ErrorCode.BAD_REQUEST);
+            throw new CustomException(ErrorCode.NOT_EXISTING_BOOKMARK);
         }
 
         bookmarkRepository.delete(publicBookmark);
-    }
-
-    public void postMeetBookmark(Long postId, User user) {
-        MeetPost meetPost = meetPostService.findById(postId);
-        User loginUser = authService.findByUsername(user.getUsername());
-
-        Meet meet = meetService.findById(meetPost.getMeet().getId());
-        if(meetAuthorizationService.findByMeetAndUser(meet,loginUser)==null){
-            throw new CustomException(ErrorCode.INCORRECT_MEET_USER);
-        }
-
-        PostBookmark postBookmark = bookmarkRepository.findByMeetPostAndUser(meetPost,
-            loginUser);
-        if (postBookmark != null) {
-            throw new CustomException(ErrorCode.BAD_REQUEST);
-        }
-        PostBookmark newPostBookmark = new PostBookmark(meetPost, loginUser);
-        bookmarkRepository.save(newPostBookmark);
-    }
-
-    public void deleteMeetBookmark(Long postId, User user) {
-        MeetPost meetPost = meetPostService.findById(postId);
-        User loginUser = authService.findByUsername(user.getUsername());
-
-        PostBookmark meetBookmark = bookmarkRepository.findByMeetPostAndUser(meetPost,
-            loginUser);
-        if (meetBookmark == null) {
-            throw new CustomException(ErrorCode.BAD_REQUEST);
-        }
-
-        bookmarkRepository.delete(meetBookmark);
     }
 
     public PostBookmark findById(Long bookmarkId) {

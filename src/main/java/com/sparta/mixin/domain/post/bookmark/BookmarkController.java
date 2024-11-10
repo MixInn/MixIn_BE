@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -19,39 +20,21 @@ public class BookmarkController {
 
     private final BookmarkService bookmarkService;
 
-    @PostMapping("/public/{postId}")
+    @PostMapping("/{postId}")
     public ResponseEntity<CommonResponse> postPublicBookmark(
         @PathVariable(name = "postId") Long postId, @AuthenticationPrincipal
     UserDetailsImpl userDetails) {
-        bookmarkService.postPublicBookmark(postId, userDetails.getUser());
-        CommonResponse response = new CommonResponse("공용커뮤니티 북마크 신청 성공", 200, "");
+        bookmarkService.postBookmark(postId, userDetails.getUser());
+        CommonResponse response = new CommonResponse("북마크 신청 성공", 200, "");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @DeleteMapping("/public/{postId}")
+    @DeleteMapping("/{postId}")
     public ResponseEntity<CommonResponse> deletePublicBookmark(
         @PathVariable(name = "postId") Long postId, @AuthenticationPrincipal
     UserDetailsImpl userDetails) {
-        bookmarkService.deletePublicBookmark(postId, userDetails.getUser());
-        CommonResponse response = new CommonResponse("공용커뮤니티 북마크 취소 성공", 204, "");
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    @PostMapping("/meet/{postId}")
-    public ResponseEntity<CommonResponse> postMeetBookmark(
-        @PathVariable(name = "postId") Long postId, @AuthenticationPrincipal
-    UserDetailsImpl userDetails) {
-        bookmarkService.postMeetBookmark(postId, userDetails.getUser());
-        CommonResponse response = new CommonResponse("밋커뮤니티 북마크 신청 성공", 200, "");
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    @DeleteMapping("/meet/{postId}")
-    public ResponseEntity<CommonResponse> deleteMeetBookmark(
-        @PathVariable(name = "postId") Long postId, @AuthenticationPrincipal
-    UserDetailsImpl userDetails) {
-        bookmarkService.deleteMeetBookmark(postId, userDetails.getUser());
-        CommonResponse response = new CommonResponse("밋커뮤니티 북마크 취소 성공", 204, "");
+        bookmarkService.deleteBookmark(postId, userDetails.getUser());
+        CommonResponse response = new CommonResponse("북마크 취소 성공", 204, "");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

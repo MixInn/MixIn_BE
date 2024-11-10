@@ -1,7 +1,7 @@
 package com.sparta.mixin.domain.post.comment.entity;
 
 import com.sparta.mixin.domain.community.comment.dto.CommentRequestDto;
-import com.sparta.mixin.domain.post.CommunityType;
+import com.sparta.mixin.domain.post.PostType;
 import com.sparta.mixin.domain.post.entity.MeetPost;
 import com.sparta.mixin.domain.post.entity.PublicPost;
 import com.sparta.mixin.domain.user.entity.User;
@@ -39,7 +39,7 @@ public class PostComment extends Timestamped {
     private MeetPost meetPost;
 
     @Enumerated(EnumType.STRING)
-    private CommunityType communityType;
+    private PostType communityType;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -53,7 +53,7 @@ public class PostComment extends Timestamped {
         User loginUser) {
         this.comment = commentRequestDto.getComment();
         this.publicPost = publicPost;
-        this.communityType = CommunityType.PUBLICPOST;
+        this.communityType = PostType.PUBLICPOST;
         this.user = loginUser;
     }
 
@@ -61,7 +61,7 @@ public class PostComment extends Timestamped {
         User loginUser) {
         this.comment = commentRequestDto.getComment();
         this.meetPost = meetPost;
-        this.communityType = CommunityType.MEETPOST;
+        this.communityType = PostType.MEETPOST;
         this.user = loginUser;
     }
 }

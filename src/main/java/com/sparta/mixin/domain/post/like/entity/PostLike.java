@@ -1,6 +1,6 @@
 package com.sparta.mixin.domain.post.like.entity;
 
-import com.sparta.mixin.domain.post.CommunityType;
+import com.sparta.mixin.domain.post.PostType;
 import com.sparta.mixin.domain.post.entity.MeetPost;
 import com.sparta.mixin.domain.post.entity.PublicPost;
 import com.sparta.mixin.domain.user.entity.User;
@@ -36,7 +36,7 @@ public class PostLike extends Timestamped {
     private MeetPost meetPost;
 
     @Enumerated(EnumType.STRING)
-    private CommunityType communityType;
+    private PostType communityType;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -45,13 +45,13 @@ public class PostLike extends Timestamped {
 
     public PostLike(PublicPost publicPost, User loginUser) {
         this.publicPost = publicPost;
-        this.communityType = CommunityType.PUBLICPOST;
+        this.communityType = PostType.PUBLICPOST;
         this.user = loginUser;
     }
 
     public PostLike(MeetPost meetPost, User loginUser) {
         this.meetPost = meetPost;
-        this.communityType = CommunityType.MEETPOST;
+        this.communityType = PostType.MEETPOST;
         this.user = loginUser;
     }
 }

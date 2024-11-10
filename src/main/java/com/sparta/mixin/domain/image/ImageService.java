@@ -1,12 +1,12 @@
 package com.sparta.mixin.domain.image;
 
 import com.sparta.mixin.domain.auth.service.AuthService;
+import com.sparta.mixin.domain.post.PostType;
 import com.sparta.mixin.domain.post.meetpost.MeetPostService;
 import com.sparta.mixin.domain.post.entity.MeetPost;
 import com.sparta.mixin.domain.post.publicpost.PublicPostService;
 import com.sparta.mixin.domain.post.entity.PublicPost;
 import com.sparta.mixin.domain.image.dto.ImageResponseDto;
-import com.sparta.mixin.domain.image.entity.EntityType;
 import com.sparta.mixin.domain.image.entity.Image;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.global.exception.CustomException;
@@ -140,12 +140,12 @@ public class ImageService {
         );
         User loginUser = authService.findByUsername(user.getUsername());
 
-        if(image.getEntityType().equals(EntityType.MEETPOST)){
+        if(image.getPostType().equals(PostType.MEETPOST)){
             MeetPost meetPost = meetPostService.findById(image.getPost().getId());
             if(meetPost.getUser()!=loginUser){
                 throw new CustomException(ErrorCode.NOT_SAME_USER);
             }
-        }if(image.getEntityType().equals(EntityType.PUBLICPOST)){
+        }if(image.getPostType().equals(PostType.PUBLICPOST)){
             PublicPost publicPost = publicPostService.findById(image.getPost().getId());
             if(publicPost.getUser()!=loginUser){
                 throw new CustomException(ErrorCode.NOT_SAME_USER);

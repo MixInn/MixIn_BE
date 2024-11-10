@@ -13,6 +13,7 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import javax.xml.crypto.dsig.Manifest;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

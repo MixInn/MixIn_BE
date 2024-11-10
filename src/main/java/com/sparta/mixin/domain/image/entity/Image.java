@@ -1,5 +1,6 @@
 package com.sparta.mixin.domain.image.entity;
 
+import com.sparta.mixin.domain.post.PostType;
 import com.sparta.mixin.domain.post.entity.Post;
 import com.sparta.mixin.global.Timestamped;
 import jakarta.persistence.CascadeType;
@@ -17,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "image")
+@Table(name = "post_image")
 @RequiredArgsConstructor
 public class Image extends Timestamped {
     @Id
@@ -27,7 +28,7 @@ public class Image extends Timestamped {
     private String imageUrl;
 
     @Enumerated(EnumType.STRING)
-    private EntityType entityType;
+    private PostType postType;
 
     @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "post_id")
@@ -36,6 +37,6 @@ public class Image extends Timestamped {
     public Image(String imageUrl, Post post) {
         this.imageUrl = imageUrl;
         this.post = post;
-        this.entityType = EntityType.valueOf(post.getClass().getSimpleName().toUpperCase());
+        this.postType = PostType.valueOf(post.getClass().getSimpleName().toUpperCase());
     }
 }
