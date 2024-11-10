@@ -63,6 +63,10 @@ public enum ErrorCode {
 	ALREADY_REGISTERED_BOOKMARK(HttpStatus.BAD_REQUEST,"이미 등록된 북마크입니다."),
 	NOT_EXISTING_BOOKMARK(HttpStatus.BAD_REQUEST,"존재하지 않는 북마크입니다."),
 
+	// Like
+	ALREADY_REGISTERED_Like(HttpStatus.BAD_REQUEST,"이미 등록된 좋아요입니다."),
+	NOT_EXISTING_Like(HttpStatus.BAD_REQUEST,"존재하지 않는 좋아요입니다."),
+
 	// 밋권한 관련
 	INCORRECT_MEET_USER(HttpStatus.UNAUTHORIZED, "해당 밋에 소속된 사용자가 아닙니다.");
 

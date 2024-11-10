@@ -58,13 +58,13 @@ public class BookmarkService {
         Post post = postService.findById(postId);
         User loginUser = authService.findByUsername(user.getUsername());
 
-        PostBookmark publicBookmark = bookmarkRepository.findByPostAndUser(post,
+        PostBookmark postBookmark = bookmarkRepository.findByPostAndUser(post,
             loginUser);
-        if (publicBookmark == null) {
+        if (postBookmark == null) {
             throw new CustomException(ErrorCode.NOT_EXISTING_BOOKMARK);
         }
 
-        bookmarkRepository.delete(publicBookmark);
+        bookmarkRepository.delete(postBookmark);
     }
 
     public PostBookmark findById(Long bookmarkId) {

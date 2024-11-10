@@ -19,37 +19,21 @@ public class LikeController {
 
     private final LikeService likeService;
 
-    @PostMapping("/public/{postId}")
-    public ResponseEntity<CommonResponse> postPublicLike(@PathVariable(name = "postId") Long postId,
+    @PostMapping("/{postId}")
+    public ResponseEntity<CommonResponse> postLike(@PathVariable(name = "postId") Long postId,
         @AuthenticationPrincipal
         UserDetailsImpl userDetails) {
-        likeService.postPublicLike(postId, userDetails.getUser());
-        CommonResponse response = new CommonResponse("공용커뮤니티 좋아요 신청 성공", 200, "");
+        likeService.postLike(postId, userDetails.getUser());
+        CommonResponse response = new CommonResponse("좋아요 신청 성공", 200, "");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @DeleteMapping("/public/{postId}")
-    public ResponseEntity<CommonResponse> deletePublicLike(
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<CommonResponse> deleteLike(
         @PathVariable(name = "postId") Long postId,
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        likeService.deletePublicLike(postId, userDetails.getUser());
-        CommonResponse response = new CommonResponse("공용커뮤니티 좋아요 취소 성공", 204, "");
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    @PostMapping("/meet/{postId}")
-    public ResponseEntity<CommonResponse> postMeetLike(@PathVariable(name = "postId") Long postId,
-        @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        likeService.postMeetLike(postId, userDetails.getUser());
-        CommonResponse response = new CommonResponse("밋커뮤니티 좋아요 신청 성공", 200, "");
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    @DeleteMapping("/meet/{postId}")
-    public ResponseEntity<CommonResponse> deleteMeetLike(@PathVariable(name = "postId") Long postId,
-        @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        likeService.deleteMeetLike(postId, userDetails.getUser());
-        CommonResponse response = new CommonResponse("밋커뮤니티 좋아요 취소 성공", 204, "");
+        likeService.deleteLike(postId, userDetails.getUser());
+        CommonResponse response = new CommonResponse("좋아요 취소 성공", 204, "");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
