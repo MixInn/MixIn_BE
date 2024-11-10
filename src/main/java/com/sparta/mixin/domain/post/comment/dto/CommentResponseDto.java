@@ -9,7 +9,7 @@ import lombok.Getter;
 public class CommentResponseDto {
     private Long id;
     private Long postId;
-    private PostType communityType;
+    private PostType postType;
     private String comment;
     private Long userId;
     private LocalDateTime createdAt;
@@ -19,13 +19,8 @@ public class CommentResponseDto {
         this.id= postComment.getId();
         this.comment= postComment.getComment();
         this.userId= postComment.getUser().getId();
-        this.communityType= postComment.getCommunityType();
-
-        if (postComment.getCommunityType() == PostType.MEETPOST) {
-            this.postId = postComment.getMeetPost().getId();
-        } else if (postComment.getCommunityType() == PostType.PUBLICPOST) {
-            this.postId = postComment.getPublicPost().getId();
-        }
+        this.postType= postComment.getPostType();
+        this.postId=postComment.getPost().getId();
         this.createdAt= postComment.getCreatedAt();
         this.modifiedAt= postComment.getModifiedAt();
     }

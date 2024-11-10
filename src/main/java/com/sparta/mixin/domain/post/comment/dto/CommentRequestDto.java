@@ -1,4 +1,4 @@
-package com.sparta.mixin.domain.community.comment.dto;
+package com.sparta.mixin.domain.post.comment.dto;
 
 import lombok.Getter;
 

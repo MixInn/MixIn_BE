@@ -1,9 +1,8 @@
 package com.sparta.mixin.domain.post.comment.entity;
 
-import com.sparta.mixin.domain.community.comment.dto.CommentRequestDto;
+import com.sparta.mixin.domain.post.comment.dto.CommentRequestDto;
 import com.sparta.mixin.domain.post.PostType;
-import com.sparta.mixin.domain.post.entity.MeetPost;
-import com.sparta.mixin.domain.post.entity.PublicPost;
+import com.sparta.mixin.domain.post.entity.Post;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.global.Timestamped;
 import jakarta.persistence.CascadeType;
@@ -31,15 +30,11 @@ public class PostComment extends Timestamped {
     private Long id;
 
     @ManyToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "publicPost_id")
-    private PublicPost publicPost;
-
-    @ManyToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "meetPost_id")
-    private MeetPost meetPost;
+    @JoinColumn(name = "post_id")
+    private Post post;
 
     @Enumerated(EnumType.STRING)
-    private PostType communityType;
+    private PostType postType;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -48,20 +43,10 @@ public class PostComment extends Timestamped {
     @Column
     private String comment;
 
-
-    public PostComment(PublicPost publicPost, CommentRequestDto commentRequestDto,
-        User loginUser) {
-        this.comment = commentRequestDto.getComment();
-        this.publicPost = publicPost;
-        this.communityType = PostType.PUBLICPOST;
-        this.user = loginUser;
-    }
-
-    public PostComment(MeetPost meetPost, CommentRequestDto commentRequestDto,
-        User loginUser) {
-        this.comment = commentRequestDto.getComment();
-        this.meetPost = meetPost;
-        this.communityType = PostType.MEETPOST;
-        this.user = loginUser;
+    public PostComment(Post post, User user, CommentRequestDto commentRequestDto){
+        this.post=post;
+        this.user=user;
+        this.postType = PostType.valueOf(post.getClass().getSimpleName().toUpperCase());
+        this.comment=commentRequestDto.getComment();
     }
 }

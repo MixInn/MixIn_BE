@@ -1,6 +1,7 @@
 package com.sparta.mixin.domain.post.comment;
 
 import com.sparta.mixin.domain.auth.security.UserDetailsImpl;
+import com.sparta.mixin.domain.post.comment.dto.CommentRequestDto;
 import com.sparta.mixin.domain.post.comment.dto.CommentResponseDto;
 import com.sparta.mixin.global.common.CommonResponse;
 import java.util.List;
@@ -23,51 +24,32 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @PostMapping("/public/{postId}")
-    public ResponseEntity<CommonResponse<CommentResponseDto>> postPublicComment(
+    @PostMapping("/{postId}")
+    public ResponseEntity<CommonResponse<CommentResponseDto>> postComment(
         @PathVariable(name = "postId") Long postId, @RequestBody
-    com.sparta.mixin.domain.community.comment.dto.CommentRequestDto commentRequestDto,@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        CommentResponseDto responseDto = commentService.postPublicComment(postId,commentRequestDto,userDetails.getUser());
-        CommonResponse response = new CommonResponse("공용커뮤니티에 댓글 작성 성공", 200, responseDto);
+    CommentRequestDto commentRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        CommentResponseDto responseDto = commentService.postComment(postId, commentRequestDto,
+            userDetails.getUser());
+        CommonResponse response = new CommonResponse("댓글 작성 성공", 200, responseDto);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @DeleteMapping("/public/{commentId}")
-    public ResponseEntity<CommonResponse> deletePublicComment(
-        @PathVariable(name = "commentId") Long commentId,@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        commentService.deletePublicComment(commentId,userDetails.getUser());
-        CommonResponse response = new CommonResponse("공용커뮤니티에 댓글 삭제 성공",204,"");
-        return new ResponseEntity<>(response,HttpStatus.OK);
-    }
-
-    @GetMapping("/public/{postId}")
-    public ResponseEntity<CommonResponse<List<CommentResponseDto>>> getPublicComment(@PathVariable(name = "postId")Long postId,@AuthenticationPrincipal UserDetailsImpl userDetails){
-        List<CommentResponseDto> responseDto = commentService.getPublicComment(postId,userDetails.getUser());
-        CommonResponse response = new CommonResponse("공용커뮤니티 댓글 조회 성공",200,responseDto);
-        return new ResponseEntity<>(response,HttpStatus.OK);
-    }
-
-    @PostMapping("/meet/{postId}")
-    public ResponseEntity<CommonResponse<CommentResponseDto>> postMeetComment(
-        @PathVariable(name = "postId") Long postId, @RequestBody
-    com.sparta.mixin.domain.community.comment.dto.CommentRequestDto commentRequestDto,@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        CommentResponseDto responseDto = commentService.postMeetComment(postId,commentRequestDto,userDetails.getUser());
-        CommonResponse response = new CommonResponse("밋커뮤니티에 댓글 작성 성공", 200, responseDto);
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<CommonResponse> deleteComment(
+        @PathVariable(name = "commentId") Long commentId,
+        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        commentService.deleteComment(commentId, userDetails.getUser());
+        CommonResponse response = new CommonResponse("댓글 삭제 성공", 204, "");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @DeleteMapping("/meet/{commentId}")
-    public ResponseEntity<CommonResponse> deleteMeetComment(
-        @PathVariable(name = "commentId") Long commentId,@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        commentService.deleteMeetComment(commentId,userDetails.getUser());
-        CommonResponse response = new CommonResponse("밋커뮤니티에 댓글 삭제 성공",204,"");
-        return new ResponseEntity<>(response,HttpStatus.OK);
-    }
-
-    @GetMapping("/meet/{postId}")
-    public ResponseEntity<CommonResponse<List<CommentResponseDto>>> getMeetComment(@PathVariable(name = "postId")Long postId,@AuthenticationPrincipal UserDetailsImpl userDetails){
-        List<CommentResponseDto> responseDto = commentService.getMeetComment(postId,userDetails.getUser());
-        CommonResponse response = new CommonResponse("밋커뮤니티 댓글 조회 성공",200,responseDto);
-        return new ResponseEntity<>(response,HttpStatus.OK);
+    @GetMapping("/{postId}")
+    public ResponseEntity<CommonResponse<List<CommentResponseDto>>> getComment(
+        @PathVariable(name = "postId") Long postId,
+        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        List<CommentResponseDto> responseDto = commentService.getComment(postId,
+            userDetails.getUser());
+        CommonResponse response = new CommonResponse("댓글 조회 성공", 200, responseDto);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
