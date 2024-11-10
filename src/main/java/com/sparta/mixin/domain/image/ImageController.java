@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/community/image")
+@RequestMapping("/post/image")
 public class ImageController {
 
     private final ImageService imageService;
@@ -25,11 +25,10 @@ public class ImageController {
     @GetMapping("/{postId}")
     public ResponseEntity<CommonResponse<List<ImageResponseDto>>> getAllPostImages(
         @PathVariable(name = "postId") Long postId,
-        @RequestParam("entityType") String entityType,
         @AuthenticationPrincipal
         UserDetailsImpl userDetails) {
-        List<ImageResponseDto> responseDtos = imageService.getAllPostImages(postId,entityType,userDetails.getUser());
-        CommonResponse response = new CommonResponse("커뮤니티 글 이미지 조회 성공", 200, responseDtos);
+        List<ImageResponseDto> responseDtos = imageService.getAllPostImages(postId,userDetails.getUser());
+        CommonResponse response = new CommonResponse("글 이미지 조회 성공", 200, responseDtos);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -39,7 +38,7 @@ public class ImageController {
         @AuthenticationPrincipal
         UserDetailsImpl userDetails) {
         imageService.deletePostImage(imageId,userDetails.getUser());
-        CommonResponse response = new CommonResponse("커뮤니티 글 이미지 단건 삭제 성공", 204, "");
+        CommonResponse response = new CommonResponse("커글 이미지 단건 삭제 성공", 204, "");
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
