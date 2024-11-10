@@ -31,7 +31,7 @@ public class Image extends Timestamped {
     @Enumerated(EnumType.STRING)
     private PostType postType;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     @JoinColumn(name = "post_id")
     private Post post;
 
