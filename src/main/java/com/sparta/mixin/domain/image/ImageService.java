@@ -34,9 +34,7 @@ public class ImageService {
 
     private final ImageRepository imageRepository;
     private final AuthService authService;
-    private final PostService postService;
-    private final MeetPostService meetPostService;
-    private final PublicPostService publicPostService;
+    private final PostService<? extends Post> postService;
 
     public void validateFile(MultipartFile file) {
         String filename = file.getOriginalFilename();

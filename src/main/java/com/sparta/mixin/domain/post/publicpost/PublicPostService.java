@@ -8,8 +8,10 @@ import com.sparta.mixin.domain.post.PostRepository;
 import com.sparta.mixin.domain.post.PostService;
 import com.sparta.mixin.domain.post.entity.PublicPost;
 import com.sparta.mixin.domain.user.entity.User;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+@Primary
 @Service
 public class PublicPostService extends PostService<PublicPost> {
 

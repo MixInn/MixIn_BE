@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "community_like")
+@Table(name = "post_like")
 @RequiredArgsConstructor
 public class PostLike extends Timestamped {
 

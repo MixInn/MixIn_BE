@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "community_comment")
+@Table(name = "post_comment")
 @RequiredArgsConstructor
 public class PostComment extends Timestamped {
 
