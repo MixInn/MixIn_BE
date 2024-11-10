@@ -1,7 +1,7 @@
 package com.sparta.mixin.domain.user.controller;
 
 import com.sparta.mixin.domain.auth.dto.TokenResponseDto;
-import com.sparta.mixin.domain.auth.security.UserDetailsImpl;
+import com.sparta.mixin.global.security.UserDetailsImpl;
 import com.sparta.mixin.domain.user.service.UserService;
 import com.sparta.mixin.global.common.CommonResponse;
 import jakarta.servlet.http.HttpServletRequest;

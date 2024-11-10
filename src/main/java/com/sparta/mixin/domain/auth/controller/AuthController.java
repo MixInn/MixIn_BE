@@ -1,19 +1,16 @@
 package com.sparta.mixin.domain.auth.controller;
 
 import com.sparta.mixin.domain.auth.dto.*;
-import com.sparta.mixin.domain.auth.security.UserDetailsImpl;
 import com.sparta.mixin.domain.auth.service.AuthService;
 import com.sparta.mixin.domain.auth.service.MailService;
 import com.sparta.mixin.domain.auth.service.SmsService;
 import com.sparta.mixin.domain.auth.service.UniversityInfoService;
 import com.sparta.mixin.global.common.CommonResponse;
 import jakarta.mail.MessagingException;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

@@ -1,6 +1,6 @@
 package com.sparta.mixin.domain.meetannouncement.controller;
 
-import com.sparta.mixin.domain.auth.security.UserDetailsImpl;
+import com.sparta.mixin.global.security.UserDetailsImpl;
 import com.sparta.mixin.domain.meetannouncement.dto.MeetAnnouncementListRequestDto;
 import com.sparta.mixin.domain.meetannouncement.dto.MeetAnnouncementRequestDto;
 import com.sparta.mixin.domain.meetannouncement.dto.MeetAnnouncementResponseDto;

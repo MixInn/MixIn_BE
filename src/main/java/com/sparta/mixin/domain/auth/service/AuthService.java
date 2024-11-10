@@ -1,16 +1,13 @@
 package com.sparta.mixin.domain.auth.service;
 
 import com.sparta.mixin.domain.auth.dto.SignupRequestDto;
-import com.sparta.mixin.domain.auth.dto.TokenResponseDto;
 import com.sparta.mixin.domain.user.entity.UserRepository;
-import com.sparta.mixin.domain.jwt.JwtUtil;
+import com.sparta.mixin.global.jwt.JwtUtil;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.domain.user.entity.UserRoleEnum;
 import com.sparta.mixin.domain.user.entity.UserStatus;
 import com.sparta.mixin.global.exception.CustomException;
 import com.sparta.mixin.global.exception.ErrorCode;
-import io.jsonwebtoken.Claims;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;

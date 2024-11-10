@@ -1,10 +1,10 @@
-package com.sparta.mixin.domain.auth.security;
+package com.sparta.mixin.global.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.mixin.domain.auth.dto.LoginRequestDto;
 import com.sparta.mixin.domain.auth.dto.TokenResponseDto;
 import com.sparta.mixin.domain.user.entity.UserRepository;
-import com.sparta.mixin.domain.jwt.JwtUtil;
+import com.sparta.mixin.global.jwt.JwtUtil;
 import com.sparta.mixin.domain.user.entity.UserRoleEnum;
 import com.sparta.mixin.global.common.CommonResponse;
 import jakarta.servlet.FilterChain;

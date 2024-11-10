@@ -1,6 +1,6 @@
 package com.sparta.mixin.domain.community.like;
 
-import com.sparta.mixin.domain.auth.security.UserDetailsImpl;
+import com.sparta.mixin.global.security.UserDetailsImpl;
 import com.sparta.mixin.global.common.CommonResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
