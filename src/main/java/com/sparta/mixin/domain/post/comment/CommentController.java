@@ -49,7 +49,7 @@ public class CommentController {
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
         List<CommentResponseDto> responseDto = commentService.getComment(postId,
             userDetails.getUser());
-        CommonResponse response = new CommonResponse("댓글 조회 성공", 200, responseDto);
+        CommonResponse response = new CommonResponse("댓글 전체 조회 성공", 200, responseDto);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

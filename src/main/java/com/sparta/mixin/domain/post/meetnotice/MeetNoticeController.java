@@ -32,7 +32,7 @@ public class MeetNoticeController {
     private final MeetNoticeService meetNoticeService;
 
     @PostMapping("/{meetId}")
-    public ResponseEntity<CommonResponse<PostResponseDto>> createMeetPost(
+    public ResponseEntity<CommonResponse<PostResponseDto>> createMeetNotice(
         @PathVariable(name = "meetId") Long meetId,
         @RequestPart("requestDto") PostRequestDto postRequestDto,
         @RequestPart(value = "files", required = false) List<MultipartFile> files,
@@ -53,7 +53,7 @@ public class MeetNoticeController {
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<CommonResponse<PostResponseDto>> getMeetPost(
+    public ResponseEntity<CommonResponse<PostResponseDto>> getMeetNotice(
         @PathVariable(name = "postId") Long postId, @AuthenticationPrincipal
     UserDetailsImpl userDetails) {
         PostResponseDto responseDto = meetNoticeService.getPost(postId, userDetails.getUser());
@@ -62,7 +62,7 @@ public class MeetNoticeController {
     }
 
     @PutMapping("/{postId}")
-    public ResponseEntity<CommonResponse<PostResponseDto>> editMeetPost(
+    public ResponseEntity<CommonResponse<PostResponseDto>> editMeetNotice(
         @PathVariable(name = "postId") Long postId,
         @RequestPart("requestDto") PostRequestDto postRequestDto,
         @RequestPart(value = "files", required = false) List<MultipartFile> files,
@@ -83,7 +83,7 @@ public class MeetNoticeController {
     }
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity<CommonResponse> deleteMeetPost(
+    public ResponseEntity<CommonResponse> deleteMeetNotice(
         @PathVariable(name = "postId") Long postId,
         @AuthenticationPrincipal
         UserDetailsImpl userDetails) {
@@ -93,7 +93,7 @@ public class MeetNoticeController {
     }
 
     @GetMapping("/{meetId}/all")
-    public ResponseEntity<CommonResponse<Page<PostResponseDto>>> getAllMeetPost(
+    public ResponseEntity<CommonResponse<Page<PostResponseDto>>> getAllMeetNotice(
         @PathVariable(name = "meetId") Long meetId,
         @RequestParam(defaultValue = "1") int page,
         @RequestParam(defaultValue = "10") int size,
