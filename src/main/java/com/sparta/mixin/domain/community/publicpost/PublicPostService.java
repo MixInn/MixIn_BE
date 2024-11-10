@@ -7,6 +7,7 @@ import com.sparta.mixin.domain.community.publicpost.entity.PublicPost;
 import com.sparta.mixin.domain.image.ImageRepository;
 import com.sparta.mixin.domain.image.entity.Image;
 import com.sparta.mixin.domain.user.entity.User;
+import com.sparta.mixin.domain.user.service.UserService;
 import com.sparta.mixin.global.exception.CustomException;
 import com.sparta.mixin.global.exception.ErrorCode;
 import java.util.List;
@@ -23,11 +24,11 @@ import org.springframework.stereotype.Service;
 public class PublicPostService {
     private final PublicPostRepository publicPostRepository;
     private final ImageRepository imageRepository;
-    private final AuthService authService;
+    private final UserService userService;
 
     public PublicPostResponseDto createPublicPost(PublicPostRequestDto publicPostRequestDto, List<String> fileUrls,
         User user) {
-        User loginUser = authService.findByUsername(user.getUsername());
+        User loginUser = userService.findByUsername(user.getUsername());
         PublicPost publicPost = new PublicPost(publicPostRequestDto,loginUser);
         publicPostRepository.save(publicPost);
 
@@ -40,7 +41,7 @@ public class PublicPostService {
 
     public Page<PublicPostResponseDto> getAllPublicPost(int page, int size, User user) {
         Pageable pageable = PageRequest.of(page,size, Sort.by(Direction.DESC,"createdAt"));
-        User loginUser = authService.findByUsername(user.getUsername());
+        User loginUser = userService.findByUsername(user.getUsername());
 
         Page<PublicPost> responsePage = publicPostRepository.findAllByUser_University(loginUser.getUniversity(),pageable);
 
@@ -48,7 +49,7 @@ public class PublicPostService {
     }
 
     public PublicPostResponseDto getPublicPost(Long postId, User user) {
-        authService.findByUsername(user.getUsername());
+        userService.findByUsername(user.getUsername());
         PublicPost publicPost = findById(postId);
         return new PublicPostResponseDto(publicPost);
     }
@@ -56,7 +57,7 @@ public class PublicPostService {
     public PublicPostResponseDto editPublicPost(Long postId,
         PublicPostRequestDto publicPostRequestDto, List<String> fileUrls, User user) {
         PublicPost publicPost = findById(postId);
-        User loginUser = authService.findByUsername(user.getUsername());
+        User loginUser = userService.findByUsername(user.getUsername());
 
         if(publicPost.getUser()!=loginUser){
             throw new CustomException(ErrorCode.NOT_SAME_USER);
@@ -74,7 +75,7 @@ public class PublicPostService {
 
     public void deletePublicPost(Long postId, User user) {
         PublicPost publicPost = findById(postId);
-        User loginUser = authService.findByUsername(user.getUsername());
+        User loginUser = userService.findByUsername(user.getUsername());
 
         if(publicPost.getUser()!=loginUser){
             throw new CustomException(ErrorCode.NOT_SAME_USER);

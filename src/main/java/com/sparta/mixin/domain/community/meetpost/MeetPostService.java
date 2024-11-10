@@ -10,6 +10,7 @@ import com.sparta.mixin.domain.meet.entity.Meet;
 import com.sparta.mixin.domain.meet.service.MeetAuthorizationService;
 import com.sparta.mixin.domain.meet.service.MeetService;
 import com.sparta.mixin.domain.user.entity.User;
+import com.sparta.mixin.domain.user.service.UserService;
 import com.sparta.mixin.global.exception.CustomException;
 import com.sparta.mixin.global.exception.ErrorCode;
 import java.util.List;
@@ -29,13 +30,13 @@ public class MeetPostService {
     private final MeetPostRepository meetPostRepository;
     private final MeetService meetService;
     private final ImageRepository imageRepository;
-    private final AuthService authService;
+    private final UserService userService;
     private final MeetAuthorizationService meetAuthorizationService;
 
     public MeetPostResponseDto createMeetPost(Long meetId, MeetPostRequestDto meetPostRequestDto,
         List<String> fileUrls, User user) {
         Meet meet = meetService.findById(meetId);
-        User loginUser = authService.findByUsername(user.getUsername());
+        User loginUser = userService.findByUsername(user.getUsername());
 
         if(meetAuthorizationService.findByMeetAndUser(meet,loginUser)==null){
             throw new CustomException(ErrorCode.INCORRECT_MEET_USER);
@@ -60,7 +61,7 @@ public class MeetPostService {
     public MeetPostResponseDto getMeetPost(Long postId, User user) {
 
         MeetPost meetPost = findById(postId);
-        User loginUser = authService.findByUsername(user.getUsername());
+        User loginUser = userService.findByUsername(user.getUsername());
 
         Meet meet = meetService.findById(meetPost.getMeet().getId());
         if(meetAuthorizationService.findByMeetAndUser(meet,loginUser)==null){
@@ -73,7 +74,7 @@ public class MeetPostService {
     public MeetPostResponseDto editMeetPost(Long postId, MeetPostRequestDto meetPostRequestDto,
         List<String> fileUrls, User user) {
         MeetPost meetPost = findById(postId);
-        User loginUser = authService.findByUsername(user.getUsername());
+        User loginUser = userService.findByUsername(user.getUsername());
 
         if (meetPost.getUser() != loginUser) {
             throw new CustomException(ErrorCode.NOT_SAME_USER);
@@ -92,7 +93,7 @@ public class MeetPostService {
     @Transactional
     public void deleteMeetPost(Long postId, User user) {
         MeetPost meetPost = findById(postId);
-        User loginUser = authService.findByUsername(user.getUsername());
+        User loginUser = userService.findByUsername(user.getUsername());
 
         if (meetPost.getUser() != loginUser) {
             throw new CustomException(ErrorCode.NOT_SAME_USER);
@@ -103,7 +104,7 @@ public class MeetPostService {
     public Page<MeetPostResponseDto> getAllMeetPost(Long meetId, int page, int size, User user) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Direction.DESC, "createdAt"));
         Meet meet = meetService.findById(meetId);
-        User loginUser = authService.findByUsername(user.getUsername());
+        User loginUser = userService.findByUsername(user.getUsername());
 
         if(meetAuthorizationService.findByMeetAndUser(meet,loginUser)==null){
             throw new CustomException(ErrorCode.INCORRECT_MEET_USER);

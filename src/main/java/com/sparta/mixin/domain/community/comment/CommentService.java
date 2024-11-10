@@ -12,6 +12,7 @@ import com.sparta.mixin.domain.meet.entity.Meet;
 import com.sparta.mixin.domain.meet.service.MeetAuthorizationService;
 import com.sparta.mixin.domain.meet.service.MeetService;
 import com.sparta.mixin.domain.user.entity.User;
+import com.sparta.mixin.domain.user.service.UserService;
 import com.sparta.mixin.global.exception.CustomException;
 import com.sparta.mixin.global.exception.ErrorCode;
 import java.util.List;
@@ -24,14 +25,14 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final PublicPostService publicPostService;
     private final MeetPostService meetPostService;
-    private final AuthService authService;
+    private final UserService userService;
     private final MeetService meetService;
     private final MeetAuthorizationService meetAuthorizationService;
 
     public CommentResponseDto postPublicComment(Long postId, CommentRequestDto commentRequestDto,
         User user) {
         PublicPost publicPost = publicPostService.findById(postId);
-        User loginUser = authService.findByUsername(user.getUsername());
+        User loginUser = userService.findByUsername(user.getUsername());
 
         CommunityComment communityComment = new CommunityComment(publicPost,commentRequestDto,loginUser);
         commentRepository.save(communityComment);
@@ -40,7 +41,7 @@ public class CommentService {
 
     public void deletePublicComment(Long commentId, User user) {
         CommunityComment communityComment = findById(commentId);
-        User loginUser = authService.findByUsername(user.getUsername());
+        User loginUser = userService.findByUsername(user.getUsername());
 
         if(communityComment.getUser()!=loginUser){
             throw new CustomException(ErrorCode.NOT_SAME_USER);
@@ -51,7 +52,7 @@ public class CommentService {
 
     public List<CommentResponseDto> getPublicComment(Long postId, User user) {
         PublicPost publicPost = publicPostService.findById(postId);
-        authService.findByUsername(user.getUsername());
+        userService.findByUsername(user.getUsername());
 
         List<CommunityComment> publicCommentList = commentRepository.findAllByPublicPost(publicPost);
 
@@ -61,7 +62,7 @@ public class CommentService {
     public CommentResponseDto postMeetComment(Long postId, CommentRequestDto commentRequestDto,
         User user) {
         MeetPost meetPost = meetPostService.findById(postId);
-        User loginUser = authService.findByUsername(user.getUsername());
+        User loginUser = userService.findByUsername(user.getUsername());
 
         Meet meet = meetService.findById(meetPost.getMeet().getId());
         if(meetAuthorizationService.findByMeetAndUser(meet,loginUser)==null){
@@ -75,7 +76,7 @@ public class CommentService {
 
     public void deleteMeetComment(Long commentId, User user) {
         CommunityComment communityComment = findById(commentId);
-        User loginUser = authService.findByUsername(user.getUsername());
+        User loginUser = userService.findByUsername(user.getUsername());
 
         if(communityComment.getUser()!=loginUser){
             throw new CustomException(ErrorCode.NOT_SAME_USER);
@@ -85,7 +86,7 @@ public class CommentService {
 
     public List<CommentResponseDto> getMeetComment(Long postId, User user) {
         MeetPost meetPost = meetPostService.findById(postId);
-        authService.findByUsername(user.getUsername());
+        userService.findByUsername(user.getUsername());
 
         List<CommunityComment> meetCommentList = commentRepository.findAllByMeetPost(meetPost);
 
