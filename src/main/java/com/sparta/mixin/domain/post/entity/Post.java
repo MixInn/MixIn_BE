@@ -8,6 +8,7 @@ import com.sparta.mixin.domain.post.like.entity.PostLike;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.global.Timestamped;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,6 +33,9 @@ public abstract class Post extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "post_type", insertable = false, updatable = false)
+    private String postType;
 
     private String title;
     private String content;
