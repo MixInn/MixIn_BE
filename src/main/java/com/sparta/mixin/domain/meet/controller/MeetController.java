@@ -2,6 +2,7 @@ package com.sparta.mixin.domain.meet.controller;
 
 import com.sparta.mixin.domain.auth.security.UserDetailsImpl;
 import com.sparta.mixin.domain.image.ImageService;
+import com.sparta.mixin.global.security.UserDetailsImpl;
 import com.sparta.mixin.domain.meet.dto.MeetRequestDto;
 import com.sparta.mixin.domain.meet.service.MeetService;
 import com.sparta.mixin.global.common.CommonResponse;

@@ -1,5 +1,6 @@
 package com.sparta.mixin.domain.user.entity;
 
+import com.sparta.mixin.domain.profile.entity.Profile;
 import com.sparta.mixin.global.Timestamped;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -15,6 +16,10 @@ public class User extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "profile_id")
+    private Profile profile;
+
     private String username;
     private String phoneNumber;
 
@@ -26,7 +31,6 @@ public class User extends Timestamped {
     private String major;
     private String name;
     private String password;
-    private String image;
 
     @Enumerated(EnumType.STRING)
     private UserRoleEnum role;
@@ -48,6 +52,10 @@ public class User extends Timestamped {
 
     public boolean isExist() {
         return this.userStatus == UserStatus.NORMAL;
+    }
+
+    public void updateProfile(Profile profile) {
+        this.profile = profile;
     }
 
     @Builder

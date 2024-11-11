@@ -1,19 +1,16 @@
 package com.sparta.mixin.domain.auth.controller;
 
 import com.sparta.mixin.domain.auth.dto.*;
-import com.sparta.mixin.domain.auth.security.UserDetailsImpl;
 import com.sparta.mixin.domain.auth.service.AuthService;
 import com.sparta.mixin.domain.auth.service.MailService;
 import com.sparta.mixin.domain.auth.service.SmsService;
 import com.sparta.mixin.domain.auth.service.UniversityInfoService;
 import com.sparta.mixin.global.common.CommonResponse;
 import jakarta.mail.MessagingException;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -73,25 +70,5 @@ public class AuthController {
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 
-	@PostMapping("/logout")
-	public ResponseEntity<CommonResponse<String>> logout(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-		authService.logout(userDetails.getUser());
-		CommonResponse<String> response = new CommonResponse<>("로그아웃이 완료되었습니다.", 200, null);
-		return new ResponseEntity<>(response, HttpStatus.OK);
-	}
-
-	@PostMapping("/withdraw")
-	public ResponseEntity<CommonResponse<String>> withdraw(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-		authService.withdraw(userDetails.getUser());
-		CommonResponse<String> response = new CommonResponse<>("회원탈퇴가 완료되었습니다.", 200, null);
-		return new ResponseEntity<>(response, HttpStatus.OK);
-	}
-
-	@PostMapping("/refresh")
-	public ResponseEntity<CommonResponse<TokenResponseDto>> refreshToken(HttpServletRequest request) {
-		TokenResponseDto token = authService.refreshToken(request);
-		CommonResponse<TokenResponseDto> response = new CommonResponse<>("리프레쉬 토큰 발급이 완료되었습니다.", 200, token);
-		return new ResponseEntity<>(response, HttpStatus.OK);
-	}
 
 }

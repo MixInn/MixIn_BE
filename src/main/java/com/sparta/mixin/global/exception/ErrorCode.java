@@ -52,6 +52,20 @@ public enum ErrorCode {
 	NOT_ALLOW_FORMAT(HttpStatus.BAD_REQUEST,"허용되지 않는 파일 형식입니다."),
 	INCORRECT_FILE_NAME(HttpStatus.BAD_REQUEST,"파일 이름이 유효하지 않습니다."),
 	INCORRECT_EXTENSION(HttpStatus.BAD_REQUEST,"파일 확장자를 찾을 수 없습니다."),
+	FILE_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드에 실패하였습니다."),
+	FILE_DELETE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "파일 삭제 실패하였습니다."),
+
+	// Post
+	INVALID_POST_TYPE(HttpStatus.BAD_REQUEST,"유효하지 않은 포스트 타입입니다."),
+	MISSING_MEET_ID(HttpStatus.BAD_REQUEST,"밋 아이디를 입력해주세요."),
+
+	// Bookmark
+	ALREADY_REGISTERED_BOOKMARK(HttpStatus.BAD_REQUEST,"이미 등록된 북마크입니다."),
+	NOT_EXISTING_BOOKMARK(HttpStatus.BAD_REQUEST,"존재하지 않는 북마크입니다."),
+
+	// Like
+	ALREADY_REGISTERED_Like(HttpStatus.BAD_REQUEST,"이미 등록된 좋아요입니다."),
+	NOT_EXISTING_Like(HttpStatus.BAD_REQUEST,"존재하지 않는 좋아요입니다."),
 
 	// 밋권한 관련
 	INCORRECT_MEET_USER(HttpStatus.UNAUTHORIZED, "해당 밋에 소속된 사용자가 아닙니다.");

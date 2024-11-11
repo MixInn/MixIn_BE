@@ -1,6 +1,6 @@
 package com.sparta.mixin.domain.meetapplication.controller;
 
-import com.sparta.mixin.domain.auth.security.UserDetailsImpl;
+import com.sparta.mixin.global.security.UserDetailsImpl;
 import com.sparta.mixin.domain.meetapplication.dto.MeetApplicationRequestDto;
 import com.sparta.mixin.domain.meetapplication.dto.MeetApplicationResponseDto;
 import com.sparta.mixin.domain.meetapplication.service.MeetApplicationService;
