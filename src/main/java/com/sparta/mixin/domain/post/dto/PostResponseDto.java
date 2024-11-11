@@ -1,5 +1,7 @@
 package com.sparta.mixin.domain.post.dto;
 
+import com.sparta.mixin.domain.post.entity.MeetNotice;
+import com.sparta.mixin.domain.post.entity.MeetPost;
 import com.sparta.mixin.domain.post.entity.Post;
 import java.time.LocalDateTime;
 import lombok.Getter;
@@ -13,8 +15,7 @@ public class PostResponseDto {
     private Long userId;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
-
-    // private Long meetId;
+    private Long meetId;
 
     public PostResponseDto(Post post) {
         this.id = post.getId();
@@ -23,6 +24,11 @@ public class PostResponseDto {
         this.userId = post.getUser().getId();
         this.createdAt = post.getCreatedAt();
         this.modifiedAt = post.getModifiedAt();
+        if (post instanceof MeetPost) {
+            this.meetId = ((MeetPost) post).getMeet().getId();
+        } else if (post instanceof MeetNotice) {
+            this.meetId = ((MeetNotice) post).getMeet().getId();
+        }
     }
 
 }
