@@ -51,6 +51,7 @@ public class CommentService {
         PostComment communityComment = new PostComment(post, loginUser, commentRequestDto);
         commentRepository.save(communityComment);
         post.increaseCommentCount();
+        postService.save(post);
         return new CommentResponseDto(communityComment);
     }
 
@@ -66,6 +67,7 @@ public class CommentService {
 
         commentRepository.delete(postComment);
         post.decreaseCommentCount();
+        postService.save(post);
     }
 
     public List<CommentResponseDto> getComment(Long postId, User user) {

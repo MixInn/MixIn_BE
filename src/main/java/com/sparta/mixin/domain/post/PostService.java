@@ -59,7 +59,7 @@ public abstract class PostService<T extends Post> {
         }
 
         T post = (T) PostFactory.createPost(postRequestDto, loginUser, postType, meet);
-        postRepository.save(post);
+        save(post);
 
         for (String fileUrl : fileUrls) {
             Image image = new Image(fileUrl, post);
@@ -77,7 +77,7 @@ public abstract class PostService<T extends Post> {
             throw new CustomException(ErrorCode.NOT_SAME_USER);
         }
         post.updatePost(postRequestDto);
-        postRepository.save(post);
+        save(post);
 
         for (String fileUrl : fileUrls) {
             Image image = new Image(fileUrl, post);
@@ -110,6 +110,7 @@ public abstract class PostService<T extends Post> {
             Meet meet = meetService.findById(((MeetNotice) post).getMeet().getId());
             checkMeetAuthorization(meet, loginUser);
             post.markAsRead();
+            save(post);
         }
 
         return new PostResponseDto(post);
@@ -157,5 +158,9 @@ public abstract class PostService<T extends Post> {
         return postRepository.findById(id).orElseThrow(
             () -> new CustomException(ErrorCode.BAD_REQUEST)
         );
+    }
+
+    public void save(T post){
+        postRepository.save(post);
     }
 }
