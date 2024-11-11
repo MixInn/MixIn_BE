@@ -1,7 +1,8 @@
-package com.sparta.mixin.domain.image.entity;
+package com.sparta.mixin.domain.post.like.entity;
 
 import com.sparta.mixin.domain.post.PostType;
 import com.sparta.mixin.domain.post.entity.Post;
+import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.global.Timestamped;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -18,26 +19,28 @@ import lombok.RequiredArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "post_image")
+@Table(name = "post_like")
 @RequiredArgsConstructor
-public class Image extends Timestamped {
+public class PostLike extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String imageUrl;
+    @ManyToOne
+    @JoinColumn(name = "post_id")
+    private Post post;
 
     @Enumerated(EnumType.STRING)
     private PostType postType;
 
     @ManyToOne
-    @JoinColumn(name = "post_id")
-    private Post post;
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    public Image(String imageUrl, Post post) {
-        this.imageUrl = imageUrl;
+    public PostLike(Post post, User user) {
         this.post = post;
+        this.user = user;
         this.postType = PostType.valueOf(post.getClass().getSimpleName().toUpperCase());
     }
 }

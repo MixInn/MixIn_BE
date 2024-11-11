@@ -1,14 +1,12 @@
 package com.sparta.mixin.domain.image;
 
-import com.sparta.mixin.domain.community.meetpost.entity.MeetPost;
-import com.sparta.mixin.domain.community.publicpost.entity.PublicPost;
 import com.sparta.mixin.domain.image.entity.Image;
+import com.sparta.mixin.domain.post.entity.Post;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ImageRepository extends JpaRepository<Image,Long> {
+public interface ImageRepository extends JpaRepository<Image, Long> {
 
-    List<Image> findAllByMeetPost(MeetPost meetPost);
+    List<Image> findAllByPost(Post post);
 
-    List<Image> findAllByPublicPost(PublicPost publicPost);
 }

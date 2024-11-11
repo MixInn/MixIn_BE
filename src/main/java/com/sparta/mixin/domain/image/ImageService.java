@@ -1,13 +1,9 @@
 package com.sparta.mixin.domain.image;
 
-import com.sparta.mixin.domain.auth.service.AuthService;
-import com.sparta.mixin.domain.community.meetpost.MeetPostService;
-import com.sparta.mixin.domain.community.meetpost.entity.MeetPost;
-import com.sparta.mixin.domain.community.publicpost.PublicPostService;
-import com.sparta.mixin.domain.community.publicpost.entity.PublicPost;
 import com.sparta.mixin.domain.image.dto.ImageResponseDto;
-import com.sparta.mixin.domain.image.entity.EntityType;
 import com.sparta.mixin.domain.image.entity.Image;
+import com.sparta.mixin.domain.post.PostService;
+import com.sparta.mixin.domain.post.entity.Post;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.domain.user.service.UserService;
 import com.sparta.mixin.global.exception.CustomException;
@@ -36,8 +32,7 @@ public class ImageService {
 
     private final ImageRepository imageRepository;
     private final UserService userService;
-    private final MeetPostService meetPostService;
-    private final PublicPostService publicPostService;
+    private final PostService<? extends Post> postService;
 
     public void validateFile(MultipartFile file) {
         String filename = file.getOriginalFilename();
@@ -73,7 +68,7 @@ public class ImageService {
         return filename.substring(dotIndex + 1);
     }
 
-    public String getFileUrl(@RequestPart("files") MultipartFile file){
+    public String getFileUrl(@RequestPart("files") MultipartFile file) {
         try {
             String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
             Path filePath = Paths.get(uploadDirectory + fileName);
@@ -110,47 +105,27 @@ public class ImageService {
         }
     }
 
-    public List<ImageResponseDto> getAllPostImages(Long postId, String entityType, User user) {
+    public List<ImageResponseDto> getAllPostImages(Long postId, User user) {
         userService.findByUsername(user.getUsername());
         List<ImageResponseDto> imageResponseDtos = new ArrayList<>();
 
-        if(entityType.equals("MEETPOST")){
-            MeetPost meetPost = meetPostService.findById(postId);
-            List<Image> imageList = imageRepository.findAllByMeetPost(meetPost);
+        Post post = postService.findById(postId);
+        List<Image> imageList = imageRepository.findAllByPost(post);
 
-            for (Image image : imageList) {
-                ImageResponseDto imageResponseDto = new ImageResponseDto(image);
-                imageResponseDtos.add(imageResponseDto);
-            }
-
-        }if(entityType.equals("PUBLICPOST")){
-            PublicPost publicPost = publicPostService.findById(postId);
-            List<Image> imageList = imageRepository.findAllByPublicPost(publicPost);
-
-            for (Image image : imageList) {
-                ImageResponseDto imageResponseDto = new ImageResponseDto(image);
-                imageResponseDtos.add(imageResponseDto);
-            }
+        for (Image image : imageList) {
+            ImageResponseDto imageResponseDto = new ImageResponseDto(image);
+            imageResponseDtos.add(imageResponseDto);
         }
         return imageResponseDtos;
     }
 
     public void deletePostImage(Long imageId, User user) {
-        Image image = imageRepository.findById(imageId).orElseThrow(
-            ()->new CustomException(ErrorCode.BAD_REQUEST)
-        );
+        Image image = findById(imageId);
         User loginUser = userService.findByUsername(user.getUsername());
+        Post post = postService.findById(image.getPost().getId());
 
-        if(image.getEntityType().equals(EntityType.MEETPOST)){
-            MeetPost meetPost = meetPostService.findById(image.getMeetPost().getId());
-            if(meetPost.getUser()!=loginUser){
-                throw new CustomException(ErrorCode.NOT_SAME_USER);
-            }
-        }if(image.getEntityType().equals(EntityType.PUBLICPOST)){
-            PublicPost publicPost = publicPostService.findById(image.getPublicPost().getId());
-            if(publicPost.getUser()!=loginUser){
-                throw new CustomException(ErrorCode.NOT_SAME_USER);
-            }
+        if (post.getUser() != loginUser) {
+            throw new CustomException(ErrorCode.NOT_SAME_USER);
         }
 
         // 서버에 저장된 이미지 삭제
@@ -158,6 +133,12 @@ public class ImageService {
 
         // DB에 저장된 이미지 삭제
         imageRepository.delete(image);
+    }
+
+    public Image findById(Long imageId) {
+        return imageRepository.findById(imageId).orElseThrow(
+            () -> new CustomException(ErrorCode.BAD_REQUEST)
+        );
     }
 }
 
