@@ -66,4 +66,15 @@ public abstract class Post extends Timestamped {
         this.title = postRequestDto.getTitle();
         this.content = postRequestDto.getContent();
     }
+
+    public abstract void increaseBookmarkCount();
+    public abstract void decreaseBookmarkCount();
+
+    public abstract void increaseLikeCount();
+    public abstract void decreaseLikeCount();
+
+    public abstract void increaseCommentCount();
+    public abstract void decreaseCommentCount();
+
+    public abstract void markAsRead();
 }

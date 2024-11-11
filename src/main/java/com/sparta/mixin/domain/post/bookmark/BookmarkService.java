@@ -70,4 +70,12 @@ public class BookmarkService {
             () -> new CustomException(ErrorCode.BAD_REQUEST)
         );
     }
+
+    public void increaseBookmarkCount(Post post){
+        post.increaseBookmarkCount();
+    }
+
+    public void decreaseBookmarkCount(Post post){
+        post.decreaseBookmarkCount();
+    }
 }
