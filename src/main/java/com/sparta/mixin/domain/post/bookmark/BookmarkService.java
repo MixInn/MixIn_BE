@@ -1,6 +1,5 @@
 package com.sparta.mixin.domain.post.bookmark;
 
-import com.sparta.mixin.domain.auth.service.AuthService;
 import com.sparta.mixin.domain.meet.entity.Meet;
 import com.sparta.mixin.domain.meet.service.MeetAuthorizationService;
 import com.sparta.mixin.domain.meet.service.MeetService;
