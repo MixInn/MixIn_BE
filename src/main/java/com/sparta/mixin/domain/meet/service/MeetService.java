@@ -16,17 +16,13 @@ public class MeetService {
 
 
     public void createMeet(MeetRequestDto requestDto, User user) {
-        // 밑 타입 string -> enum으로 변환
         MeetType meetType = MeetType.fromString(requestDto.getType());
-        // 밑 카테고리도 enum으로 변환
         MeetCategory meetCategory = MeetCategory.fromString(requestDto.getCategory());
-        // 유저 확인 추가
-        String imageUrl = "";
 
         Meet meet = Meet.builder()
                 .type(meetType)
                 .meetCategory(meetCategory)
-                .image(imageUrl)
+                .image(requestDto.getImage())
                 .name(requestDto.getName())
                 .info(requestDto.getInfo())
                 .rule(requestDto.getRule())
