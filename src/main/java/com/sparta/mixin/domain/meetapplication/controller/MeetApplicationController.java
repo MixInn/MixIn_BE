@@ -4,7 +4,6 @@ import com.sparta.mixin.domain.auth.security.UserDetailsImpl;
 import com.sparta.mixin.domain.meetapplication.dto.MeetApplicationRequestDto;
 import com.sparta.mixin.domain.meetapplication.dto.MeetApplicationResponseDto;
 import com.sparta.mixin.domain.meetapplication.service.MeetApplicationService;
-import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.global.common.CommonResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
