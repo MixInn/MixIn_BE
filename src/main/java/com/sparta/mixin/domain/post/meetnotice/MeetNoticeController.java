@@ -40,10 +40,12 @@ public class MeetNoticeController {
         UserDetailsImpl userDetails) {
         List<String> fileUrls = new ArrayList<>();
 
-        for (MultipartFile file : files) {
-            imageService.validateFile(file);
-            String fileUrl = imageService.getFileUrl(file);
-            fileUrls.add(fileUrl);
+        if(files !=null && !files.isEmpty()){
+            for (MultipartFile file : files) {
+                imageService.validateFile(file);
+                String fileUrl = imageService.getFileUrl(file);
+                fileUrls.add(fileUrl);
+            }
         }
 
         PostResponseDto responseDto = meetNoticeService.createPost(postRequestDto, "MEETNOTICE",

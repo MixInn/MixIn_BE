@@ -38,11 +38,14 @@ public class PublicPostController {
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
         List<String> fileUrls = new ArrayList<>();
 
-        for (MultipartFile file : files) {
-            imageService.validateFile(file);
-            String fileUrl = imageService.getFileUrl(file);
-            fileUrls.add(fileUrl);
+        if(files !=null && !files.isEmpty()){
+            for (MultipartFile file : files) {
+                imageService.validateFile(file);
+                String fileUrl = imageService.getFileUrl(file);
+                fileUrls.add(fileUrl);
+            }
         }
+
         PostResponseDto responseDto = publicPostService.createPost(postRequestDto, "PUBLICPOST",
             fileUrls, userDetails.getUser(), null);
         CommonResponse response = new CommonResponse("공용커뮤니티에 글 작성 성공", 201, responseDto);
