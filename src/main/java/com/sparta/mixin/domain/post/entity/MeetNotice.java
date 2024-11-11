@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 public class MeetNotice extends Post {
 
     @Column(name = "is_read")
-    private boolean isRead;
+    private boolean isRead=false;
 
     @ManyToOne
     @JoinColumn(name = "meet_id", nullable = false)

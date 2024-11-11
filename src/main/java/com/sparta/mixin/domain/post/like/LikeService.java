@@ -49,6 +49,7 @@ public class LikeService {
         }
         PostLike newPostLike = new PostLike(post, loginUser);
         likeRepository.save(newPostLike);
+        post.increaseLikeCount();
     }
 
     public void deleteLike(Long postId, User user) {
@@ -60,6 +61,7 @@ public class LikeService {
             throw new CustomException(ErrorCode.BAD_REQUEST);
         }
         likeRepository.delete(postLike);
+        post.decreaseLikeCount();
     }
 
     public PostLike findById(Long likeId) {

@@ -17,6 +17,7 @@ import com.sparta.mixin.global.exception.ErrorCode;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -49,11 +50,14 @@ public class CommentService {
 
         PostComment communityComment = new PostComment(post, loginUser, commentRequestDto);
         commentRepository.save(communityComment);
+        post.increaseCommentCount();
         return new CommentResponseDto(communityComment);
     }
 
+    @Transactional
     public void deleteComment(Long commentId, User user) {
         PostComment postComment = findById(commentId);
+        Post post = postComment.getPost();
         User loginUser = userService.findByUsername(user.getUsername());
 
         if (postComment.getUser() != loginUser) {
@@ -61,6 +65,7 @@ public class CommentService {
         }
 
         commentRepository.delete(postComment);
+        post.decreaseCommentCount();
     }
 
     public List<CommentResponseDto> getComment(Long postId, User user) {

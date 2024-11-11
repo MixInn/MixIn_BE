@@ -50,6 +50,7 @@ public class BookmarkService {
         }
         PostBookmark newPostBookmark = new PostBookmark(post, loginUser);
         bookmarkRepository.save(newPostBookmark);
+        post.increaseBookmarkCount();
     }
 
     public void deleteBookmark(Long postId, User user) {
@@ -63,19 +64,12 @@ public class BookmarkService {
         }
 
         bookmarkRepository.delete(postBookmark);
+        post.decreaseBookmarkCount();
     }
 
     public PostBookmark findById(Long bookmarkId) {
         return bookmarkRepository.findById(bookmarkId).orElseThrow(
             () -> new CustomException(ErrorCode.BAD_REQUEST)
         );
-    }
-
-    public void increaseBookmarkCount(Post post){
-        post.increaseBookmarkCount();
-    }
-
-    public void decreaseBookmarkCount(Post post){
-        post.decreaseBookmarkCount();
     }
 }
