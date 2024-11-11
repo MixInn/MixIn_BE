@@ -17,13 +17,13 @@ import lombok.RequiredArgsConstructor;
 public class PublicPost extends Post {
 
     @Column(name = "like_count")
-    private Long likeCount;
+    private Long likeCount=0L;
 
     @Column(name = "bookmark_count")
-    private Long bookmarkCount;
+    private Long bookmarkCount=0L;
 
     @Column(name = "comment_count")
-    private Long commentCount;
+    private Long commentCount=0L;
 
     public PublicPost(PostRequestDto postRequestDto, User user) {
         super(postRequestDto, user);
