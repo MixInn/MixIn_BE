@@ -7,6 +7,7 @@ import com.sparta.mixin.domain.meet.service.MeetService;
 import com.sparta.mixin.domain.post.PostRepository;
 import com.sparta.mixin.domain.post.PostService;
 import com.sparta.mixin.domain.post.entity.MeetPost;
+import com.sparta.mixin.domain.post.meetnotice.MeetNoticeRepository;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.domain.user.service.UserService;
 import com.sparta.mixin.global.exception.CustomException;
@@ -18,10 +19,13 @@ public class MeetPostService extends PostService<MeetPost> {
 
     private final MeetAuthorizationService meetAuthorizationService;
 
-    public MeetPostService(PostRepository<MeetPost> postRepository, ImageRepository imageRepository,
+    public MeetPostService(PostRepository<MeetPost> postRepository,
+        MeetPostRepository meetPostRepository,
+        MeetNoticeRepository meetNoticeRepository,
+        ImageRepository imageRepository,
         UserService userService, MeetAuthorizationService meetAuthorizationService,
         MeetService meetService) {
-        super(postRepository, imageRepository, userService, meetService);
+        super(postRepository, meetPostRepository, meetNoticeRepository,imageRepository, userService, meetService);
         this.meetAuthorizationService = meetAuthorizationService;
     }
 

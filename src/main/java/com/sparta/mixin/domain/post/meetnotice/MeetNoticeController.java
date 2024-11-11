@@ -40,55 +40,17 @@ public class MeetNoticeController {
         UserDetailsImpl userDetails) {
         List<String> fileUrls = new ArrayList<>();
 
-        for (MultipartFile file : files) {
-            imageService.validateFile(file);
-            String fileUrl = imageService.getFileUrl(file);
-            fileUrls.add(fileUrl);
+        if(files !=null && !files.isEmpty()){
+            for (MultipartFile file : files) {
+                imageService.validateFile(file);
+                String fileUrl = imageService.getFileUrl(file);
+                fileUrls.add(fileUrl);
+            }
         }
 
         PostResponseDto responseDto = meetNoticeService.createPost(postRequestDto, "MEETNOTICE",
             fileUrls, userDetails.getUser(), meetId);
         CommonResponse response = new CommonResponse("밋공지에 글 작성 성공", 201, responseDto);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    @GetMapping("/{postId}")
-    public ResponseEntity<CommonResponse<PostResponseDto>> getMeetNotice(
-        @PathVariable(name = "postId") Long postId, @AuthenticationPrincipal
-    UserDetailsImpl userDetails) {
-        PostResponseDto responseDto = meetNoticeService.getPost(postId, userDetails.getUser());
-        CommonResponse response = new CommonResponse<>("밋공지 단건 글 조회 성공", 200, responseDto);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    @PutMapping("/{postId}")
-    public ResponseEntity<CommonResponse<PostResponseDto>> editMeetNotice(
-        @PathVariable(name = "postId") Long postId,
-        @RequestPart("requestDto") PostRequestDto postRequestDto,
-        @RequestPart(value = "files", required = false) List<MultipartFile> files,
-        @AuthenticationPrincipal
-        UserDetailsImpl userDetails) {
-        List<String> fileUrls = new ArrayList<>();
-
-        for (MultipartFile file : files) {
-            imageService.validateFile(file);
-            String fileUrl = imageService.getFileUrl(file);
-            fileUrls.add(fileUrl);
-        }
-
-        PostResponseDto responseDto = meetNoticeService.editPost(postId, postRequestDto, fileUrls,
-            userDetails.getUser());
-        CommonResponse response = new CommonResponse<>("밋공지 글 수정 성공", 200, responseDto);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    @DeleteMapping("/{postId}")
-    public ResponseEntity<CommonResponse> deleteMeetNotice(
-        @PathVariable(name = "postId") Long postId,
-        @AuthenticationPrincipal
-        UserDetailsImpl userDetails) {
-        meetNoticeService.deletePost(postId, userDetails.getUser());
-        CommonResponse response = new CommonResponse("밋공지 글 삭제 성공", 204, "");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
