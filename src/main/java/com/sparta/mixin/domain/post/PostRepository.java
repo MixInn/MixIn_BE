@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PostRepository<T extends Post> extends JpaRepository<T, Long> {
 
-    Page<T> findAllByUser_University(String university, Pageable pageable);
+    Page<T> findAllByUser_UniversityAndPostType(String university, String postType, Pageable pageable);
 }

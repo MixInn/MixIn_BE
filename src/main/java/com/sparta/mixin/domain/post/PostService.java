@@ -9,6 +9,9 @@ import com.sparta.mixin.domain.post.dto.PostResponseDto;
 import com.sparta.mixin.domain.post.entity.MeetNotice;
 import com.sparta.mixin.domain.post.entity.MeetPost;
 import com.sparta.mixin.domain.post.entity.Post;
+import com.sparta.mixin.domain.post.meetnotice.MeetNoticeRepository;
+import com.sparta.mixin.domain.post.meetpost.MeetPostRepository;
+import com.sparta.mixin.domain.post.publicpost.PublicPostRepository;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.domain.user.service.UserService;
 import com.sparta.mixin.global.exception.CustomException;
@@ -28,6 +31,8 @@ import org.springframework.transaction.annotation.Transactional;
 public abstract class PostService<T extends Post> {
 
     private final PostRepository<T> postRepository;
+    private final MeetPostRepository meetPostRepository;
+    private final MeetNoticeRepository meetNoticeRepository;
     private final ImageRepository imageRepository;
     private final UserService userService;
     private final MeetService meetService;
@@ -126,14 +131,22 @@ public abstract class PostService<T extends Post> {
         }
 
         // 후크 메서드: 자식 클래스에서 처리해야 할 로직
-        if (postType.equals("MEETPOST") || postType.equals("MEETNOTICE")) {
-            checkMeetAuthorization(meet, loginUser);  // 자식 클래스에서 구현
+        if (postType.equals("MEETPOST")) {
+            checkMeetAuthorization(meet, loginUser);
+            return meetPostRepository.findAllByUser_UniversityAndPostTypeAndMeet(
+                loginUser.getUniversity(), postType, meet, pageable
+            ).map(PostResponseDto::new);
         }
-
-        Page<T> responsePage = postRepository.findAllByUser_University(loginUser.getUniversity(),
-            pageable);
-
-        return responsePage.map(PostResponseDto::new);
+        if (postType.equals("MEETNOTICE")) {
+            checkMeetAuthorization(meet, loginUser);
+            return meetNoticeRepository.findAllByUser_UniversityAndPostTypeAndMeet(
+                loginUser.getUniversity(), postType, meet, pageable
+            ).map(PostResponseDto::new);
+        }
+        else {
+            return postRepository.findAllByUser_UniversityAndPostType(loginUser.getUniversity(), postType,
+                pageable).map(PostResponseDto::new);
+        }
     }
 
     // 후크 메서드를 오버라이드하여 MeetPost에만 필요한 로직 추가

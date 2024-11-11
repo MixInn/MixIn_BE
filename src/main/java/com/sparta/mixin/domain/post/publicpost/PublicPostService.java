@@ -6,6 +6,8 @@ import com.sparta.mixin.domain.meet.service.MeetService;
 import com.sparta.mixin.domain.post.PostRepository;
 import com.sparta.mixin.domain.post.PostService;
 import com.sparta.mixin.domain.post.entity.PublicPost;
+import com.sparta.mixin.domain.post.meetnotice.MeetNoticeRepository;
+import com.sparta.mixin.domain.post.meetpost.MeetPostRepository;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.domain.user.service.UserService;
 import org.springframework.context.annotation.Primary;
@@ -16,9 +18,11 @@ import org.springframework.stereotype.Service;
 public class PublicPostService extends PostService<PublicPost> {
 
     public PublicPostService(PostRepository<PublicPost> postRepository,
+        MeetPostRepository meetPostRepository,
+        MeetNoticeRepository meetNoticeRepository,
         ImageRepository imageRepository,
         UserService userService, MeetService meetService) {
-        super(postRepository, imageRepository, userService, meetService);
+        super(postRepository, meetPostRepository,meetNoticeRepository,imageRepository, userService, meetService);
     }
 
     @Override
