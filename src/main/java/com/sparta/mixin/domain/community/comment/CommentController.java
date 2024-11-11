@@ -1,6 +1,6 @@
 package com.sparta.mixin.domain.community.comment;
 
-import com.sparta.mixin.domain.auth.security.UserDetailsImpl;
+import com.sparta.mixin.global.security.UserDetailsImpl;
 import com.sparta.mixin.domain.community.comment.dto.CommentRequestDto;
 import com.sparta.mixin.domain.community.comment.dto.CommentResponseDto;
 import com.sparta.mixin.global.common.CommonResponse;

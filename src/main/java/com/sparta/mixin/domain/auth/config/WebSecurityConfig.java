@@ -1,10 +1,10 @@
 package com.sparta.mixin.domain.auth.config;
 
 import com.sparta.mixin.domain.user.entity.UserRepository;
-import com.sparta.mixin.domain.auth.security.JwtAuthenticationFilter;
-import com.sparta.mixin.domain.auth.security.JwtAuthorizationFilter;
-import com.sparta.mixin.domain.auth.security.UserDetailsServiceImpl;
-import com.sparta.mixin.domain.jwt.JwtUtil;
+import com.sparta.mixin.global.security.JwtAuthenticationFilter;
+import com.sparta.mixin.global.security.JwtAuthorizationFilter;
+import com.sparta.mixin.global.security.UserDetailsServiceImpl;
+import com.sparta.mixin.global.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;

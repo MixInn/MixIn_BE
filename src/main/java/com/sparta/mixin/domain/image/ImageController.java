@@ -1,6 +1,6 @@
 package com.sparta.mixin.domain.image;
 
-import com.sparta.mixin.domain.auth.security.UserDetailsImpl;
+import com.sparta.mixin.global.security.UserDetailsImpl;
 import com.sparta.mixin.domain.image.dto.ImageResponseDto;
 import com.sparta.mixin.global.common.CommonResponse;
 import java.util.List;

@@ -10,6 +10,7 @@ import com.sparta.mixin.domain.meet.entity.Meet;
 import com.sparta.mixin.domain.meet.service.MeetAuthorizationService;
 import com.sparta.mixin.domain.meet.service.MeetService;
 import com.sparta.mixin.domain.user.entity.User;
+import com.sparta.mixin.domain.user.service.UserService;
 import com.sparta.mixin.global.exception.CustomException;
 import com.sparta.mixin.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -22,13 +23,13 @@ public class LikeService {
     private final LikeRepository likeRepository;
     private final MeetPostService meetPostService;
     private final PublicPostService publicPostService;
-    private final AuthService authService;
+    private final UserService userService;
     private final MeetService meetService;
     private final MeetAuthorizationService meetAuthorizationService;
 
     public void postPublicLike(Long postId, User user) {
         PublicPost publicPost = publicPostService.findById(postId);
-        User loginUser = authService.findByUsername(user.getUsername());
+        User loginUser = userService.findByUsername(user.getUsername());
 
         CommunityLike communityLike = likeRepository.findByPublicPostAndUser(publicPost, loginUser);
         if (communityLike != null) {
@@ -40,7 +41,7 @@ public class LikeService {
 
     public void deletePublicLike(Long postId, User user) {
         PublicPost publicPost = publicPostService.findById(postId);
-        User loginUser = authService.findByUsername(user.getUsername());
+        User loginUser = userService.findByUsername(user.getUsername());
 
         CommunityLike publicLike = likeRepository.findByPublicPostAndUser(publicPost, loginUser);
         if (publicLike == null) {
@@ -51,7 +52,7 @@ public class LikeService {
 
     public void postMeetLike(Long postId, User user) {
         MeetPost meetPost = meetPostService.findById(postId);
-        User loginUser = authService.findByUsername(user.getUsername());
+        User loginUser = userService.findByUsername(user.getUsername());
 
         Meet meet = meetService.findById(meetPost.getMeet().getId());
         if(meetAuthorizationService.findByMeetAndUser(meet,loginUser)==null){
@@ -68,7 +69,7 @@ public class LikeService {
 
     public void deleteMeetLike(Long postId, User user) {
         MeetPost meetPost = meetPostService.findById(postId);
-        User loginUser = authService.findByUsername(user.getUsername());
+        User loginUser = userService.findByUsername(user.getUsername());
 
         CommunityLike meetLike = likeRepository.findByMeetPostAndUser(meetPost, loginUser);
         if (meetLike == null) {

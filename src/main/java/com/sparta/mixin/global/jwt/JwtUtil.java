@@ -1,4 +1,4 @@
-package com.sparta.mixin.domain.jwt;
+package com.sparta.mixin.global.jwt;
 
 import com.sparta.mixin.domain.auth.dto.TokenResponseDto;
 import com.sparta.mixin.domain.user.entity.UserRoleEnum;

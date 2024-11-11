@@ -9,6 +9,7 @@ import com.sparta.mixin.domain.image.dto.ImageResponseDto;
 import com.sparta.mixin.domain.image.entity.EntityType;
 import com.sparta.mixin.domain.image.entity.Image;
 import com.sparta.mixin.domain.user.entity.User;
+import com.sparta.mixin.domain.user.service.UserService;
 import com.sparta.mixin.global.exception.CustomException;
 import com.sparta.mixin.global.exception.ErrorCode;
 import java.io.File;
@@ -34,7 +35,7 @@ public class ImageService {
     private String uploadDirectory;
 
     private final ImageRepository imageRepository;
-    private final AuthService authService;
+    private final UserService userService;
     private final MeetPostService meetPostService;
     private final PublicPostService publicPostService;
 
@@ -110,7 +111,7 @@ public class ImageService {
     }
 
     public List<ImageResponseDto> getAllPostImages(Long postId, String entityType, User user) {
-        authService.findByUsername(user.getUsername());
+        userService.findByUsername(user.getUsername());
         List<ImageResponseDto> imageResponseDtos = new ArrayList<>();
 
         if(entityType.equals("MEETPOST")){
@@ -138,7 +139,7 @@ public class ImageService {
         Image image = imageRepository.findById(imageId).orElseThrow(
             ()->new CustomException(ErrorCode.BAD_REQUEST)
         );
-        User loginUser = authService.findByUsername(user.getUsername());
+        User loginUser = userService.findByUsername(user.getUsername());
 
         if(image.getEntityType().equals(EntityType.MEETPOST)){
             MeetPost meetPost = meetPostService.findById(image.getMeetPost().getId());
