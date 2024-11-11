@@ -10,6 +10,7 @@ import com.sparta.mixin.domain.post.entity.MeetNotice;
 import com.sparta.mixin.domain.post.entity.MeetPost;
 import com.sparta.mixin.domain.post.entity.Post;
 import com.sparta.mixin.domain.user.entity.User;
+import com.sparta.mixin.domain.user.service.UserService;
 import com.sparta.mixin.global.exception.CustomException;
 import com.sparta.mixin.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -21,13 +22,13 @@ public class BookmarkService {
 
     private final BookmarkRepository bookmarkRepository;
     private final PostService postService;
-    private final AuthService authService;
+    private final UserService userService;
     private final MeetService meetService;
     private final MeetAuthorizationService meetAuthorizationService;
 
     public void postBookmark(Long postId, User user) {
         Post post = postService.findById(postId);
-        User loginUser = authService.findByUsername(user.getUsername());
+        User loginUser = userService.findByUsername(user.getUsername());
 
         if (post instanceof MeetPost) {
             Meet meet = meetService.findById(((MeetPost) post).getMeet().getId());
@@ -54,7 +55,7 @@ public class BookmarkService {
 
     public void deleteBookmark(Long postId, User user) {
         Post post = postService.findById(postId);
-        User loginUser = authService.findByUsername(user.getUsername());
+        User loginUser = userService.findByUsername(user.getUsername());
 
         PostBookmark postBookmark = bookmarkRepository.findByPostAndUser(post,
             loginUser);

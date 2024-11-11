@@ -1,9 +1,7 @@
-package com.sparta.mixin.domain.auth.security;
+package com.sparta.mixin.global.security;
 
-import com.sparta.mixin.domain.jwt.JwtUtil;
+import com.sparta.mixin.global.jwt.JwtUtil;
 import com.sparta.mixin.domain.user.entity.UserRoleEnum;
-import com.sparta.mixin.global.exception.CustomException;
-import com.sparta.mixin.global.exception.ErrorCode;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

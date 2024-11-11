@@ -1,7 +1,7 @@
 package com.sparta.mixin.domain.post.bookmark;
 
-import com.sparta.mixin.domain.auth.security.UserDetailsImpl;
 import com.sparta.mixin.global.common.CommonResponse;
+import com.sparta.mixin.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

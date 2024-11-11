@@ -1,13 +1,11 @@
 package com.sparta.mixin.domain.image;
 
-import com.sparta.mixin.domain.auth.service.AuthService;
 import com.sparta.mixin.domain.image.dto.ImageResponseDto;
 import com.sparta.mixin.domain.image.entity.Image;
 import com.sparta.mixin.domain.post.PostService;
 import com.sparta.mixin.domain.post.entity.Post;
-import com.sparta.mixin.domain.post.meetpost.MeetPostService;
-import com.sparta.mixin.domain.post.publicpost.PublicPostService;
 import com.sparta.mixin.domain.user.entity.User;
+import com.sparta.mixin.domain.user.service.UserService;
 import com.sparta.mixin.global.exception.CustomException;
 import com.sparta.mixin.global.exception.ErrorCode;
 import java.io.File;
@@ -33,7 +31,7 @@ public class ImageService {
     private String uploadDirectory;
 
     private final ImageRepository imageRepository;
-    private final AuthService authService;
+    private final UserService userService;
     private final PostService<? extends Post> postService;
 
     public void validateFile(MultipartFile file) {
@@ -108,7 +106,7 @@ public class ImageService {
     }
 
     public List<ImageResponseDto> getAllPostImages(Long postId, User user) {
-        authService.findByUsername(user.getUsername());
+        userService.findByUsername(user.getUsername());
         List<ImageResponseDto> imageResponseDtos = new ArrayList<>();
 
         Post post = postService.findById(postId);
@@ -118,13 +116,12 @@ public class ImageService {
             ImageResponseDto imageResponseDto = new ImageResponseDto(image);
             imageResponseDtos.add(imageResponseDto);
         }
-
         return imageResponseDtos;
     }
 
     public void deletePostImage(Long imageId, User user) {
         Image image = findById(imageId);
-        User loginUser = authService.findByUsername(user.getUsername());
+        User loginUser = userService.findByUsername(user.getUsername());
         Post post = postService.findById(image.getPost().getId());
 
         if (post.getUser() != loginUser) {

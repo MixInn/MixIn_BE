@@ -1,9 +1,9 @@
 package com.sparta.mixin.domain.post.comment;
 
-import com.sparta.mixin.domain.auth.security.UserDetailsImpl;
 import com.sparta.mixin.domain.post.comment.dto.CommentRequestDto;
 import com.sparta.mixin.domain.post.comment.dto.CommentResponseDto;
 import com.sparta.mixin.global.common.CommonResponse;
+import com.sparta.mixin.global.security.UserDetailsImpl;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

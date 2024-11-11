@@ -1,6 +1,5 @@
 package com.sparta.mixin.domain.post.like;
 
-import com.sparta.mixin.domain.auth.service.AuthService;
 import com.sparta.mixin.domain.meet.entity.Meet;
 import com.sparta.mixin.domain.meet.service.MeetAuthorizationService;
 import com.sparta.mixin.domain.meet.service.MeetService;
@@ -10,6 +9,7 @@ import com.sparta.mixin.domain.post.entity.MeetPost;
 import com.sparta.mixin.domain.post.entity.Post;
 import com.sparta.mixin.domain.post.like.entity.PostLike;
 import com.sparta.mixin.domain.user.entity.User;
+import com.sparta.mixin.domain.user.service.UserService;
 import com.sparta.mixin.global.exception.CustomException;
 import com.sparta.mixin.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -21,13 +21,13 @@ public class LikeService {
 
     private final LikeRepository likeRepository;
     private final PostService postService;
-    private final AuthService authService;
+    private final UserService userService;
     private final MeetService meetService;
     private final MeetAuthorizationService meetAuthorizationService;
 
     public void postLike(Long postId, User user) {
         Post post = postService.findById(postId);
-        User loginUser = authService.findByUsername(user.getUsername());
+        User loginUser = userService.findByUsername(user.getUsername());
 
         if (post instanceof MeetPost) {
             Meet meet = meetService.findById(((MeetPost) post).getMeet().getId());
@@ -53,7 +53,7 @@ public class LikeService {
 
     public void deleteLike(Long postId, User user) {
         Post post = postService.findById(postId);
-        User loginUser = authService.findByUsername(user.getUsername());
+        User loginUser = userService.findByUsername(user.getUsername());
 
         PostLike postLike = likeRepository.findByPostAndUser(post, loginUser);
         if (postLike == null) {

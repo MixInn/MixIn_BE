@@ -1,6 +1,6 @@
 package com.sparta.mixin.domain.post.publicpost;
 
-import com.sparta.mixin.domain.auth.security.UserDetailsImpl;
+import com.sparta.mixin.global.security.UserDetailsImpl;
 import com.sparta.mixin.domain.image.ImageService;
 import com.sparta.mixin.domain.post.dto.PostRequestDto;
 import com.sparta.mixin.domain.post.dto.PostResponseDto;

@@ -1,6 +1,6 @@
 package com.sparta.mixin.domain.profile.controller;
 
-import com.sparta.mixin.domain.auth.security.UserDetailsImpl;
+import com.sparta.mixin.global.security.UserDetailsImpl;
 import com.sparta.mixin.domain.profile.dto.ProfileRequestDto;
 import com.sparta.mixin.domain.profile.dto.ProfileResponseDto;
 import com.sparta.mixin.domain.profile.service.ProfileService;

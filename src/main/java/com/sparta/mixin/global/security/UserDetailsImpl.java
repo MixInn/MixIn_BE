@@ -1,4 +1,4 @@
-package com.sparta.mixin.domain.auth.security;
+package com.sparta.mixin.global.security;
 
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.domain.user.entity.UserRoleEnum;

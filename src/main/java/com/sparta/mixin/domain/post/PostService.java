@@ -1,6 +1,5 @@
 package com.sparta.mixin.domain.post;
 
-import com.sparta.mixin.domain.auth.service.AuthService;
 import com.sparta.mixin.domain.image.ImageRepository;
 import com.sparta.mixin.domain.image.entity.Image;
 import com.sparta.mixin.domain.meet.entity.Meet;
@@ -11,6 +10,7 @@ import com.sparta.mixin.domain.post.entity.MeetNotice;
 import com.sparta.mixin.domain.post.entity.MeetPost;
 import com.sparta.mixin.domain.post.entity.Post;
 import com.sparta.mixin.domain.user.entity.User;
+import com.sparta.mixin.domain.user.service.UserService;
 import com.sparta.mixin.global.exception.CustomException;
 import com.sparta.mixin.global.exception.ErrorCode;
 import java.util.List;
@@ -29,13 +29,13 @@ public abstract class PostService<T extends Post> {
 
     private final PostRepository<T> postRepository;
     private final ImageRepository imageRepository;
-    private final AuthService authService;
+    private final UserService userService;
     private final MeetService meetService;
 
     public PostResponseDto createPost(
         PostRequestDto postRequestDto, String postType, List<String> fileUrls,
         User user, Long meetId) {
-        User loginUser = authService.findByUsername(user.getUsername());
+        User loginUser = userService.findByUsername(user.getUsername());
 
         // MeetPost이거나 MeetNotice인 경우 meetId가 필수
         if ((postType.equals("MEETPOST") || postType.equals("MEETNOTICE")) && meetId == null) {
@@ -66,7 +66,7 @@ public abstract class PostService<T extends Post> {
     public PostResponseDto editPost(Long postId, PostRequestDto postRequestDto,
         List<String> fileUrls, User user) {
         T post = findById(postId);
-        User loginUser = authService.findByUsername(user.getUsername());
+        User loginUser = userService.findByUsername(user.getUsername());
 
         if (post.getUser() != loginUser) {
             throw new CustomException(ErrorCode.NOT_SAME_USER);
@@ -84,7 +84,7 @@ public abstract class PostService<T extends Post> {
     @Transactional
     public void deletePost(Long postId, User user) {
         T post = findById(postId);
-        User loginUser = authService.findByUsername(user.getUsername());
+        User loginUser = userService.findByUsername(user.getUsername());
 
         if (post.getUser() != loginUser) {
             throw new CustomException(ErrorCode.NOT_SAME_USER);
@@ -94,7 +94,7 @@ public abstract class PostService<T extends Post> {
 
     public PostResponseDto getPost(Long postId, User user) {
         T post = findById(postId);
-        User loginUser = authService.findByUsername(user.getUsername());
+        User loginUser = userService.findByUsername(user.getUsername());
 
         if (post instanceof MeetPost) {
             Meet meet = meetService.findById(((MeetPost) post).getMeet().getId());
@@ -112,7 +112,7 @@ public abstract class PostService<T extends Post> {
     public Page<PostResponseDto> getAllPost(int page, int size,
         String postType, User user, Long meetId) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Direction.DESC, "createdAt"));
-        User loginUser = authService.findByUsername(user.getUsername());
+        User loginUser = userService.findByUsername(user.getUsername());
 
         // MeetPost이거나 MeetNotice인 경우 meetId가 필수
         if ((postType.equals("MEETPOST") || postType.equals("MEETNOTICE")) && meetId == null) {
