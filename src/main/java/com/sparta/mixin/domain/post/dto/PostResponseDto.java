@@ -36,7 +36,6 @@ public class PostResponseDto {
             this.commentCount=((MeetPost) post).getCommentCount();
         } else if (post instanceof MeetNotice) {
             this.meetId = ((MeetNotice) post).getMeet().getId();
-            this.isRead=((MeetNotice) post).isRead();
         } else if (post instanceof PublicPost) {
             this.bookmarkCount=((PublicPost) post).getBookmarkCount();
             this.likeCount=((PublicPost) post).getLikeCount();

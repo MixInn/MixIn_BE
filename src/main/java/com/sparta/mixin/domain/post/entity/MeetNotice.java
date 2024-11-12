@@ -20,9 +20,6 @@ import lombok.RequiredArgsConstructor;
 @DiscriminatorValue("MEETNOTICE")
 public class MeetNotice extends Post {
 
-    @Column(name = "is_read")
-    private boolean isRead=false;
-
     @ManyToOne
     @JoinColumn(name = "meet_id", nullable = false)
     private Meet meet;
@@ -65,11 +62,6 @@ public class MeetNotice extends Post {
     @Override
     public void decreaseCommentCount() {
 
-    }
-
-    @Override
-    public void markAsRead() {
-        this.isRead=true;
     }
 }
 

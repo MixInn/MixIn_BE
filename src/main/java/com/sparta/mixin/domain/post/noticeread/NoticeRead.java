@@ -35,4 +35,8 @@ public class NoticeRead {
     @Column(name = "is_read")
     private boolean isRead=false;
 
+    public void markAsRead(){
+        this.isRead=true;
+    }
+
 }

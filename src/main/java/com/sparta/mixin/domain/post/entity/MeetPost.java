@@ -72,9 +72,4 @@ public class MeetPost extends Post {
     public void decreaseCommentCount() {
         this.commentCount--;
     }
-
-    @Override
-    public void markAsRead() {
-
-    }
 }

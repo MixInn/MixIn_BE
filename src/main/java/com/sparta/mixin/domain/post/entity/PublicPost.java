@@ -62,9 +62,4 @@ public class PublicPost extends Post {
     public void decreaseCommentCount() {
         this.commentCount--;
     }
-
-    @Override
-    public void markAsRead() {
-
-    }
 }
