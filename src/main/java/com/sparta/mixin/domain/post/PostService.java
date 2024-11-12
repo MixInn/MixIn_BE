@@ -4,6 +4,7 @@ import com.sparta.mixin.domain.image.ImageRepository;
 import com.sparta.mixin.domain.image.entity.Image;
 import com.sparta.mixin.domain.meet.entity.Meet;
 import com.sparta.mixin.domain.meet.service.MeetService;
+import com.sparta.mixin.domain.post.dto.MeetNoticeResponseDto;
 import com.sparta.mixin.domain.post.dto.PostRequestDto;
 import com.sparta.mixin.domain.post.dto.PostResponseDto;
 import com.sparta.mixin.domain.post.entity.MeetNotice;
@@ -147,9 +148,16 @@ public abstract class PostService<T extends Post> {
         }
         if (postType.equals("MEETNOTICE")) {
             checkMeetAuthorization(meet, loginUser);
-            return meetNoticeRepository.findAllByUser_UniversityAndPostTypeAndMeet(
+            Page<MeetNotice> noticePage= meetNoticeRepository.findAllByUser_UniversityAndPostTypeAndMeet(
                 loginUser.getUniversity(), postType, meet, pageable
-            ).map(PostResponseDto::new);
+            );
+            for (MeetNotice meetNotice : noticePage) {
+                if(noticeReadRepository.findByUserAndNotice(loginUser,meetNotice)!=null){
+                    MeetNoticeResponseDto responseDto = new MeetNoticeResponseDto(meetNotice,true);
+                } else {
+                    MeetNoticeResponseDto responseDto = new MeetNoticeResponseDto(meetNotice,false);
+                }
+            }
         }
         else {
             return postRepository.findAllByUser_UniversityAndPostType(loginUser.getUniversity(), postType,
