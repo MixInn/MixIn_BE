@@ -50,6 +50,8 @@ public class BookmarkService {
         }
         PostBookmark newPostBookmark = new PostBookmark(post, loginUser);
         bookmarkRepository.save(newPostBookmark);
+        post.increaseBookmarkCount();
+        postService.save(post);
     }
 
     public void deleteBookmark(Long postId, User user) {
@@ -63,6 +65,8 @@ public class BookmarkService {
         }
 
         bookmarkRepository.delete(postBookmark);
+        post.decreaseBookmarkCount();
+        postService.save(post);
     }
 
     public PostBookmark findById(Long bookmarkId) {

@@ -3,6 +3,7 @@ package com.sparta.mixin.domain.post.entity;
 import com.sparta.mixin.domain.meet.entity.Meet;
 import com.sparta.mixin.domain.post.dto.PostRequestDto;
 import com.sparta.mixin.domain.user.entity.User;
+import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -31,6 +32,36 @@ public class MeetNotice extends Post {
 
     public void updatePost(PostRequestDto postRequestDto) {
         super.updatePost(postRequestDto);
+    }
+
+    @Override
+    public void increaseBookmarkCount() {
+
+    }
+
+    @Override
+    public void decreaseBookmarkCount() {
+
+    }
+
+    @Override
+    public void increaseLikeCount() {
+
+    }
+
+    @Override
+    public void decreaseLikeCount() {
+
+    }
+
+    @Override
+    public void increaseCommentCount() {
+
+    }
+
+    @Override
+    public void decreaseCommentCount() {
+
     }
 }
 

@@ -61,7 +61,7 @@ public class MeetPostController {
         @RequestParam(defaultValue = "10") int size,
         @AuthenticationPrincipal
         UserDetailsImpl userDetails) {
-        Page<PostResponseDto> responseDtos = meetPostService.getAllPost(page - 1,
+        Page<? extends PostResponseDto> responseDtos = meetPostService.getAllPost(page - 1,
             size, "MEETPOST", userDetails.getUser(), meetId);
         CommonResponse response = new CommonResponse("밋커뮤니티 글 전체 조회 성공", 200, responseDtos);
         return new ResponseEntity<>(response, HttpStatus.OK);

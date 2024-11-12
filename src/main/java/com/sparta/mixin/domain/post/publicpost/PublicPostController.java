@@ -57,7 +57,7 @@ public class PublicPostController {
         @RequestParam(defaultValue = "1") int page,
         @RequestParam(defaultValue = "10") int size,
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        Page<PostResponseDto> responseDtos = publicPostService.getAllPost(page - 1,
+        Page<? extends PostResponseDto> responseDtos = publicPostService.getAllPost(page - 1,
             size, "PUBLICPOST", userDetails.getUser(), null);
         CommonResponse response = new CommonResponse("공용커뮤니티 글 전체 조회 성공", 200, responseDtos);
         return new ResponseEntity<>(response, HttpStatus.OK);
