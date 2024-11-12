@@ -1,5 +1,6 @@
 package com.sparta.mixin.domain.post.noticeread;
 
+import com.sparta.mixin.domain.meet.entity.Meet;
 import com.sparta.mixin.domain.post.entity.MeetNotice;
 import com.sparta.mixin.domain.user.entity.User;
 import jakarta.persistence.Column;
@@ -28,15 +29,17 @@ public class NoticeRead {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name = "meet_notice_id")
-    private MeetNotice meetNotice;
+    @ManyToOne
+    @JoinColumn(name = "meet_id")
+    private Meet meet;
 
-    @Column(name = "is_read")
-    private boolean isRead=false;
+    @ManyToOne
+    @JoinColumn(name = "notice_id")
+    private MeetNotice notice;
 
-    public void markAsRead(){
-        this.isRead=true;
+    public NoticeRead(User user, Meet meet, MeetNotice notice) {
+        this.user = user;
+        this.meet = meet;
+        this.notice = notice;
     }
-
 }

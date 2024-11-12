@@ -11,6 +11,8 @@ import com.sparta.mixin.domain.post.entity.MeetPost;
 import com.sparta.mixin.domain.post.entity.Post;
 import com.sparta.mixin.domain.post.meetnotice.MeetNoticeRepository;
 import com.sparta.mixin.domain.post.meetpost.MeetPostRepository;
+import com.sparta.mixin.domain.post.noticeread.NoticeRead;
+import com.sparta.mixin.domain.post.noticeread.NoticeReadRepository;
 import com.sparta.mixin.domain.post.publicpost.PublicPostRepository;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.domain.user.service.UserService;
@@ -36,6 +38,7 @@ public abstract class PostService<T extends Post> {
     private final ImageRepository imageRepository;
     private final UserService userService;
     private final MeetService meetService;
+    private final NoticeReadRepository noticeReadRepository;
 
     public PostResponseDto createPost(
         PostRequestDto postRequestDto, String postType, List<String> fileUrls,
@@ -109,7 +112,11 @@ public abstract class PostService<T extends Post> {
         if (post instanceof MeetNotice) {
             Meet meet = meetService.findById(((MeetNotice) post).getMeet().getId());
             checkMeetAuthorization(meet, loginUser);
-            save(post);
+            NoticeRead noticeRead =noticeReadRepository.findByUserAndNotice(loginUser,(MeetNotice) post);
+            if(noticeRead==null){
+                NoticeRead newNoticeRead = new NoticeRead(loginUser,meet,(MeetNotice) post);
+                noticeReadRepository.save(newNoticeRead);
+            }
         }
 
         return new PostResponseDto(post);
