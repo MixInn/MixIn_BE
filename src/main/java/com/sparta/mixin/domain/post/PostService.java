@@ -76,7 +76,8 @@ public abstract class PostService<T extends Post> {
         if (post instanceof MeetPost) {
             return new MeetPostResponseDto((MeetPost) post);
         } else if (post instanceof MeetNotice) {
-            return new MeetNoticeResponseDto((MeetNotice) post, true);
+            boolean isRead = noticeReadRepository.findByUserAndNotice(loginUser, (MeetNotice) post) != null;
+            return new MeetNoticeResponseDto((MeetNotice) post, isRead);
         } else {
             return new PublicPostResponseDto((PublicPost) post);
         }
