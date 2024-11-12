@@ -5,11 +5,14 @@ import com.sparta.mixin.domain.image.entity.Image;
 import com.sparta.mixin.domain.meet.entity.Meet;
 import com.sparta.mixin.domain.meet.service.MeetService;
 import com.sparta.mixin.domain.post.dto.MeetNoticeResponseDto;
+import com.sparta.mixin.domain.post.dto.MeetPostResponseDto;
 import com.sparta.mixin.domain.post.dto.PostRequestDto;
 import com.sparta.mixin.domain.post.dto.PostResponseDto;
+import com.sparta.mixin.domain.post.dto.PublicPostResponseDto;
 import com.sparta.mixin.domain.post.entity.MeetNotice;
 import com.sparta.mixin.domain.post.entity.MeetPost;
 import com.sparta.mixin.domain.post.entity.Post;
+import com.sparta.mixin.domain.post.entity.PublicPost;
 import com.sparta.mixin.domain.post.meetnotice.MeetNoticeRepository;
 import com.sparta.mixin.domain.post.meetpost.MeetPostRepository;
 import com.sparta.mixin.domain.post.noticeread.NoticeRead;
@@ -36,6 +39,7 @@ public abstract class PostService<T extends Post> {
     private final PostRepository<T> postRepository;
     private final MeetPostRepository meetPostRepository;
     private final MeetNoticeRepository meetNoticeRepository;
+    private final PublicPostRepository publicPostRepository;
     private final ImageRepository imageRepository;
     private final UserService userService;
     private final MeetService meetService;
@@ -69,7 +73,13 @@ public abstract class PostService<T extends Post> {
             Image image = new Image(fileUrl, post);
             imageRepository.save(image);
         }
-        return new PostResponseDto(post);
+        if (post instanceof MeetPost) {
+            return new MeetPostResponseDto((MeetPost) post);
+        } else if (post instanceof MeetNotice) {
+            return new MeetNoticeResponseDto((MeetNotice) post, true);
+        } else {
+            return new PublicPostResponseDto((PublicPost) post);
+        }
     }
 
     public PostResponseDto editPost(Long postId, PostRequestDto postRequestDto,
@@ -87,7 +97,15 @@ public abstract class PostService<T extends Post> {
             Image image = new Image(fileUrl, post);
             imageRepository.save(image);
         }
-        return new PostResponseDto(post);
+
+        if (post instanceof MeetPost) {
+            return new MeetPostResponseDto((MeetPost) post);
+        } else if (post instanceof MeetNotice) {
+            boolean isRead = noticeReadRepository.findByUserAndNotice(loginUser, (MeetNotice) post) != null;
+            return new MeetNoticeResponseDto((MeetNotice) post, isRead);
+        } else {
+            return new PublicPostResponseDto((PublicPost) post);
+        }
     }
 
     @Transactional
@@ -108,6 +126,7 @@ public abstract class PostService<T extends Post> {
         if (post instanceof MeetPost) {
             Meet meet = meetService.findById(((MeetPost) post).getMeet().getId());
             checkMeetAuthorization(meet, loginUser);
+            return new MeetPostResponseDto((MeetPost) post);
         }
 
         if (post instanceof MeetNotice) {
@@ -118,52 +137,48 @@ public abstract class PostService<T extends Post> {
                 NoticeRead newNoticeRead = new NoticeRead(loginUser,meet,(MeetNotice) post);
                 noticeReadRepository.save(newNoticeRead);
             }
+            return new MeetNoticeResponseDto((MeetNotice) post,true);
         }
 
-        return new PostResponseDto(post);
+        return new PublicPostResponseDto((PublicPost) post);
     }
 
-    public Page<PostResponseDto> getAllPost(int page, int size,
-        String postType, User user, Long meetId) {
+    public Page<? extends PostResponseDto> getAllPost(int page, int size, String postType, User user, Long meetId) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Direction.DESC, "createdAt"));
         User loginUser = userService.findByUsername(user.getUsername());
 
-        // MeetPost이거나 MeetNotice인 경우 meetId가 필수
         if ((postType.equals("MEETPOST") || postType.equals("MEETNOTICE")) && meetId == null) {
             throw new CustomException(ErrorCode.MISSING_MEET_ID);
         }
 
-        // meetId가 존재하면 Meet 객체 찾기
         Meet meet = null;
         if (meetId != null) {
             meet = meetService.findById(meetId);
         }
 
-        // 후크 메서드: 자식 클래스에서 처리해야 할 로직
         if (postType.equals("MEETPOST")) {
             checkMeetAuthorization(meet, loginUser);
             return meetPostRepository.findAllByUser_UniversityAndPostTypeAndMeet(
                 loginUser.getUniversity(), postType, meet, pageable
-            ).map(PostResponseDto::new);
+            ).map(MeetPostResponseDto::new);
         }
+
         if (postType.equals("MEETNOTICE")) {
             checkMeetAuthorization(meet, loginUser);
-            Page<MeetNotice> noticePage= meetNoticeRepository.findAllByUser_UniversityAndPostTypeAndMeet(
+            Page<MeetNotice> noticePage = meetNoticeRepository.findAllByUser_UniversityAndPostTypeAndMeet(
                 loginUser.getUniversity(), postType, meet, pageable
             );
-            for (MeetNotice meetNotice : noticePage) {
-                if(noticeReadRepository.findByUserAndNotice(loginUser,meetNotice)!=null){
-                    MeetNoticeResponseDto responseDto = new MeetNoticeResponseDto(meetNotice,true);
-                } else {
-                    MeetNoticeResponseDto responseDto = new MeetNoticeResponseDto(meetNotice,false);
-                }
-            }
+
+            return noticePage.map(notice -> {
+                boolean isRead = noticeReadRepository.findByUserAndNotice(loginUser, notice) != null;
+                return new MeetNoticeResponseDto(notice, isRead);
+            });
         }
-        else {
-            return postRepository.findAllByUser_UniversityAndPostType(loginUser.getUniversity(), postType,
-                pageable).map(PostResponseDto::new);
-        }
+
+        return publicPostRepository.findAllByUser_UniversityAndPostType(loginUser.getUniversity(), postType, pageable)
+            .map(PublicPostResponseDto::new);
     }
+
 
     // 후크 메서드를 오버라이드하여 MeetPost에만 필요한 로직 추가
     protected abstract void checkMeetAuthorization(Meet meet, User loginUser);

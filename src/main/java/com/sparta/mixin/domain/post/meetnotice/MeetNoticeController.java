@@ -61,7 +61,7 @@ public class MeetNoticeController {
         @RequestParam(defaultValue = "10") int size,
         @AuthenticationPrincipal
         UserDetailsImpl userDetails) {
-        Page<PostResponseDto> responseDtos = meetNoticeService.getAllPost(page - 1,
+        Page<? extends PostResponseDto> responseDtos = meetNoticeService.getAllPost(page - 1,
             size, "MEETNOTICE", userDetails.getUser(), meetId);
         CommonResponse response = new CommonResponse("밋공지 글 전체 조회 성공", 200, responseDtos);
         return new ResponseEntity<>(response, HttpStatus.OK);
