@@ -9,4 +9,5 @@ import java.util.List;
 public interface MeetApplicationRepository extends JpaRepository<MeetApplication, Long> {
     List<MeetApplication> findByUser(User user);
     List<MeetApplication> findByMeetAnnouncement(MeetAnnouncement meetAnnouncement);
+    boolean existsByMeetAnnouncementAndUser(MeetAnnouncement meetAnnouncement, User user);
 }

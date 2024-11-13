@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,14 +40,16 @@ public class MeetAuthorizationService {
                 .collect(Collectors.toList());
     }
 
-    public MeetAuthorization findByMeetAndUser(Meet meet, User user){
-        return meetAuthorizationRepository.findByMeetAndUser(meet, user).orElseThrow(
-            ()->new CustomException(ErrorCode.NOT_FOUND)
-        );
+    public Optional<MeetAuthorization> findByMeetAndUser(Meet meet, User user){
+        return meetAuthorizationRepository.findByMeetAndUser(meet, user);
     }
 
     public boolean isUserMemberOfMeet(Meet meet, User user) {
         // Check if there's an authorization entry linking the user to the meet
         return meetAuthorizationRepository.existsByMeetAndUser(meet, user);
+    }
+
+    public void deleteMeetAuthorization(MeetAuthorization meetAuthorization) {
+        meetAuthorizationRepository.delete(meetAuthorization);
     }
 }

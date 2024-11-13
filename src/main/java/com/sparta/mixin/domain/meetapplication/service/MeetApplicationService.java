@@ -4,7 +4,6 @@ import com.sparta.mixin.domain.meet.entity.AuthorizationLevel;
 import com.sparta.mixin.domain.meet.entity.Meet;
 import com.sparta.mixin.domain.meet.entity.MeetAuthorization;
 import com.sparta.mixin.domain.meet.service.MeetAuthorizationService;
-import com.sparta.mixin.domain.meet.service.MeetService;
 import com.sparta.mixin.domain.meetannouncement.entity.ApprovalType;
 import com.sparta.mixin.domain.meetannouncement.entity.GenderRestriction;
 import com.sparta.mixin.domain.meetannouncement.entity.MeetAnnouncement;
@@ -22,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,6 +45,11 @@ public class MeetApplicationService {
         boolean isMember = meetAuthorizationService.isUserMemberOfMeet(meet, user);
         if (isMember) {
             throw new CustomException(ErrorCode.FORBIDDEN);
+        }
+
+        // 이미 신청한 사용자 확인
+        if (meetApplicationRepository.existsByMeetAnnouncementAndUser(meetAnnouncement, user)) {
+            throw new CustomException(ErrorCode.ALREADY_APPLIED);
         }
 
         // 성별 제한 확인
@@ -88,11 +93,20 @@ public class MeetApplicationService {
 
         MeetApplication meetApplication = findById(meetApplicationId);
 
-        if (!meetApplication.getUser().equals(user)) {
+        if (!meetApplication.getUser().getId().equals(user.getId())) {
             throw new CustomException(ErrorCode.FORBIDDEN);
+        }
+        // 해당 지원서로 생성된 MeetAuthorization 삭제
+        Meet meet = meetApplication.getMeetAnnouncement().getMeet();
+        Optional<MeetAuthorization> meetAuthorization = meetAuthorizationService.findByMeetAndUser(meet, user);
+
+        if (meetAuthorization.isPresent()) {
+            meetAuthorizationService.deleteMeetAuthorization(meetAuthorization.orElse(null));
         }
 
         meetApplicationRepository.delete(meetApplication);
+
+
     }
 
     @Transactional
