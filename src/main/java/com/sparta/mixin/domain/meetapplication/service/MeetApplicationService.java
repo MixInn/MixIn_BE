@@ -5,17 +5,21 @@ import com.sparta.mixin.domain.meet.entity.Meet;
 import com.sparta.mixin.domain.meet.entity.MeetAuthorization;
 import com.sparta.mixin.domain.meet.service.MeetAuthorizationService;
 import com.sparta.mixin.domain.meet.service.MeetService;
+import com.sparta.mixin.domain.meetannouncement.entity.ApprovalType;
+import com.sparta.mixin.domain.meetannouncement.entity.GenderRestriction;
 import com.sparta.mixin.domain.meetannouncement.entity.MeetAnnouncement;
 import com.sparta.mixin.domain.meetannouncement.service.MeetAnnouncementService;
 import com.sparta.mixin.domain.meetapplication.dto.MeetApplicationRequestDto;
 import com.sparta.mixin.domain.meetapplication.dto.MeetApplicationResponseDto;
 import com.sparta.mixin.domain.meetapplication.entity.MeetApplication;
 import com.sparta.mixin.domain.meetapplication.entity.MeetApplicationRepository;
+import com.sparta.mixin.domain.user.entity.Gender;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.global.exception.CustomException;
 import com.sparta.mixin.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,7 +31,13 @@ public class MeetApplicationService {
     private final MeetAuthorizationService meetAuthorizationService;
     private final MeetAnnouncementService meetAnnouncementService;
 
-    public void createMeetApplication(Long meetAnnouncementId,MeetApplicationRequestDto requestDto,User user) {
+    @Transactional
+    public void createMeetApplication(Long meetAnnouncementId, MeetApplicationRequestDto requestDto, User user) {
+        // 유저 id 확인
+        if (user.getId() != requestDto.getUserId()) {
+            throw new CustomException(ErrorCode.NOT_FOUND_USER);
+        }
+
         // 모임 지원서
         MeetAnnouncement meetAnnouncement = meetAnnouncementService.findById(meetAnnouncementId);
         Meet meet = meetAnnouncement.getMeet();
@@ -37,16 +47,31 @@ public class MeetApplicationService {
             throw new CustomException(ErrorCode.FORBIDDEN);
         }
 
+        // 성별 제한 확인
+        if (meetAnnouncement.getGender() != GenderRestriction.NO_RESTRICTION) {
+            if (!isGenderMatch(meetAnnouncement.getGender(), user.getGender())) {
+                throw new CustomException(ErrorCode.FORBIDDEN);
+            }
+        }
+
         MeetApplication meetApplication = MeetApplication.builder()
                 .meetAnnouncement(meetAnnouncement)
                 .user(user)
                 .content(requestDto.getContent())
                 .build();
 
+        // 저장
         meetApplicationRepository.save(meetApplication);
+
+        // approvalType이 OPEN일 경우 바로 가입 처리
+        if (meetAnnouncement.getApprovalType() == ApprovalType.OPEN) {
+            acceptMeetApplication(meetApplication.getId());
+        }
     }
 
-    public void updateMeetApplication(Long meetApplicationId, MeetApplicationRequestDto requestDto,User user) {
+
+    @Transactional
+    public void updateMeetApplication(Long meetApplicationId, MeetApplicationRequestDto requestDto, User user) {
         MeetApplication meetApplication = findById(meetApplicationId);
 
         if (!meetApplication.getUser().equals(user)) {
@@ -58,8 +83,8 @@ public class MeetApplicationService {
         meetApplicationRepository.save(meetApplication);
     }
 
-
-    public void deleteMeetApplication(Long meetApplicationId,User user) {
+    @Transactional
+    public void deleteMeetApplication(Long meetApplicationId, User user) {
 
         MeetApplication meetApplication = findById(meetApplicationId);
 
@@ -70,6 +95,7 @@ public class MeetApplicationService {
         meetApplicationRepository.delete(meetApplication);
     }
 
+    @Transactional
     public void acceptMeetApplication(Long meetApplicationId) {
         MeetApplication meetApplication = findById(meetApplicationId);
 
@@ -95,7 +121,8 @@ public class MeetApplicationService {
         meetApplicationRepository.save(meetApplication);
     }
 
-    public void rejectMeetApplication(Long meetApplicationId,String reason) {
+    @Transactional
+    public void rejectMeetApplication(Long meetApplicationId, String reason) {
         MeetApplication meetApplication = findById(meetApplicationId);
 
         // 거절 상태로 변경
@@ -130,5 +157,18 @@ public class MeetApplicationService {
 
     public MeetApplication findById(Long meetApplicationId) {
         return meetApplicationRepository.findById(meetApplicationId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
+    }
+
+    private boolean isGenderMatch(GenderRestriction genderRestriction, Gender userGender) {
+        switch (genderRestriction) {
+            case MALE_ONLY:
+                return userGender == Gender.MALE;
+            case FEMALE_ONLY:
+                return userGender == Gender.FEMALE;
+            case NO_RESTRICTION:
+                return true;
+            default:
+                throw new IllegalArgumentException("Unknown gender restriction: " + genderRestriction);
+        }
     }
 }
