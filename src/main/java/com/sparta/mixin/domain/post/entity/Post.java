@@ -44,6 +44,9 @@ public abstract class Post extends Timestamped {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(name = "click_count")
+    private Long clickCount = 0L;
+
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostBookmark> postBookmarks;
 
@@ -75,5 +78,7 @@ public abstract class Post extends Timestamped {
 
     public abstract void increaseCommentCount();
     public abstract void decreaseCommentCount();
-    public abstract void increaseClickCount();
+    public void increaseClickCount(){
+        this.clickCount++;
+    };
 }

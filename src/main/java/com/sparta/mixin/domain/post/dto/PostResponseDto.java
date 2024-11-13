@@ -12,6 +12,7 @@ public abstract class PostResponseDto {
     private Long userId;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
+    private Long clickCount;
 
     protected PostResponseDto(Post post) {
         this.id = post.getId();
@@ -20,5 +21,6 @@ public abstract class PostResponseDto {
         this.userId=post.getUser().getId();
         this.createdAt = post.getCreatedAt();
         this.modifiedAt = post.getModifiedAt();
+        this.clickCount= post.getClickCount();
     }
 }

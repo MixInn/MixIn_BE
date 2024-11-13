@@ -56,8 +56,8 @@ public class PublicPostController {
     public ResponseEntity<CommonResponse<Page<PostResponseDto>>> getAllPublicPost(
         @RequestParam(defaultValue = "1") int page,
         @RequestParam(defaultValue = "10") int size,
-        @RequestParam String orderBy,
-        @RequestParam String searchWord,
+        @RequestParam(defaultValue = "createdAt") String orderBy,
+        @RequestParam(defaultValue = "") String searchWord,
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
         Page<? extends PostResponseDto> responseDtos = publicPostService.getAllPost(page - 1,
             size,orderBy, searchWord,"PUBLICPOST", userDetails.getUser(), null);

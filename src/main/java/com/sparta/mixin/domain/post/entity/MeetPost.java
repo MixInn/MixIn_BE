@@ -33,9 +33,6 @@ public class MeetPost extends Post {
     @Column(name = "comment_count")
     private Long commentCount = 0L;
 
-    @Column(name = "click_count")
-    private Long clickCount = 0L;
-
     @Builder
     public MeetPost(PostRequestDto postRequestDto, User user, Meet meet) {
         super(postRequestDto, user);
@@ -76,8 +73,4 @@ public class MeetPost extends Post {
         this.commentCount--;
     }
 
-    @Override
-    public void increaseClickCount() {
-        this.clickCount++;
-    }
 }

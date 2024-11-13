@@ -145,6 +145,11 @@ public abstract class PostService<T extends Post> {
             return new MeetNoticeResponseDto((MeetNotice) post,true);
         }
 
+        if(post instanceof PublicPost){
+            post.increaseClickCount();
+            save(post);
+        }
+
         return new PublicPostResponseDto((PublicPost) post);
     }
 
