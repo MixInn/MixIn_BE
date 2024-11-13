@@ -9,4 +9,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface PublicPostRepository extends JpaRepository<PublicPost, Long> {
 
     Page<PublicPost> findAllByUser_UniversityAndPostType(String university, String postType, Pageable pageable);
+
+    Page<PublicPost> findAllByUser_UniversityAndPostTypeOrderByClickCountDesc(String university, String postType, Pageable pageable);
+
+    Page<PublicPost> findAllByUser_UniversityAndPostTypeOrderByLikeCountDesc(String university, String postType, Pageable pageable);
 }

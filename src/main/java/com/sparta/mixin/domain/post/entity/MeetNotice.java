@@ -65,8 +65,9 @@ public class MeetNotice extends Post {
     }
 
     @Override
-    public void increaseReadCount() {
+    public void increaseClickCount() {
 
     }
+
 }
 

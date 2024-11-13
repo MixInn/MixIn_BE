@@ -127,7 +127,7 @@ public abstract class PostService<T extends Post> {
         if (post instanceof MeetPost) {
             Meet meet = meetService.findById(((MeetPost) post).getMeet().getId());
             checkMeetAuthorization(meet, loginUser);
-            post.increaseReadCount();
+            post.increaseClickCount();
             save(post);
             return new MeetPostResponseDto((MeetPost) post);
         }
@@ -140,7 +140,7 @@ public abstract class PostService<T extends Post> {
                 NoticeRead newNoticeRead = new NoticeRead(loginUser,meet,(MeetNotice) post);
                 noticeReadRepository.save(newNoticeRead);
             }
-            post.increaseReadCount();
+            post.increaseClickCount();
             save(post);
             return new MeetNoticeResponseDto((MeetNotice) post,true);
         }
@@ -148,7 +148,7 @@ public abstract class PostService<T extends Post> {
         return new PublicPostResponseDto((PublicPost) post);
     }
 
-    public Page<? extends PostResponseDto> getAllPost(int page, int size, String postType, User user, Long meetId) {
+    public Page<? extends PostResponseDto> getAllPost(int page, int size, String orderBy, String postType, User user, Long meetId) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Direction.DESC, "createdAt"));
         User loginUser = userService.findByUsername(user.getUsername());
 
@@ -163,6 +163,16 @@ public abstract class PostService<T extends Post> {
 
         if (postType.equals("MEETPOST")) {
             checkMeetAuthorization(meet, loginUser);
+            if(orderBy.equals("click")){
+                return meetPostRepository.findAllByUser_UniversityAndPostTypeAndMeetOrderByClickCountDesc(
+                    loginUser.getUniversity(), postType, meet, pageable
+                ).map(MeetPostResponseDto::new);
+            }
+            if(orderBy.equals("like")){
+                return meetPostRepository.findAllByUser_UniversityAndPostTypeAndMeetOrderByLikeCountDesc(
+                    loginUser.getUniversity(), postType, meet, pageable
+                ).map(MeetPostResponseDto::new);
+            }
             return meetPostRepository.findAllByUser_UniversityAndPostTypeAndMeet(
                 loginUser.getUniversity(), postType, meet, pageable
             ).map(MeetPostResponseDto::new);
@@ -180,10 +190,20 @@ public abstract class PostService<T extends Post> {
             });
         }
 
+        if(postType.equals("PUBLICPOST")){
+            if(orderBy.equals("click")){
+                return publicPostRepository.findAllByUser_UniversityAndPostTypeOrderByClickCountDesc(loginUser.getUniversity(), postType, pageable)
+                    .map(PublicPostResponseDto::new);
+            }
+            if(orderBy.equals("like")){
+                return publicPostRepository.findAllByUser_UniversityAndPostTypeOrderByLikeCountDesc(loginUser.getUniversity(), postType, pageable)
+                    .map(PublicPostResponseDto::new);
+            }
+        }
+
         return publicPostRepository.findAllByUser_UniversityAndPostType(loginUser.getUniversity(), postType, pageable)
             .map(PublicPostResponseDto::new);
     }
-
 
     // 후크 메서드를 오버라이드하여 MeetPost에만 필요한 로직 추가
     protected abstract void checkMeetAuthorization(Meet meet, User loginUser);

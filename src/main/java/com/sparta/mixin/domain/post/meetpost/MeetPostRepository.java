@@ -12,4 +12,10 @@ public interface MeetPostRepository extends JpaRepository<MeetPost, Long> {
     Page<MeetPost> findAllByMeet(Meet meet, Pageable pageable);
 
     Page<MeetPost> findAllByUser_UniversityAndPostTypeAndMeet(String university, String postType, Meet meet, Pageable pageable);
+
+    Page<MeetPost> findAllByUser_UniversityAndPostTypeAndMeetOrderByClickCountDesc(String university, String postType,
+        Meet meet, Pageable pageable);
+
+    Page<MeetPost> findAllByUser_UniversityAndPostTypeAndMeetOrderByLikeCountDesc(String university, String postType,
+        Meet meet, Pageable pageable);
 }

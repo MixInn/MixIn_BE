@@ -25,8 +25,8 @@ public class PublicPost extends Post {
     @Column(name = "comment_count")
     private Long commentCount = 0L;
 
-    @Column(name = "read_count")
-    private Long readCount = 0L;
+    @Column(name = "click_count")
+    private Long clickCount = 0L;
 
     public PublicPost(PostRequestDto postRequestDto, User user) {
         super(postRequestDto, user);
@@ -67,7 +67,7 @@ public class PublicPost extends Post {
     }
 
     @Override
-    public void increaseReadCount() {
-        this.readCount++;
+    public void increaseClickCount() {
+        this.clickCount++;
     }
 }

@@ -75,5 +75,5 @@ public abstract class Post extends Timestamped {
 
     public abstract void increaseCommentCount();
     public abstract void decreaseCommentCount();
-    public abstract void increaseReadCount();
+    public abstract void increaseClickCount();
 }
