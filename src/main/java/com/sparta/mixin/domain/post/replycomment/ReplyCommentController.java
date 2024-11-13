@@ -1,8 +1,7 @@
 package com.sparta.mixin.domain.post.replycomment;
 
-import com.sparta.mixin.domain.post.comment.CommentController;
 import com.sparta.mixin.domain.post.comment.dto.CommentRequestDto;
-import com.sparta.mixin.domain.post.comment.dto.CommentResponseDto;
+import com.sparta.mixin.domain.post.comment.dto.ReplyCommentResponseDto;
 import com.sparta.mixin.global.common.CommonResponse;
 import com.sparta.mixin.global.security.UserDetailsImpl;
 import java.util.List;
@@ -12,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -28,19 +26,19 @@ public class ReplyCommentController {
     private final ReplyCommentService replyCommentService;
 
     @PostMapping("/{commentId}")
-    public ResponseEntity<CommonResponse<CommentResponseDto>> postReplyComment(@PathVariable(name = "commentId")Long commentId,@RequestBody
+    public ResponseEntity<CommonResponse<ReplyCommentResponseDto>> postReplyComment(@PathVariable(name = "commentId")Long commentId,@RequestBody
         CommentRequestDto commentRequestDto,@AuthenticationPrincipal
         UserDetailsImpl userDetails){
-        CommentResponseDto responseDto = replyCommentService.postReplyComment(commentId,commentRequestDto,userDetails.getUser());
+        ReplyCommentResponseDto responseDto = replyCommentService.postReplyComment(commentId,commentRequestDto,userDetails.getUser());
         CommonResponse response = new CommonResponse("대댓글 작성 성공",200,responseDto);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PutMapping("/{commentId}")
-    public ResponseEntity<CommonResponse<CommentResponseDto>> editReplyComment(@PathVariable(name = "commentId")Long commentId,@RequestBody
+    @PutMapping("/{replyCommentId}")
+    public ResponseEntity<CommonResponse<ReplyCommentResponseDto>> editReplyComment(@PathVariable(name = "replyCommentId")Long replyCommentId,@RequestBody
     CommentRequestDto commentRequestDto,@AuthenticationPrincipal
     UserDetailsImpl userDetails){
-        CommentResponseDto responseDto = replyCommentService.editReplyComment(commentId,commentRequestDto,userDetails.getUser());
+        ReplyCommentResponseDto responseDto = replyCommentService.editReplyComment(replyCommentId,commentRequestDto,userDetails.getUser());
         CommonResponse response = new CommonResponse("대댓글 수정 성공",200,responseDto);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -55,9 +53,9 @@ public class ReplyCommentController {
     }
 
     @GetMapping("/{commentId}")
-    public ResponseEntity<CommonResponse<List<CommentResponseDto>>> getAllReplyComment(@PathVariable(name = "commentId")Long commentId,@AuthenticationPrincipal
+    public ResponseEntity<CommonResponse<List<ReplyCommentResponseDto>>> getAllReplyComment(@PathVariable(name = "commentId")Long commentId,@AuthenticationPrincipal
     UserDetailsImpl userDetails){
-        List<CommentResponseDto> responseDto = replyCommentService.getAllReplyComment(commentId,userDetails.getUser());
+        List<ReplyCommentResponseDto> responseDto = replyCommentService.getAllReplyComment(commentId,userDetails.getUser());
         CommonResponse response = new CommonResponse("대댓글 전체 조회 성공",200,responseDto);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

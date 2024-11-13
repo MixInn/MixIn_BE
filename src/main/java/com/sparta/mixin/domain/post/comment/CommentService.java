@@ -55,6 +55,19 @@ public class CommentService {
         return new CommentResponseDto(communityComment);
     }
 
+    public CommentResponseDto editComment(Long commentId, CommentRequestDto commentRequestDto, User user) {
+        PostComment postComment = findById(commentId);
+        User loginUser = userService.findByUsername(user.getUsername());
+
+        if (postComment.getUser() != loginUser) {
+            throw new CustomException(ErrorCode.NOT_SAME_USER);
+        }
+        postComment.updateComment(commentRequestDto);
+        commentRepository.save(postComment);
+
+        return new CommentResponseDto(postComment);
+    }
+
     @Transactional
     public void deleteComment(Long commentId, User user) {
         PostComment postComment = findById(commentId);
@@ -70,7 +83,7 @@ public class CommentService {
         postService.save(post);
     }
 
-    public List<CommentResponseDto> getComment(Long postId, User user) {
+    public List<CommentResponseDto> getAllComment(Long postId, User user) {
         Post post = postService.findById(postId);
         User loginUser = userService.findByUsername(user.getUsername());
 

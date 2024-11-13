@@ -3,6 +3,7 @@ package com.sparta.mixin.domain.post.comment.entity;
 import com.sparta.mixin.domain.post.PostType;
 import com.sparta.mixin.domain.post.comment.dto.CommentRequestDto;
 import com.sparta.mixin.domain.post.entity.Post;
+import com.sparta.mixin.domain.post.replycomment.ReplyComment;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.global.Timestamped;
 import jakarta.persistence.CascadeType;
@@ -15,7 +16,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -43,10 +46,17 @@ public class PostComment extends Timestamped {
     @Column
     private String comment;
 
+    @OneToMany(mappedBy = "postComment",cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReplyComment> replyComments;
+
     public PostComment(Post post, User user, CommentRequestDto commentRequestDto) {
         this.post = post;
         this.user = user;
         this.postType = PostType.valueOf(post.getClass().getSimpleName().toUpperCase());
         this.comment = commentRequestDto.getComment();
+    }
+
+    public void updateComment(CommentRequestDto commentRequestDto) {
+        this.comment=commentRequestDto.getComment();
     }
 }
