@@ -127,6 +127,8 @@ public abstract class PostService<T extends Post> {
         if (post instanceof MeetPost) {
             Meet meet = meetService.findById(((MeetPost) post).getMeet().getId());
             checkMeetAuthorization(meet, loginUser);
+            post.increaseReadCount();
+            save(post);
             return new MeetPostResponseDto((MeetPost) post);
         }
 
@@ -138,6 +140,8 @@ public abstract class PostService<T extends Post> {
                 NoticeRead newNoticeRead = new NoticeRead(loginUser,meet,(MeetNotice) post);
                 noticeReadRepository.save(newNoticeRead);
             }
+            post.increaseReadCount();
+            save(post);
             return new MeetNoticeResponseDto((MeetNotice) post,true);
         }
 

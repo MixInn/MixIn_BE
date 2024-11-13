@@ -63,5 +63,10 @@ public class MeetNotice extends Post {
     public void decreaseCommentCount() {
 
     }
+
+    @Override
+    public void increaseReadCount() {
+
+    }
 }
 
