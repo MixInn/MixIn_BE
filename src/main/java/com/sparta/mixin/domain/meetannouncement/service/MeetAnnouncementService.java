@@ -42,7 +42,7 @@ public class MeetAnnouncementService {
     }
 
     public void createMeetAnnouncement(Long meetId, MeetAnnouncementRequestDto requestDto, User currentUser) {
-        Meet meet = meetRepository.findById(meetId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
+        Meet meet = meetRepository.findById(meetId).orElseThrow(() -> new CustomException(ErrorCode.MEET_NOT_FOUND));
         AuthorizationLevel userRole = meetAuthorizationService.getUserRole(meet, currentUser);
 
         // 사용자 권한 확인 ( 리더인 경우 생성 가능 )
@@ -50,9 +50,9 @@ public class MeetAnnouncementService {
             throw new CustomException(ErrorCode.FORBIDDEN);
         }
 
-        if (meetAnnouncementRepository.findByMeetId(meetId).isPresent()) {
-            throw new CustomException(ErrorCode.NOT_FOUND);
-        }
+        meetAnnouncementRepository.findByMeetId(meetId).ifPresent(meetAnnouncement -> {
+            throw new CustomException(ErrorCode.MEET_ANNOUNCEMENT_ALREADY_EXISTS);
+        });
 
         MeetAnnouncement meetAnnouncement = MeetAnnouncement.builder()
                 .meet(meet)
@@ -61,7 +61,7 @@ public class MeetAnnouncementService {
                 .numberOfPeople(requestDto.getNumberOfPeople())
                 .preferences(requestDto.getPreferences())
                 .meetingFrequency(requestDto.getMeetingFrequency())
-                .approvalType(requestDto.getApprovalType())
+                .approvalType(ApprovalType.fromString(requestDto.getApprovalType()))
                 .applicationForm(requestDto.getApplicationForm())
                 .tag(requestDto.getTag())
                 .university(currentUser.getUniversity())
@@ -72,7 +72,7 @@ public class MeetAnnouncementService {
     }
 
     public void createLightingAnnouncement(Long meetId,MeetAnnouncementRequestDto requestDto, User currentUser) {
-        Meet meet = meetRepository.findById(meetId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
+        Meet meet = meetRepository.findById(meetId).orElseThrow(() -> new CustomException(ErrorCode.MEET_NOT_FOUND));
 
         MeetAnnouncement meetAnnouncement = MeetAnnouncement.builder()
                 .meet(meet)
@@ -80,7 +80,7 @@ public class MeetAnnouncementService {
                 .meetTime(requestDto.getMeetTime())
                 .gender(requestDto.getGender())
                 .numberOfPeople(requestDto.getNumberOfPeople())
-                .approvalType(ApprovalType.OPEN.getDescription())
+                .approvalType(ApprovalType.OPEN)
                 .university(currentUser.getUniversity())
                 .tag(requestDto.getTag())
                 .build();
@@ -89,14 +89,15 @@ public class MeetAnnouncementService {
         meetAnnouncementRepository.save(meetAnnouncement);
     }
 
+
     public void updateMeetAnnouncement(Long meetId, MeetAnnouncementRequestDto requestDto, User currentUser) {
-        MeetAnnouncement meetAnnouncement = meetAnnouncementRepository.findByMeetId(meetId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
+        MeetAnnouncement meetAnnouncement = findByMeetId(meetId);
 
         AuthorizationLevel userRole = meetAuthorizationService.getUserRole(meetAnnouncement.getMeet(), currentUser);
 
         // 사용자 권한 확인 ( 리더 or 부리더인 경우 수정 가능 )
         if (userRole != AuthorizationLevel.LEADER && userRole != AuthorizationLevel.SUBLEADER) {
-            throw new CustomException(ErrorCode.FORBIDDEN);
+            throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
         }
 
         // 모임 공고 수정
@@ -110,10 +111,10 @@ public class MeetAnnouncementService {
     }
 
     public MeetAnnouncement findByMeetId(Long meetId) {
-        return meetAnnouncementRepository.findByMeetId(meetId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
+        return meetAnnouncementRepository.findByMeetId(meetId).orElseThrow(() -> new CustomException(ErrorCode.MEET_ANNOUNCEMENT_NOT_FOUND));
     }
 
     public MeetAnnouncement findById(Long meetAnnouncementId) {
-        return meetAnnouncementRepository.findById(meetAnnouncementId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
+        return meetAnnouncementRepository.findById(meetAnnouncementId).orElseThrow(() -> new CustomException(ErrorCode.MEET_ANNOUNCEMENT_NOT_FOUND));
     }
 }

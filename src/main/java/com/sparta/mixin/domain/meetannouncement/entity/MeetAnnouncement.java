@@ -41,7 +41,7 @@ public class MeetAnnouncement extends Timestamped {
     private String university;
 
     @Builder
-    public MeetAnnouncement(Meet meet, String recruitmentPeriod,String meetTime,String gender, int numberOfPeople,String tag, String preferences, String meetingFrequency,String approvalType, String applicationForm,String university){
+    public MeetAnnouncement(Meet meet, String recruitmentPeriod,String meetTime,String gender, int numberOfPeople,String tag, String preferences, String meetingFrequency,ApprovalType approvalType, String applicationForm,String university){
         this.meet = meet;
         this.meetType = meet.getType(); // Meet의 타입을 공고에 저장
         this.recruitmentPeriod = LocalDate.parse(recruitmentPeriod);
@@ -53,7 +53,7 @@ public class MeetAnnouncement extends Timestamped {
         this.numberOfPeople = numberOfPeople;
         this.preferences = preferences;
         this.meetingFrequency = meetingFrequency;
-        this.approvalType = ApprovalType.fromString(approvalType);
+        this.approvalType = approvalType;
         this.applicationForm = applicationForm;
         this.university = university;
     }
