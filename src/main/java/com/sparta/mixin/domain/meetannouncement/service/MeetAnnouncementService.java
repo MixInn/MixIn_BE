@@ -9,6 +9,7 @@ import com.sparta.mixin.domain.meet.service.MeetService;
 import com.sparta.mixin.domain.meetannouncement.dto.MeetAnnouncementListRequestDto;
 import com.sparta.mixin.domain.meetannouncement.dto.MeetAnnouncementRequestDto;
 import com.sparta.mixin.domain.meetannouncement.dto.MeetAnnouncementResponseDto;
+import com.sparta.mixin.domain.meetannouncement.entity.ApprovalType;
 import com.sparta.mixin.domain.meetannouncement.entity.MeetAnnouncement;
 import com.sparta.mixin.domain.meetannouncement.entity.MeetAnnouncementRepository;
 import com.sparta.mixin.domain.user.entity.User;
@@ -27,7 +28,7 @@ public class MeetAnnouncementService {
     private final MeetAuthorizationService meetAuthorizationService;
     private final MeetService meetService;
 
-    public Page<MeetAnnouncementResponseDto> getAnnouncementList(MeetAnnouncementListRequestDto requestDto) {
+    public Page<MeetAnnouncementResponseDto> getAnnouncementList(MeetAnnouncementListRequestDto requestDto,User currentUser) {
         Pageable pageable = PageRequest.of(requestDto.getPage(), requestDto.getSize());
 
         MeetType meetType = (requestDto.getMeetType() != null) ? MeetType.fromString(requestDto.getMeetType()) : null;
@@ -38,6 +39,7 @@ public class MeetAnnouncementService {
                 category,
                 requestDto.getTags(),
                 requestDto.getMeetName(),
+                currentUser.getUniversity(),
                 pageable
         ).map(MeetAnnouncementResponseDto::new);
     }
@@ -59,12 +61,33 @@ public class MeetAnnouncementService {
         MeetAnnouncement meetAnnouncement = MeetAnnouncement.builder()
                 .meet(meet)
                 .recruitmentPeriod(requestDto.getRecruitmentPeriod())
+                .meetTime(requestDto.getMeetTime())
                 .gender(requestDto.getGender())
                 .numberOfPeople(requestDto.getNumberOfPeople())
                 .preferences(requestDto.getPreferences())
                 .meetingFrequency(requestDto.getMeetingFrequency())
                 .approvalType(requestDto.getApprovalType())
                 .applicationForm(requestDto.getApplicationForm())
+                .tag(requestDto.getTag())
+                .university(currentUser.getUniversity())
+                .build();
+
+        // 모임 공고 생성
+        meetAnnouncementRepository.save(meetAnnouncement);
+    }
+
+    public void createLightingAnnouncement(Long meetId,MeetAnnouncementRequestDto requestDto, User currentUser) {
+        Meet meet = meetService.findById(meetId);
+
+        MeetAnnouncement meetAnnouncement = MeetAnnouncement.builder()
+                .meet(meet)
+                .recruitmentPeriod(requestDto.getRecruitmentPeriod())
+                .meetTime(requestDto.getMeetTime())
+                .gender(requestDto.getGender())
+                .numberOfPeople(requestDto.getNumberOfPeople())
+                .approvalType(ApprovalType.OPEN.getDescription())
+                .university(currentUser.getUniversity())
+                .tag(requestDto.getTag())
                 .build();
 
         // 모임 공고 생성

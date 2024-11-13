@@ -1,11 +1,11 @@
 package com.sparta.mixin.domain.meetannouncement.controller;
 
-import com.sparta.mixin.global.security.UserDetailsImpl;
 import com.sparta.mixin.domain.meetannouncement.dto.MeetAnnouncementListRequestDto;
 import com.sparta.mixin.domain.meetannouncement.dto.MeetAnnouncementRequestDto;
 import com.sparta.mixin.domain.meetannouncement.dto.MeetAnnouncementResponseDto;
 import com.sparta.mixin.domain.meetannouncement.service.MeetAnnouncementService;
 import com.sparta.mixin.global.common.CommonResponse;
+import com.sparta.mixin.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -26,10 +26,11 @@ public class MeetAnnouncementController {
             @RequestParam(required = false) String tags,
             @RequestParam(required = false) String meetName,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "10") int size,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         MeetAnnouncementListRequestDto requestDto = new MeetAnnouncementListRequestDto(meetType, category, tags, meetName, page, size);
-        Page<MeetAnnouncementResponseDto> responseDtoPage = meetAnnouncementService.getAnnouncementList(requestDto);
+        Page<MeetAnnouncementResponseDto> responseDtoPage = meetAnnouncementService.getAnnouncementList(requestDto,userDetails.getUser());
         CommonResponse response = new CommonResponse<>("모임 공고 리스트 조회 성공", 200, responseDtoPage);
         return ResponseEntity.ok(response);
     }

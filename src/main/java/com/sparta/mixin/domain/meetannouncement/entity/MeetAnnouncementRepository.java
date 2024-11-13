@@ -16,12 +16,14 @@ public interface MeetAnnouncementRepository extends JpaRepository<MeetAnnounceme
             "(:meetType IS NULL OR a.meet.type = :meetType) AND " +
             "(:category IS NULL OR a.meet.category = :category) AND " +
             "(:tags IS NULL OR :tags = '' OR a.preferences LIKE %:tags%) AND " +
-            "(:meetName IS NULL OR :meetName = '' OR a.meet.name LIKE %:meetName%)")
+            "(:meetName IS NULL OR :meetName = '' OR a.meet.name LIKE %:meetName%) AND " +
+            "(:university IS NULL OR a.university = :university)")
     Page<MeetAnnouncement> findAnnouncementsWithFilters(
-            @Param("meetType") MeetType meetType,  // Change to MeetType
-            @Param("category") MeetCategory category,  // Change to MeetCategory
+            @Param("meetType") MeetType meetType,
+            @Param("category") MeetCategory category,
             @Param("tags") String tags,
             @Param("meetName") String meetName,
+            @Param("university") String university,  // 추가
             Pageable pageable);
 
 

@@ -2,6 +2,8 @@ package com.sparta.mixin.domain.meet.service;
 
 import com.sparta.mixin.domain.meet.dto.MeetRequestDto;
 import com.sparta.mixin.domain.meet.entity.*;
+import com.sparta.mixin.domain.meetannouncement.dto.MeetAnnouncementRequestDto;
+import com.sparta.mixin.domain.meetannouncement.service.MeetAnnouncementService;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.global.exception.CustomException;
 import com.sparta.mixin.global.exception.ErrorCode;
@@ -15,7 +17,7 @@ public class MeetService {
     private final MeetAuthorizationService meetAuthorizationService;
 
 
-    public void createMeet(MeetRequestDto requestDto, User user) {
+    public Meet createMeet(MeetRequestDto requestDto, User user) {
         MeetType meetType = MeetType.fromString(requestDto.getType());
         MeetCategory meetCategory = MeetCategory.fromString(requestDto.getCategory());
 
@@ -29,7 +31,8 @@ public class MeetService {
                 .tag(requestDto.getTag())
                 .build();
         // 밑 생성
-        meetRepository.save(meet);
+        Meet savedMeet = meetRepository.save(meet);
+
 
 
         // 유저를 생성자 권한으로 추가하기
@@ -40,6 +43,8 @@ public class MeetService {
                 .build();
 
         meetAuthorizationService.save(meetAuthorization);
+
+        return savedMeet;
     }
 
 
