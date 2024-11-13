@@ -25,13 +25,13 @@ public class MeetPost extends Post {
     private Meet meet;
 
     @Column(name = "like_count")
-    private Long likeCount=0L;
+    private Long likeCount = 0L;
 
     @Column(name = "bookmark_count")
-    private Long bookmarkCount=0L;
+    private Long bookmarkCount = 0L;
 
     @Column(name = "comment_count")
-    private Long commentCount=0L;
+    private Long commentCount = 0L;
 
     @Builder
     public MeetPost(PostRequestDto postRequestDto, User user, Meet meet) {
@@ -72,4 +72,5 @@ public class MeetPost extends Post {
     public void decreaseCommentCount() {
         this.commentCount--;
     }
+
 }
