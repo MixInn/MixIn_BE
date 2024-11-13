@@ -148,7 +148,7 @@ public abstract class PostService<T extends Post> {
         return new PublicPostResponseDto((PublicPost) post);
     }
 
-    public Page<? extends PostResponseDto> getAllPost(int page, int size, String orderBy, String postType, User user, Long meetId) {
+    public Page<? extends PostResponseDto> getAllPost(int page, int size, String orderBy, String searchWord, String postType, User user, Long meetId) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Direction.DESC, "createdAt"));
         User loginUser = userService.findByUsername(user.getUsername());
 
@@ -159,6 +159,16 @@ public abstract class PostService<T extends Post> {
         Meet meet = null;
         if (meetId != null) {
             meet = meetService.findById(meetId);
+        }
+
+        if(!searchWord.isEmpty()){
+            if(postType.equals("MEETPOST")){
+                checkMeetAuthorization(meet, loginUser);
+                return meetPostRepository.findAllByUser_UniversityAndPostTypeAndMeetAndTitleContainingOrContentContaining(loginUser.getUniversity(),postType,meet,searchWord,pageable).map(MeetPostResponseDto::new);
+            }
+            if(postType.equals("PUBLICPOST")){
+                return publicPostRepository.findAllByUser_UniversityAndPostTypeAndTitleContainingOrContentContaining(loginUser.getUniversity(),postType,searchWord,pageable).map(PublicPostResponseDto::new);
+            }
         }
 
         if (postType.equals("MEETPOST")) {
