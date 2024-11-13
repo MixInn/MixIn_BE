@@ -45,7 +45,9 @@ public class MeetAnnouncement extends Timestamped {
         this.meet = meet;
         this.meetType = meet.getType(); // Meet의 타입을 공고에 저장
         this.recruitmentPeriod = LocalDate.parse(recruitmentPeriod);
-        this.meetTime = LocalTime.parse(meetTime);
+        if (meetTime != null) {
+            this.meetTime = LocalTime.parse(meetTime);
+        }
         this.gender = GenderRestriction.fromString(gender);
         this.tag = tag;
         this.numberOfPeople = numberOfPeople;

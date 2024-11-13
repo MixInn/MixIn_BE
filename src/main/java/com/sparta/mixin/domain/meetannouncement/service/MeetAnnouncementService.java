@@ -57,7 +57,6 @@ public class MeetAnnouncementService {
         MeetAnnouncement meetAnnouncement = MeetAnnouncement.builder()
                 .meet(meet)
                 .recruitmentPeriod(requestDto.getRecruitmentPeriod())
-                .meetTime(requestDto.getMeetTime())
                 .gender(requestDto.getGender())
                 .numberOfPeople(requestDto.getNumberOfPeople())
                 .preferences(requestDto.getPreferences())
