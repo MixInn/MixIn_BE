@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 public class MeetService {
     private final MeetRepository meetRepository;
     private final MeetAuthorizationService meetAuthorizationService;
+    private final MeetAnnouncementService meetAnnouncementService;
 
 
     public Meet createMeet(MeetRequestDto requestDto, User user) {
@@ -33,6 +34,17 @@ public class MeetService {
         // 밑 생성
         Meet savedMeet = meetRepository.save(meet);
 
+
+        if (meetType == MeetType.LIGHTNING) {
+            MeetAnnouncementRequestDto announcementRequestDto = MeetAnnouncementRequestDto.builder()
+                    .recruitmentPeriod(requestDto.getRecruitmentPeriod())
+                    .gender(requestDto.getGender())
+                    .numberOfPeople(requestDto.getNumberOfPeople())
+                    .meetTime(requestDto.getMeetTime())
+                    .tag(requestDto.getTag())
+                    .build();
+            meetAnnouncementService.createLightingAnnouncement(savedMeet.getId(),announcementRequestDto,user);
+        }
 
 
         // 유저를 생성자 권한으로 추가하기

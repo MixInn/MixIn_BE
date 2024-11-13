@@ -1,11 +1,9 @@
 package com.sparta.mixin.domain.meetactivity.controller;
 
-import com.sparta.mixin.domain.auth.security.UserDetailsImpl;
-import com.sparta.mixin.domain.meet.dto.MeetRequestDto;
 import com.sparta.mixin.domain.meetactivity.dto.MeetActivityRequestDto;
 import com.sparta.mixin.domain.meetactivity.service.MeetActivityService;
-import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.global.common.CommonResponse;
+import com.sparta.mixin.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

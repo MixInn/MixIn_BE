@@ -1,9 +1,6 @@
 package com.sparta.mixin.domain.meetannouncement.service;
 
-import com.sparta.mixin.domain.meet.entity.AuthorizationLevel;
-import com.sparta.mixin.domain.meet.entity.Meet;
-import com.sparta.mixin.domain.meet.entity.MeetCategory;
-import com.sparta.mixin.domain.meet.entity.MeetType;
+import com.sparta.mixin.domain.meet.entity.*;
 import com.sparta.mixin.domain.meet.service.MeetAuthorizationService;
 import com.sparta.mixin.domain.meet.service.MeetService;
 import com.sparta.mixin.domain.meetannouncement.dto.MeetAnnouncementListRequestDto;
@@ -25,8 +22,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MeetAnnouncementService {
     private final MeetAnnouncementRepository meetAnnouncementRepository;
+    private final MeetRepository meetRepository;
     private final MeetAuthorizationService meetAuthorizationService;
-    private final MeetService meetService;
 
     public Page<MeetAnnouncementResponseDto> getAnnouncementList(MeetAnnouncementListRequestDto requestDto,User currentUser) {
         Pageable pageable = PageRequest.of(requestDto.getPage(), requestDto.getSize());
@@ -45,8 +42,7 @@ public class MeetAnnouncementService {
     }
 
     public void createMeetAnnouncement(Long meetId, MeetAnnouncementRequestDto requestDto, User currentUser) {
-        Meet meet = meetService.findById(meetId);
-
+        Meet meet = meetRepository.findById(meetId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
         AuthorizationLevel userRole = meetAuthorizationService.getUserRole(meet, currentUser);
 
         // 사용자 권한 확인 ( 리더인 경우 생성 가능 )
@@ -77,7 +73,7 @@ public class MeetAnnouncementService {
     }
 
     public void createLightingAnnouncement(Long meetId,MeetAnnouncementRequestDto requestDto, User currentUser) {
-        Meet meet = meetService.findById(meetId);
+        Meet meet = meetRepository.findById(meetId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
 
         MeetAnnouncement meetAnnouncement = MeetAnnouncement.builder()
                 .meet(meet)

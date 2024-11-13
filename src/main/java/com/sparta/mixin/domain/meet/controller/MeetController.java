@@ -38,16 +38,7 @@ public class MeetController {
         Meet savedMeet = meetService.createMeet(requestDto,userDetails.getUser());
         MeetType meetType = MeetType.fromString(requestDto.getType());
 
-        if (meetType == MeetType.LIGHTNING) {
-            MeetAnnouncementRequestDto announcementRequestDto = MeetAnnouncementRequestDto.builder()
-                    .recruitmentPeriod(requestDto.getRecruitmentPeriod())
-                    .gender(requestDto.getGender())
-                    .numberOfPeople(requestDto.getNumberOfPeople())
-                    .meetTime(requestDto.getMeetTime())
-                    .tag(requestDto.getTag())
-                    .build();
-            meetAnnouncementService.createLightingAnnouncement(savedMeet.getId(),announcementRequestDto,userDetails.getUser());
-        }
+
 
         CommonResponse response = new CommonResponse<>("모임 생성 성공", 201, "");
         return new ResponseEntity<>(response, HttpStatus.CREATED);
