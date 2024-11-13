@@ -18,6 +18,9 @@ import com.sparta.mixin.domain.post.meetpost.MeetPostRepository;
 import com.sparta.mixin.domain.post.noticeread.NoticeRead;
 import com.sparta.mixin.domain.post.noticeread.NoticeReadRepository;
 import com.sparta.mixin.domain.post.publicpost.PublicPostRepository;
+import com.sparta.mixin.domain.post.vote.PostVote;
+import com.sparta.mixin.domain.post.vote.PostVoteRepository;
+import com.sparta.mixin.domain.post.vote.VoteRequestDto;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.domain.user.service.UserService;
 import com.sparta.mixin.global.exception.CustomException;
@@ -44,6 +47,7 @@ public abstract class PostService<T extends Post> {
     private final UserService userService;
     private final MeetService meetService;
     private final NoticeReadRepository noticeReadRepository;
+    private final PostVoteRepository postVoteRepository;
 
     public PostResponseDto createPost(
         PostRequestDto postRequestDto, String postType, List<String> fileUrls,
@@ -73,6 +77,12 @@ public abstract class PostService<T extends Post> {
             Image image = new Image(fileUrl, post);
             imageRepository.save(image);
         }
+
+        if(postRequestDto.getVoteRequestDto()!=null){
+            PostVote vote = new PostVote(postRequestDto.getVoteRequestDto());
+            postVoteRepository.save(vote);
+        }
+
         if (post instanceof MeetPost) {
             return new MeetPostResponseDto((MeetPost) post);
         } else if (post instanceof MeetNotice) {
