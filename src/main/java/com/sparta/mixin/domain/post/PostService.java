@@ -100,6 +100,7 @@ public abstract class PostService<T extends Post> {
         }
     }
 
+    @Transactional
     public PostResponseDto editPost(Long postId, PostRequestDto postRequestDto,
         List<String> fileUrls, User user) {
         T post = findById(postId);
@@ -118,13 +119,23 @@ public abstract class PostService<T extends Post> {
 
         if(postRequestDto.getVoteRequestDto()!=null){
             PostVote postVote = postVoteRepository.findByPost(post);
-            postVote.updateVote(postRequestDto.getVoteRequestDto());
-            postVoteRepository.save(postVote);
 
-            voteOptionRepository.deleteAllByPostVote(postVote);
+            if(postVote==null){
+                PostVote vote = new PostVote(postRequestDto.getVoteRequestDto(),post);
+                postVoteRepository.save(vote);
+                for (String optionText : postRequestDto.getVoteRequestDto().getVoteOption()) {
+                    VoteOption voteOption = new VoteOption(vote,optionText);
+                    voteOptionRepository.save(voteOption);
+                }
+            } else {
+                postVote.updateVote(postRequestDto.getVoteRequestDto());
+                postVoteRepository.save(postVote);
 
-            List<VoteOption> updatedVoteOptions = postRequestDto.getVoteRequestDto().getVoteOption().stream().map(optionText -> new VoteOption(postVote,optionText)).toList();
-            voteOptionRepository.saveAll(updatedVoteOptions);
+                voteOptionRepository.deleteAllByPostVote(postVote);
+
+                List<VoteOption> updatedVoteOptions = postRequestDto.getVoteRequestDto().getVoteOption().stream().map(optionText -> new VoteOption(postVote,optionText)).toList();
+                voteOptionRepository.saveAll(updatedVoteOptions);
+            }
         }
 
         if (post instanceof MeetPost) {
