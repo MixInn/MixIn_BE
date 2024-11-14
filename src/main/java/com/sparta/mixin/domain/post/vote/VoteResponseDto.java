@@ -2,7 +2,9 @@ package com.sparta.mixin.domain.post.vote;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import lombok.Getter;
 
+@Getter
 public class VoteResponseDto {
     private Long id;
     private Long postId;

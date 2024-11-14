@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @Entity
-@Table(name = "vote_options")
+@Table(name = "vote_option")
 @RequiredArgsConstructor
 public class VoteOption {
 
@@ -25,11 +25,6 @@ public class VoteOption {
     private PostVote postVote;
 
     private String optionText;
-
-    public VoteOption(String voteOption, PostVote postVote) {
-        this.postVote=postVote;
-        this.optionText=voteOption;
-    }
 
     public VoteOption(PostVote postVote, String optionText) {
         this.postVote=postVote;

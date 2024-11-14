@@ -82,7 +82,7 @@ public abstract class PostService<T extends Post> {
         }
 
         if(postRequestDto.getVoteRequestDto()!=null){
-            PostVote vote = new PostVote(postRequestDto.getVoteRequestDto());
+            PostVote vote = new PostVote(postRequestDto.getVoteRequestDto(),post);
             postVoteRepository.save(vote);
             for (String optionText : postRequestDto.getVoteRequestDto().getVoteOption()) {
                 VoteOption voteOption = new VoteOption(vote,optionText);
