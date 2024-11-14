@@ -37,10 +37,15 @@ public class PostVoteService {
             throw new CustomException(ErrorCode.NOT_SAME_USER);
         }
         postVote.updateVote(voteRequestDto);
-        List<VoteOption> voteOptions = voteOptionRepository.findAllByPostVote(postVote);
-        for (VoteOption voteOption : voteOptions) {
-            
-        }
+
+        voteOptionRepository.deleteAllByPostVote(postVote);
+
+        List<VoteOption> updatedVoteOptions = voteRequestDto.getVoteOption().stream().map(optionText -> new VoteOption(postVote,optionText)).toList();
+        voteOptionRepository.saveAll(updatedVoteOptions);
+
+        List<String> optionTextList = updatedVoteOptions.stream().map(VoteOption::getOptionText).toList();
+
+        return new VoteResponseDto(postVote,optionTextList);
     }
 
     public void deletePostVote(Long voteId, User user) {

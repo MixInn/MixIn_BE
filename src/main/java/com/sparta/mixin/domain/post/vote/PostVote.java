@@ -50,6 +50,5 @@ public class PostVote {
         this.deadline=voteRequestDto.getDeadline();
         this.isAnonymous=voteRequestDto.isAnonymous();
         this.allowMultipleVotes=voteRequestDto.isAllowMultipleVotes();
-        this.voteOptions=voteRequestDto.getVoteOption();
     }
 }
