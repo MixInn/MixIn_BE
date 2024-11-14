@@ -116,6 +116,17 @@ public abstract class PostService<T extends Post> {
             imageRepository.save(image);
         }
 
+        if(postRequestDto.getVoteRequestDto()!=null){
+            PostVote postVote = postVoteRepository.findByPost(post);
+            postVote.updateVote(postRequestDto.getVoteRequestDto());
+            postVoteRepository.save(postVote);
+
+            voteOptionRepository.deleteAllByPostVote(postVote);
+
+            List<VoteOption> updatedVoteOptions = postRequestDto.getVoteRequestDto().getVoteOption().stream().map(optionText -> new VoteOption(postVote,optionText)).toList();
+            voteOptionRepository.saveAll(updatedVoteOptions);
+        }
+
         if (post instanceof MeetPost) {
             return new MeetPostResponseDto((MeetPost) post);
         } else if (post instanceof MeetNotice) {
