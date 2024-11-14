@@ -23,6 +23,11 @@ public class PostVoteService {
         userService.findByUsername(user.getUsername());
 
         PostVote postVote = postVoteRepository.findByPost(post);
+
+        if(postVote==null){
+            throw new CustomException(ErrorCode.NOT_FOUND);
+        }
+
         List<String> optionTextList = voteOptionRepository.findAllByPostVote(postVote).stream().map(VoteOption::getOptionText).toList();
 
         return new VoteResponseDto(postVote,optionTextList);
