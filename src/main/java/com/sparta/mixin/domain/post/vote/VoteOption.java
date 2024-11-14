@@ -30,4 +30,9 @@ public class VoteOption {
         this.postVote=postVote;
         this.optionText=voteOption;
     }
+
+    public VoteOption(PostVote postVote, String optionText) {
+        this.postVote=postVote;
+        this.optionText=optionText;
+    }
 }

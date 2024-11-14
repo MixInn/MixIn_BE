@@ -20,6 +20,8 @@ import com.sparta.mixin.domain.post.noticeread.NoticeReadRepository;
 import com.sparta.mixin.domain.post.publicpost.PublicPostRepository;
 import com.sparta.mixin.domain.post.vote.PostVote;
 import com.sparta.mixin.domain.post.vote.PostVoteRepository;
+import com.sparta.mixin.domain.post.vote.VoteOption;
+import com.sparta.mixin.domain.post.vote.VoteOptionRepository;
 import com.sparta.mixin.domain.post.vote.VoteRequestDto;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.domain.user.service.UserService;
@@ -48,6 +50,7 @@ public abstract class PostService<T extends Post> {
     private final MeetService meetService;
     private final NoticeReadRepository noticeReadRepository;
     private final PostVoteRepository postVoteRepository;
+    private final VoteOptionRepository voteOptionRepository;
 
     public PostResponseDto createPost(
         PostRequestDto postRequestDto, String postType, List<String> fileUrls,
@@ -81,6 +84,10 @@ public abstract class PostService<T extends Post> {
         if(postRequestDto.getVoteRequestDto()!=null){
             PostVote vote = new PostVote(postRequestDto.getVoteRequestDto());
             postVoteRepository.save(vote);
+            for (String optionText : postRequestDto.getVoteRequestDto().getVoteOption()) {
+                VoteOption voteOption = new VoteOption(vote,optionText);
+                voteOptionRepository.save(voteOption);
+            }
         }
 
         if (post instanceof MeetPost) {

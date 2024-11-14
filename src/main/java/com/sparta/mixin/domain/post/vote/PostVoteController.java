@@ -1,0 +1,45 @@
+package com.sparta.mixin.domain.post.vote;
+
+import com.sparta.mixin.global.common.CommonResponse;
+import com.sparta.mixin.global.security.UserDetailsImpl;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/post/vote")
+public class PostVoteController {
+    private final PostVoteService postVoteService;
+
+    @GetMapping("/{postId}")
+    public ResponseEntity<CommonResponse<List<VoteResponseDto>>> getPostVote(@PathVariable(name = "postId")Long postId,@AuthenticationPrincipal
+        UserDetailsImpl userDetails){
+        List<VoteResponseDto> voteResponseDto = postVoteService.getPostVote(postId,userDetails.getUser());
+        CommonResponse response = new CommonResponse("투표 조회 성공",200,voteResponseDto);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PutMapping("/{voteId}")
+    public ResponseEntity<CommonResponse<VoteResponseDto>> editPostVote(@PathVariable(name = "voteId")Long voteId,@RequestBody VoteRequestDto voteRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        VoteResponseDto voteResponseDto = postVoteService.editPostVote(voteId,voteRequestDto,userDetails.getUser());
+        CommonResponse response= new CommonResponse("투표 수정 성공",200,voteResponseDto);
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{voteId}")
+    public ResponseEntity<CommonResponse> deletePostVote(@PathVariable(name = "voteId")Long voteId,@AuthenticationPrincipal UserDetailsImpl userDetails){
+        postVoteService.deletePostVote(voteId,userDetails.getUser());
+        CommonResponse response = new CommonResponse("투표 삭제 성공",200,"");
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+}
