@@ -2,17 +2,15 @@ package com.sparta.mixin.domain.post.vote;
 
 import com.sparta.mixin.domain.post.entity.Post;
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +25,7 @@ public class PostVote {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "post_id")
     private Post post;
 
@@ -40,10 +38,11 @@ public class PostVote {
 
     private boolean allowMultipleVotes;
 
-    public PostVote(VoteRequestDto voteRequestDto) {
+    public <T extends Post> PostVote(VoteRequestDto voteRequestDto, T post) {
         this.deadline=voteRequestDto.getDeadline();
         this.isAnonymous=voteRequestDto.isAnonymous();
         this.allowMultipleVotes=voteRequestDto.isAllowMultipleVotes();
+        this.post=post;
     }
 
     public void updateVote(VoteRequestDto voteRequestDto) {

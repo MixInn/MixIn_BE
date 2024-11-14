@@ -18,16 +18,14 @@ public class PostVoteService {
     private final PostService postService;
     private final UserService userService;
 
-    public List<VoteResponseDto> getPostVote(Long postId, User user) {
+    public VoteResponseDto getPostVote(Long postId, User user) {
         Post post = postService.findById(postId);
         userService.findByUsername(user.getUsername());
 
-        List<PostVote> postVoteList = postVoteRepository.findAllByPost(post);
+        PostVote postVote = postVoteRepository.findByPost(post);
+        List<String> optionTextList = voteOptionRepository.findAllByPostVote(postVote).stream().map(VoteOption::getOptionText).toList();
 
-        return postVoteList.stream().map(postVote->{
-                List<String> optionTextList = voteOptionRepository.findAllByPostVote(postVote).stream().map(VoteOption::getOptionText).toList();
-                return new VoteResponseDto(postVote,optionTextList);
-            }).toList();
+        return new VoteResponseDto(postVote,optionTextList);
     }
 
     public VoteResponseDto editPostVote(Long voteId, VoteRequestDto voteRequestDto, User user) {

@@ -22,9 +22,9 @@ public class PostVoteController {
     private final PostVoteService postVoteService;
 
     @GetMapping("/{postId}")
-    public ResponseEntity<CommonResponse<List<VoteResponseDto>>> getPostVote(@PathVariable(name = "postId")Long postId,@AuthenticationPrincipal
+    public ResponseEntity<CommonResponse<VoteResponseDto>> getPostVote(@PathVariable(name = "postId")Long postId,@AuthenticationPrincipal
         UserDetailsImpl userDetails){
-        List<VoteResponseDto> voteResponseDto = postVoteService.getPostVote(postId,userDetails.getUser());
+        VoteResponseDto voteResponseDto = postVoteService.getPostVote(postId,userDetails.getUser());
         CommonResponse response = new CommonResponse("투표 조회 성공",200,voteResponseDto);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
