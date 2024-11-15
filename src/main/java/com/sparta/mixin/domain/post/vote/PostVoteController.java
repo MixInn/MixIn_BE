@@ -1,5 +1,9 @@
 package com.sparta.mixin.domain.post.vote;
 
+import com.sparta.mixin.domain.post.vote.dto.VoteOptionResponseDto;
+import com.sparta.mixin.domain.post.vote.dto.VoteRequestDto;
+import com.sparta.mixin.domain.post.vote.dto.VoteResponseDto;
+import com.sparta.mixin.domain.post.vote.entity.PostVote;
 import com.sparta.mixin.global.common.CommonResponse;
 import com.sparta.mixin.global.exception.CustomException;
 import com.sparta.mixin.global.exception.ErrorCode;
@@ -55,6 +59,13 @@ public class PostVoteController {
         }
         postVoteService.submitVote(postVote,voteOptionIds,userDetails.getUser());
         CommonResponse response = new CommonResponse("투표 성공",200,"");
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+    @GetMapping("/option/{voteId}")
+    public ResponseEntity<CommonResponse<List<VoteOptionResponseDto>>> getAllVoteOption(@PathVariable(name = "voteId")Long voteId,@AuthenticationPrincipal UserDetailsImpl userDetails){
+        List<VoteOptionResponseDto> voteOptionResponseDtos = postVoteService.getAllVoteOption(voteId,userDetails.getUser());
+        CommonResponse response = new CommonResponse("투표 항목 조회 성공",200,voteOptionResponseDtos);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 }

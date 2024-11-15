@@ -2,11 +2,21 @@ package com.sparta.mixin.domain.post.vote;
 
 import com.sparta.mixin.domain.post.PostService;
 import com.sparta.mixin.domain.post.entity.Post;
+import com.sparta.mixin.domain.post.vote.dto.VoteOptionResponseDto;
+import com.sparta.mixin.domain.post.vote.dto.VoteRequestDto;
+import com.sparta.mixin.domain.post.vote.dto.VoteResponseDto;
+import com.sparta.mixin.domain.post.vote.entity.PostVote;
+import com.sparta.mixin.domain.post.vote.entity.VoteOption;
+import com.sparta.mixin.domain.post.vote.entity.VoteResult;
+import com.sparta.mixin.domain.post.vote.repository.PostVoteRepository;
+import com.sparta.mixin.domain.post.vote.repository.VoteOptionRepository;
+import com.sparta.mixin.domain.post.vote.repository.VoteResultRepository;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.domain.user.service.UserService;
 import com.sparta.mixin.global.exception.CustomException;
 import com.sparta.mixin.global.exception.ErrorCode;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -77,6 +87,21 @@ public class PostVoteService {
                     : new VoteResult(voteOption, loginUser, LocalDateTime.now());
             voteResultRepository.save(voteResult);
         }
+    }
+
+    public List<VoteOptionResponseDto> getAllVoteOption(Long voteId, User user) {
+        userService.findByUsername(user.getUsername());
+        PostVote postVote = findById(voteId);
+        List<VoteOptionResponseDto> responseDtos = new ArrayList<>();
+
+        List<VoteOption> voteOptionList = voteOptionRepository.findAllByPostVote(postVote);
+        for (VoteOption voteOption : voteOptionList) {
+            Long voteCount = voteResultRepository.countByVoteOption(voteOption);
+            List<String> voteUser = voteResultRepository.findUserByVoteOption(voteOption).stream().map(User::getName).toList();
+            VoteOptionResponseDto responseDto = new VoteOptionResponseDto(voteOption,voteCount,voteUser);
+            responseDtos.add(responseDto);
+        }
+        return responseDtos;
     }
 
     public PostVote findById(Long voteId) {
