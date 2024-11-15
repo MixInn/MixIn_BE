@@ -8,7 +8,6 @@ import lombok.Getter;
 @Getter
 public class VoteResponseDto {
     private Long id;
-    private Long postId;
     private List<String> voteOptions;
     private LocalDateTime deadline;
     private boolean isAnonymous;
@@ -16,7 +15,6 @@ public class VoteResponseDto {
 
     public VoteResponseDto(PostVote postVote,List<String> optionTextList) {
         this.id = postVote.getId();
-        this.postId = postVote.getPost().getId();
         this.voteOptions = optionTextList;
         this.deadline = postVote.getDeadline();
         this.isAnonymous = postVote.isAnonymous();
