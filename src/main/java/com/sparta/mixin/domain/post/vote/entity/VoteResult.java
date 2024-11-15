@@ -23,6 +23,10 @@ public class VoteResult {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "vote_id")
+    private PostVote postVote;
+
+    @ManyToOne
     @JoinColumn(name = "vote_option_id")
     private VoteOption voteOption;
 
@@ -33,6 +37,7 @@ public class VoteResult {
     private LocalDateTime voteTime;
 
     public VoteResult(VoteOption voteOption, User user, LocalDateTime voteTime) {
+        this.postVote=voteOption.getPostVote();
         this.voteOption = voteOption;
         this.user = user; // 익명 투표의 경우 null
         this.voteTime = voteTime;
