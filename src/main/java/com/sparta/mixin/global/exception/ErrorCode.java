@@ -71,7 +71,8 @@ public enum ErrorCode {
 	INCORRECT_MEET_USER(HttpStatus.UNAUTHORIZED, "해당 밋에 소속된 사용자가 아닙니다."),
 
 	// 투표
-	NOT_ALLOW_MULTIPLE_VOTES(HttpStatus.BAD_REQUEST,"다중 투표가 허용되지 않습니다.");
+	NOT_ALLOW_MULTIPLE_VOTES(HttpStatus.BAD_REQUEST,"다중 투표가 허용되지 않습니다."),
+	CLOSED_VOTE(HttpStatus.BAD_REQUEST,"투표가 마감되었습니다.");
 
     private final HttpStatus status;
 	private final String message;

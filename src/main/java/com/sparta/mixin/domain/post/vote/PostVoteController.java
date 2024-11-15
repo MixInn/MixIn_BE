@@ -8,6 +8,7 @@ import com.sparta.mixin.global.common.CommonResponse;
 import com.sparta.mixin.global.exception.CustomException;
 import com.sparta.mixin.global.exception.ErrorCode;
 import com.sparta.mixin.global.security.UserDetailsImpl;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -54,6 +55,9 @@ public class PostVoteController {
     public ResponseEntity<CommonResponse> submitVote(@PathVariable(name = "voteId")Long voteId,@RequestBody List<Long> voteOptionIds,@AuthenticationPrincipal UserDetailsImpl userDetails){
         PostVote postVote = postVoteService.findById(voteId);
 
+        if(postVote.getDeadline().isAfter(LocalDateTime.now())){
+            throw new CustomException(ErrorCode.CLOSED_VOTE);
+        }
         if(!postVote.isAllowMultipleVotes()&&voteOptionIds.size()>1){
             throw new CustomException(ErrorCode.NOT_ALLOW_MULTIPLE_VOTES);
         }
