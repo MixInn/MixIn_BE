@@ -9,12 +9,12 @@ public class VoteOptionResponseDto {
     private Long id;
     private String voteOptionText;
     private Long voteCount;
-    private List<String> usernames;
+    private List<String> voters;
 
     public VoteOptionResponseDto(VoteOption voteOption, Long voteCount, List<String> voteUser) {
         this.id=voteOption.getId();
         this.voteOptionText=voteOption.getOptionText();
         this.voteCount=voteCount;
-        this.usernames=voteUser;
+        this.voters=voteUser;
     }
 }

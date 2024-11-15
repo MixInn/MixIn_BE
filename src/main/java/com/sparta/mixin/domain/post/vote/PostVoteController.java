@@ -55,7 +55,7 @@ public class PostVoteController {
     public ResponseEntity<CommonResponse> submitVote(@PathVariable(name = "voteId")Long voteId,@RequestBody List<Long> voteOptionIds,@AuthenticationPrincipal UserDetailsImpl userDetails){
         PostVote postVote = postVoteService.findById(voteId);
 
-        if(postVote.getDeadline().isAfter(LocalDateTime.now())){
+        if(postVote.getDeadline().isBefore(LocalDateTime.now())){
             throw new CustomException(ErrorCode.CLOSED_VOTE);
         }
         if(!postVote.isAllowMultipleVotes()&&voteOptionIds.size()>1){
@@ -70,7 +70,7 @@ public class PostVoteController {
     public ResponseEntity<CommonResponse> reSubmitVote(@PathVariable(name = "voteId")Long voteId,@RequestBody List<Long> voteOptionIds,@AuthenticationPrincipal UserDetailsImpl userDetails){
         PostVote postVote = postVoteService.findById(voteId);
 
-        if(postVote.getDeadline().isAfter(LocalDateTime.now())){
+        if(postVote.getDeadline().isBefore(LocalDateTime.now())){
             throw new CustomException(ErrorCode.CLOSED_VOTE);
         }
         if(!postVote.isAllowMultipleVotes()&&voteOptionIds.size()>1){
