@@ -6,6 +6,7 @@ import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.domain.user.service.UserService;
 import com.sparta.mixin.global.exception.CustomException;
 import com.sparta.mixin.global.exception.ErrorCode;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ public class PostVoteService {
     private final VoteOptionRepository voteOptionRepository;
     private final PostService postService;
     private final UserService userService;
+    private final VoteResultRepository voteResultRepository;
 
     public VoteResponseDto getPostVote(Long postId, User user) {
         Post post = postService.findById(postId);
@@ -58,6 +60,20 @@ public class PostVoteService {
             throw new CustomException(ErrorCode.NOT_SAME_USER);
         }
         postVoteRepository.delete(postVote);
+    }
+
+    public void submitVote(PostVote postVote, List<Long> voteOptionIds, User user) {
+        User loginUser = userService.findByUsername(user.getUsername());
+        for (Long voteOptionId : voteOptionIds) {
+            VoteOption voteOption = voteOptionRepository.findById(voteOptionId).orElseThrow(
+                ()->new CustomException(ErrorCode.BAD_REQUEST)
+            );
+            if(postVote.isAnonymous()){
+                VoteResult voteResult = new VoteResult(voteOption,null, LocalDateTime.now());
+            }
+            VoteResult voteResult = new VoteResult(voteOption,loginUser, LocalDateTime.now());
+            voteResultRepository.save(voteResult);
+        }
     }
 
     public PostVote findById(Long voteId){

@@ -1,6 +1,8 @@
 package com.sparta.mixin.domain.post.vote;
 
 import com.sparta.mixin.global.common.CommonResponse;
+import com.sparta.mixin.global.exception.CustomException;
+import com.sparta.mixin.global.exception.ErrorCode;
 import com.sparta.mixin.global.security.UserDetailsImpl;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +12,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,6 +43,18 @@ public class PostVoteController {
     public ResponseEntity<CommonResponse> deletePostVote(@PathVariable(name = "voteId")Long voteId,@AuthenticationPrincipal UserDetailsImpl userDetails){
         postVoteService.deletePostVote(voteId,userDetails.getUser());
         CommonResponse response = new CommonResponse("투표 삭제 성공",200,"");
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+    @PostMapping("/{voteId}")
+    public ResponseEntity<CommonResponse> submitVote(@PathVariable(name = "voteId")Long voteId,@RequestBody List<Long> voteOptionIds,@AuthenticationPrincipal UserDetailsImpl userDetails){
+        PostVote postVote = postVoteService.findById(voteId);
+
+        if(!postVote.isAllowMultipleVotes()&&voteOptionIds.size()>1){
+            throw new CustomException(ErrorCode.NOT_ALLOW_MULTIPLE_VOTES);
+        }
+        postVoteService.submitVote(postVote,voteOptionIds,userDetails.getUser());
+        CommonResponse response = new CommonResponse("투표 성공",200,"");
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 }
