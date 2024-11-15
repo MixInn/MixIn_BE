@@ -89,6 +89,22 @@ public class PostVoteService {
         }
     }
 
+    public void reSubmitVote(PostVote postVote, List<Long> voteOptionIds, User user) {
+        User loginUser = userService.findByUsername(user.getUsername());
+        List<VoteResult> voteResults = voteResultRepository.findAllByPostVoteAndUser(postVote,loginUser);
+        voteResultRepository.deleteAll(voteResults);
+
+        for (Long voteOptionId : voteOptionIds) {
+            VoteOption voteOption = voteOptionRepository.findById(voteOptionId).orElseThrow(
+                () -> new CustomException(ErrorCode.BAD_REQUEST)
+            );
+            VoteResult voteResult =
+                postVote.isAnonymous() ? new VoteResult(voteOption, null, LocalDateTime.now())
+                    : new VoteResult(voteOption, loginUser, LocalDateTime.now());
+            voteResultRepository.save(voteResult);
+        }
+    }
+
     public List<VoteOptionResponseDto> getAllVoteOption(Long voteId, User user) {
         userService.findByUsername(user.getUsername());
         PostVote postVote = findById(voteId);

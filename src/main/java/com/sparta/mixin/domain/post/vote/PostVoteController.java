@@ -66,7 +66,22 @@ public class PostVoteController {
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
-    @GetMapping("/option/{voteId}")
+    @PutMapping("/{voteId}/re")
+    public ResponseEntity<CommonResponse> reSubmitVote(@PathVariable(name = "voteId")Long voteId,@RequestBody List<Long> voteOptionIds,@AuthenticationPrincipal UserDetailsImpl userDetails){
+        PostVote postVote = postVoteService.findById(voteId);
+
+        if(postVote.getDeadline().isAfter(LocalDateTime.now())){
+            throw new CustomException(ErrorCode.CLOSED_VOTE);
+        }
+        if(!postVote.isAllowMultipleVotes()&&voteOptionIds.size()>1){
+            throw new CustomException(ErrorCode.NOT_ALLOW_MULTIPLE_VOTES);
+        }
+        postVoteService.reSubmitVote(postVote,voteOptionIds,userDetails.getUser());
+        CommonResponse response = new CommonResponse("재투표 성공",200,"");
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+    @GetMapping("/{voteId}/option")
     public ResponseEntity<CommonResponse<List<VoteOptionResponseDto>>> getAllVoteOption(@PathVariable(name = "voteId")Long voteId,@AuthenticationPrincipal UserDetailsImpl userDetails){
         List<VoteOptionResponseDto> voteOptionResponseDtos = postVoteService.getAllVoteOption(voteId,userDetails.getUser());
         CommonResponse response = new CommonResponse("투표 항목 조회 성공",200,voteOptionResponseDtos);
