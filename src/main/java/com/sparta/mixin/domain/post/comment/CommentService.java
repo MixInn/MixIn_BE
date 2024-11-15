@@ -6,10 +6,13 @@ import com.sparta.mixin.domain.meet.service.MeetService;
 import com.sparta.mixin.domain.post.PostService;
 import com.sparta.mixin.domain.post.comment.dto.CommentRequestDto;
 import com.sparta.mixin.domain.post.comment.dto.CommentResponseDto;
+import com.sparta.mixin.domain.post.comment.dto.ReplyCommentResponseDto;
 import com.sparta.mixin.domain.post.comment.entity.PostComment;
 import com.sparta.mixin.domain.post.entity.MeetNotice;
 import com.sparta.mixin.domain.post.entity.MeetPost;
 import com.sparta.mixin.domain.post.entity.Post;
+import com.sparta.mixin.domain.post.replycomment.ReplyComment;
+import com.sparta.mixin.domain.post.replycomment.ReplyCommentRepository;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.domain.user.service.UserService;
 import com.sparta.mixin.global.exception.CustomException;
@@ -24,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommentService {
 
     private final CommentRepository commentRepository;
+    private final ReplyCommentRepository replyCommentRepository;
     private final PostService postService;
     private final UserService userService;
     private final MeetService meetService;
@@ -102,8 +106,14 @@ public class CommentService {
         }
 
         List<PostComment> publicCommentList = commentRepository.findAllByPost(post);
+        for (PostComment postComment : publicCommentList) {
+            List<ReplyComment> replyCommentList = replyCommentRepository.findAllByPostComment(postComment);
+        }
 
-        return publicCommentList.stream().map(CommentResponseDto::new).toList();
+        return publicCommentList.stream().map(postComment -> {
+            List<ReplyCommentResponseDto> replyCommentList = replyCommentRepository.findAllByPostComment(postComment).stream().map(ReplyCommentResponseDto::new).toList();
+            return new CommentResponseDto(postComment,replyCommentList);
+        }).toList();
     }
 
     public PostComment findById(Long commentId) {

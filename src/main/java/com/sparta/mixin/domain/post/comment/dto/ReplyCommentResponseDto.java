@@ -8,7 +8,6 @@ import lombok.Getter;
 public class ReplyCommentResponseDto {
     private Long id;
     private String replyComment;
-    private Long postCommentId;
     private Long userId;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
@@ -16,7 +15,6 @@ public class ReplyCommentResponseDto {
     public ReplyCommentResponseDto(ReplyComment replyComment) {
         this.id= replyComment.getId();
         this.replyComment=replyComment.getReplyComment();
-        this.postCommentId=replyComment.getPostComment().getId();
         this.userId=replyComment.getUser().getId();
         this.createdAt=replyComment.getCreatedAt();
         this.modifiedAt=replyComment.getModifiedAt();
