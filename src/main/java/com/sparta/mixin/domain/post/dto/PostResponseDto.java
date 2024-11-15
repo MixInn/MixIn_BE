@@ -1,5 +1,6 @@
 package com.sparta.mixin.domain.post.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.sparta.mixin.domain.image.dto.ImageResponseDto;
 import com.sparta.mixin.domain.post.entity.Post;
 import com.sparta.mixin.domain.post.vote.dto.VoteResponseDto;
@@ -8,6 +9,7 @@ import java.util.List;
 import lombok.Getter;
 
 @Getter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public abstract class PostResponseDto {
     private Long id;
     private String title;
