@@ -1,6 +1,6 @@
 package com.sparta.mixin.domain.post.dto;
 
-import com.sparta.mixin.domain.post.vote.VoteRequestDto;
+import com.sparta.mixin.domain.post.vote.dto.VoteRequestDto;
 import lombok.Getter;
 
 @Getter

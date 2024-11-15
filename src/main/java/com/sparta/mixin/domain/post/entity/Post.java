@@ -5,7 +5,7 @@ import com.sparta.mixin.domain.post.bookmark.entity.PostBookmark;
 import com.sparta.mixin.domain.post.comment.entity.PostComment;
 import com.sparta.mixin.domain.post.dto.PostRequestDto;
 import com.sparta.mixin.domain.post.like.entity.PostLike;
-import com.sparta.mixin.domain.post.vote.PostVote;
+import com.sparta.mixin.domain.post.vote.entity.PostVote;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.global.Timestamped;
 import jakarta.persistence.CascadeType;
