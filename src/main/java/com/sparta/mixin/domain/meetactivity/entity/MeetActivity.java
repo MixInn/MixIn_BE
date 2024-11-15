@@ -8,7 +8,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "MeetActivity")
@@ -23,22 +25,31 @@ public class MeetActivity extends Timestamped {
     @JoinColumn(name = "meet_id", nullable = false)
     private Meet meet;
 
-    private String activityPosition;
-    private LocalDateTime date;
+    private String title;
+    private String position;
+    private LocalDate date;
     private String content;
+
+    @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ActivityParticipation> participants = new ArrayList<>();
 
 
     @Builder
-    public MeetActivity( Meet meet, String activityPosition, LocalDateTime date, String content) {
+    public MeetActivity(Meet meet, String title, String position, LocalDate date, String content) {
         this.meet = meet;
-        this.activityPosition = activityPosition;
+        this.title = title;
+        this.position = position;
         this.date = date;
         this.content = content;
     }
 
     public void updateActivity(MeetActivityRequestDto meetActivityRequestDto){
-        if (meetActivityRequestDto.getActivityPosition() != null) {
-            this.activityPosition = meetActivityRequestDto.getActivityPosition();
+        if (meetActivityRequestDto.getTitle() != null){
+            this.title = meetActivityRequestDto.getTitle();
+        }
+
+        if (meetActivityRequestDto.getPosition() != null) {
+            this.position = meetActivityRequestDto.getPosition();
         }
 
         if (meetActivityRequestDto.getDate() != null) {
