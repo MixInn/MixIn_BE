@@ -1,4 +1,4 @@
-package com.sparta.mixin.domain.post.vote;
+package com.sparta.mixin.domain.post.vote.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;

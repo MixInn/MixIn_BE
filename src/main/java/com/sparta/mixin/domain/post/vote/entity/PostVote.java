@@ -1,6 +1,7 @@
-package com.sparta.mixin.domain.post.vote;
+package com.sparta.mixin.domain.post.vote.entity;
 
 import com.sparta.mixin.domain.post.entity.Post;
+import com.sparta.mixin.domain.post.vote.dto.VoteRequestDto;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
