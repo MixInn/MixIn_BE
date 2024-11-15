@@ -10,6 +10,8 @@ import com.sparta.mixin.domain.post.entity.MeetNotice;
 import com.sparta.mixin.domain.post.meetpost.MeetPostRepository;
 import com.sparta.mixin.domain.post.noticeread.NoticeReadRepository;
 import com.sparta.mixin.domain.post.publicpost.PublicPostRepository;
+import com.sparta.mixin.domain.post.vote.repository.PostVoteRepository;
+import com.sparta.mixin.domain.post.vote.repository.VoteOptionRepository;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.domain.user.service.UserService;
 import com.sparta.mixin.global.exception.CustomException;
@@ -28,8 +30,10 @@ public class MeetNoticeService extends PostService<MeetNotice> {
         ImageRepository imageRepository,
         UserService userService, MeetAuthorizationService meetAuthorizationService,
         MeetService meetService,
-        NoticeReadRepository noticeReadRepository) {
-        super(postRepository, meetPostRepository,meetNoticeRepository,publicPostRepository,imageRepository, userService, meetService,noticeReadRepository);
+        NoticeReadRepository noticeReadRepository,
+        PostVoteRepository postVoteRepository,
+        VoteOptionRepository voteOptionRepository) {
+        super(postRepository, meetPostRepository,meetNoticeRepository,publicPostRepository,imageRepository, userService, meetService,noticeReadRepository,postVoteRepository,voteOptionRepository);
         this.meetAuthorizationService = meetAuthorizationService;
     }
 

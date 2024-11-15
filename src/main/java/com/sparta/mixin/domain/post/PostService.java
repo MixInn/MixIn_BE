@@ -18,6 +18,10 @@ import com.sparta.mixin.domain.post.meetpost.MeetPostRepository;
 import com.sparta.mixin.domain.post.noticeread.NoticeRead;
 import com.sparta.mixin.domain.post.noticeread.NoticeReadRepository;
 import com.sparta.mixin.domain.post.publicpost.PublicPostRepository;
+import com.sparta.mixin.domain.post.vote.entity.PostVote;
+import com.sparta.mixin.domain.post.vote.repository.PostVoteRepository;
+import com.sparta.mixin.domain.post.vote.entity.VoteOption;
+import com.sparta.mixin.domain.post.vote.repository.VoteOptionRepository;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.domain.user.service.UserService;
 import com.sparta.mixin.global.exception.CustomException;
@@ -44,6 +48,8 @@ public abstract class PostService<T extends Post> {
     private final UserService userService;
     private final MeetService meetService;
     private final NoticeReadRepository noticeReadRepository;
+    private final PostVoteRepository postVoteRepository;
+    private final VoteOptionRepository voteOptionRepository;
 
     public PostResponseDto createPost(
         PostRequestDto postRequestDto, String postType, List<String> fileUrls,
@@ -73,6 +79,16 @@ public abstract class PostService<T extends Post> {
             Image image = new Image(fileUrl, post);
             imageRepository.save(image);
         }
+
+        if(postRequestDto.getVoteRequestDto()!=null){
+            PostVote vote = new PostVote(postRequestDto.getVoteRequestDto(),post);
+            postVoteRepository.save(vote);
+            for (String optionText : postRequestDto.getVoteRequestDto().getVoteOption()) {
+                VoteOption voteOption = new VoteOption(vote,optionText);
+                voteOptionRepository.save(voteOption);
+            }
+        }
+
         if (post instanceof MeetPost) {
             return new MeetPostResponseDto((MeetPost) post);
         } else if (post instanceof MeetNotice) {
@@ -83,6 +99,7 @@ public abstract class PostService<T extends Post> {
         }
     }
 
+    @Transactional
     public PostResponseDto editPost(Long postId, PostRequestDto postRequestDto,
         List<String> fileUrls, User user) {
         T post = findById(postId);
@@ -97,6 +114,27 @@ public abstract class PostService<T extends Post> {
         for (String fileUrl : fileUrls) {
             Image image = new Image(fileUrl, post);
             imageRepository.save(image);
+        }
+
+        if(postRequestDto.getVoteRequestDto()!=null){
+            PostVote postVote = postVoteRepository.findByPost(post);
+
+            if(postVote==null){
+                PostVote vote = new PostVote(postRequestDto.getVoteRequestDto(),post);
+                postVoteRepository.save(vote);
+                for (String optionText : postRequestDto.getVoteRequestDto().getVoteOption()) {
+                    VoteOption voteOption = new VoteOption(vote,optionText);
+                    voteOptionRepository.save(voteOption);
+                }
+            } else {
+                postVote.updateVote(postRequestDto.getVoteRequestDto());
+                postVoteRepository.save(postVote);
+
+                voteOptionRepository.deleteAllByPostVote(postVote);
+
+                List<VoteOption> updatedVoteOptions = postRequestDto.getVoteRequestDto().getVoteOption().stream().map(optionText -> new VoteOption(postVote,optionText)).toList();
+                voteOptionRepository.saveAll(updatedVoteOptions);
+            }
         }
 
         if (post instanceof MeetPost) {
