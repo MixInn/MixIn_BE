@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -89,7 +90,7 @@ public class MeetAnnouncementService {
         meetAnnouncementRepository.save(meetAnnouncement);
     }
 
-
+    @Transactional
     public void updateMeetAnnouncement(Long meetId, MeetAnnouncementRequestDto requestDto, User currentUser) {
         MeetAnnouncement meetAnnouncement = findByMeetId(meetId);
 
@@ -117,4 +118,21 @@ public class MeetAnnouncementService {
     public MeetAnnouncement findById(Long meetAnnouncementId) {
         return meetAnnouncementRepository.findById(meetAnnouncementId).orElseThrow(() -> new CustomException(ErrorCode.MEET_ANNOUNCEMENT_NOT_FOUND));
     }
+
+    public void createLightningAnnouncement(Meet meet, MeetAnnouncementRequestDto requestDto, User user) {
+
+        // 번개 모임 공지 생성
+        MeetAnnouncement announcement = MeetAnnouncement.builder()
+                .meet(meet)
+                .recruitmentPeriod(requestDto.getRecruitmentPeriod())
+                .gender(requestDto.getGender())
+                .numberOfPeople(requestDto.getNumberOfPeople())
+                .meetTime(requestDto.getMeetTime())
+                .tag(requestDto.getTag())
+                .build();
+
+        // 저장
+        meetAnnouncementRepository.save(announcement);
+    }
+
 }

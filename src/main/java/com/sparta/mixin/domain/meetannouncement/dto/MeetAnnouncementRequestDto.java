@@ -1,5 +1,6 @@
 package com.sparta.mixin.domain.meetannouncement.dto;
 
+import com.sparta.mixin.domain.meet.dto.MeetRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -20,4 +21,14 @@ public class MeetAnnouncementRequestDto {
     private String meetingFrequency; // 모임주기
     private String approvalType; // 승인여부
     private String applicationForm;
+
+    public static MeetAnnouncementRequestDto fromRequest(MeetRequestDto requestDto) {
+        return MeetAnnouncementRequestDto.builder()
+                .recruitmentPeriod(requestDto.getRecruitmentPeriod())
+                .gender(requestDto.getGender())
+                .numberOfPeople(requestDto.getNumberOfPeople())
+                .meetTime(requestDto.getMeetTime())
+                .tag(requestDto.getTag())
+                .build();
+    }
 }
