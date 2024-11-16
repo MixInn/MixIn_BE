@@ -2,6 +2,7 @@ package com.sparta.mixin.domain.post.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.sparta.mixin.domain.image.dto.ImageResponseDto;
+import com.sparta.mixin.domain.image.entity.Image;
 import com.sparta.mixin.domain.post.entity.Post;
 import com.sparta.mixin.domain.post.vote.dto.VoteResponseDto;
 import java.time.LocalDateTime;
@@ -20,6 +21,7 @@ public abstract class PostResponseDto {
     private Long clickCount;
     private List<ImageResponseDto> imageResponseDtos;
     private VoteResponseDto voteResponseDto;
+    private String firstImageUrl;
 
     protected PostResponseDto(Post post) {
         this.id = post.getId();
@@ -29,6 +31,7 @@ public abstract class PostResponseDto {
         this.createdAt = post.getCreatedAt();
         this.modifiedAt = post.getModifiedAt();
         this.clickCount= post.getClickCount();
+        this.firstImageUrl=extractFirstImageUrl(post);
     }
 
     protected PostResponseDto(Post post, List<ImageResponseDto> imageResponseDtos,VoteResponseDto voteResponseDto) {
@@ -41,5 +44,14 @@ public abstract class PostResponseDto {
         this.clickCount= post.getClickCount();
         this.imageResponseDtos=imageResponseDtos;
         this.voteResponseDto=voteResponseDto;
+    }
+
+    // 이미지 리스트에서 첫 번째 URL 추출
+    private String extractFirstImageUrl(Post post) {
+        List<Image> images = post.getPostImages();
+        if (images != null && !images.isEmpty()) {
+            return images.get(0).getImageUrl();
+        }
+        return null;
     }
 }
