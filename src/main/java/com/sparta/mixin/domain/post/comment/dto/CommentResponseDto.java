@@ -15,7 +15,7 @@ public class CommentResponseDto {
     private Long postId;
     private PostType postType;
     private String comment;
-    private Long userId;
+    private String userNickname;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
     private List<ReplyCommentResponseDto> replyCommentResponseDtos;
@@ -23,7 +23,7 @@ public class CommentResponseDto {
     public CommentResponseDto(PostComment postComment,List<ReplyCommentResponseDto> replyCommentResponseDtos) {
         this.id = postComment.getId();
         this.comment = postComment.getComment();
-        this.userId = postComment.getUser().getId();
+        this.userNickname = postComment.getUser().getName();
         this.postType = postComment.getPostType();
         this.postId = postComment.getPost().getId();
         this.createdAt = postComment.getCreatedAt();
@@ -33,7 +33,7 @@ public class CommentResponseDto {
     public CommentResponseDto(PostComment postComment) {
         this.id = postComment.getId();
         this.comment = postComment.getComment();
-        this.userId = postComment.getUser().getId();
+        this.userNickname = postComment.getUser().getName();
         this.postType = postComment.getPostType();
         this.postId = postComment.getPost().getId();
         this.createdAt = postComment.getCreatedAt();
