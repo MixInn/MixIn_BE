@@ -15,6 +15,7 @@ public class MeetAnnouncementRequestDto {
 
     // 번개만
     private String meetTime;
+    private String location;
 
     // 일반 공고
     private String preferences; // 우대사항
@@ -28,6 +29,7 @@ public class MeetAnnouncementRequestDto {
                 .gender(requestDto.getGender())
                 .numberOfPeople(requestDto.getNumberOfPeople())
                 .meetTime(requestDto.getMeetTime())
+                .location(requestDto.getLocation())
                 .tag(requestDto.getTag())
                 .build();
     }

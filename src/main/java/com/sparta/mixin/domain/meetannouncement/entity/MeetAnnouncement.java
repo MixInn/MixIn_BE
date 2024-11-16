@@ -3,6 +3,7 @@ package com.sparta.mixin.domain.meetannouncement.entity;
 import com.sparta.mixin.domain.meet.entity.Meet;
 import com.sparta.mixin.domain.meet.entity.MeetType;
 import com.sparta.mixin.domain.meetannouncement.dto.MeetAnnouncementRequestDto;
+import com.sparta.mixin.domain.meetapplication.entity.MeetApplication;
 import com.sparta.mixin.global.Timestamped;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -12,6 +13,8 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "MeetAnnouncement")
@@ -35,19 +38,25 @@ public class MeetAnnouncement extends Timestamped {
     private int numberOfPeople; // 인원수
     private String preferences; // 우대사항
     private String meetingFrequency; // 모임주기
+    private String location;
     private ApprovalType approvalType; // 승인여부
     private String applicationForm;
     private String tag;
     private String university;
 
+    @OneToMany(mappedBy = "meetAnnouncement", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MeetApplication> meetApplications = new ArrayList<>();
+
+
     @Builder
-    public MeetAnnouncement(Meet meet, String recruitmentPeriod,String meetTime,String gender, int numberOfPeople,String tag, String preferences, String meetingFrequency,ApprovalType approvalType, String applicationForm,String university){
+    public MeetAnnouncement(Meet meet, String location, String recruitmentPeriod,String meetTime,String gender, int numberOfPeople,String tag, String preferences, String meetingFrequency,ApprovalType approvalType, String applicationForm,String university){
         this.meet = meet;
         this.meetType = meet.getType(); // Meet의 타입을 공고에 저장
         this.recruitmentPeriod = LocalDate.parse(recruitmentPeriod);
         if (meetTime != null) {
             this.meetTime = LocalTime.parse(meetTime);
         }
+        this.location = location;
         this.gender = GenderRestriction.fromString(gender);
         this.tag = tag;
         this.numberOfPeople = numberOfPeople;
@@ -64,6 +73,9 @@ public class MeetAnnouncement extends Timestamped {
         }
         if(requestDto.getMeetTime() != null){
             this.meetTime = LocalTime.parse(requestDto.getMeetTime());
+        }
+        if (requestDto.getLocation() != null){
+            this.location = requestDto.getLocation();
         }
         if(requestDto.getGender() != null){
             this.gender = GenderRestriction.fromString(requestDto.getGender());
