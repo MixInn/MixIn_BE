@@ -33,21 +33,21 @@ public class PostVoteController {
     public ResponseEntity<CommonResponse<VoteResponseDto>> getPostVote(@PathVariable(name = "postId")Long postId,@AuthenticationPrincipal
         UserDetailsImpl userDetails){
         VoteResponseDto voteResponseDto = postVoteService.getPostVote(postId,userDetails.getUser());
-        CommonResponse response = new CommonResponse("투표 조회 성공",200,voteResponseDto);
+        CommonResponse response = new CommonResponse("투표 단독 조회 성공",200,voteResponseDto);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PutMapping("/{voteId}")
     public ResponseEntity<CommonResponse<VoteResponseDto>> editPostVote(@PathVariable(name = "voteId")Long voteId,@RequestBody VoteRequestDto voteRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         VoteResponseDto voteResponseDto = postVoteService.editPostVote(voteId,voteRequestDto,userDetails.getUser());
-        CommonResponse response= new CommonResponse("투표 수정 성공",200,voteResponseDto);
+        CommonResponse response= new CommonResponse("투표 단독 수정 성공",200,voteResponseDto);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
     @DeleteMapping("/{voteId}")
     public ResponseEntity<CommonResponse> deletePostVote(@PathVariable(name = "voteId")Long voteId,@AuthenticationPrincipal UserDetailsImpl userDetails){
         postVoteService.deletePostVote(voteId,userDetails.getUser());
-        CommonResponse response = new CommonResponse("투표 삭제 성공",200,"");
+        CommonResponse response = new CommonResponse("투표 단독 삭제 성공",200,"");
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 

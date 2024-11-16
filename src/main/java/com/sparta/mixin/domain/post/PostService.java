@@ -1,6 +1,7 @@
 package com.sparta.mixin.domain.post;
 
 import com.sparta.mixin.domain.image.ImageRepository;
+import com.sparta.mixin.domain.image.dto.ImageResponseDto;
 import com.sparta.mixin.domain.image.entity.Image;
 import com.sparta.mixin.domain.meet.entity.Meet;
 import com.sparta.mixin.domain.meet.service.MeetService;
@@ -18,6 +19,7 @@ import com.sparta.mixin.domain.post.meetpost.MeetPostRepository;
 import com.sparta.mixin.domain.post.noticeread.NoticeRead;
 import com.sparta.mixin.domain.post.noticeread.NoticeReadRepository;
 import com.sparta.mixin.domain.post.publicpost.PublicPostRepository;
+import com.sparta.mixin.domain.post.vote.dto.VoteResponseDto;
 import com.sparta.mixin.domain.post.vote.entity.PostVote;
 import com.sparta.mixin.domain.post.vote.repository.PostVoteRepository;
 import com.sparta.mixin.domain.post.vote.entity.VoteOption;
@@ -26,9 +28,11 @@ import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.domain.user.service.UserService;
 import com.sparta.mixin.global.exception.CustomException;
 import com.sparta.mixin.global.exception.ErrorCode;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -79,23 +83,38 @@ public abstract class PostService<T extends Post> {
             Image image = new Image(fileUrl, post);
             imageRepository.save(image);
         }
-
-        if(postRequestDto.getVoteRequestDto()!=null){
-            PostVote vote = new PostVote(postRequestDto.getVoteRequestDto(),post);
-            postVoteRepository.save(vote);
-            for (String optionText : postRequestDto.getVoteRequestDto().getVoteOption()) {
-                VoteOption voteOption = new VoteOption(vote,optionText);
-                voteOptionRepository.save(voteOption);
+        List<Image> imageList = imageRepository.findAllByPost(post);
+        List<ImageResponseDto> imageResponseDtos = new ArrayList<>();
+        if(imageList!=null&&!imageList.isEmpty()){
+            for (Image image : imageList) {
+                ImageResponseDto imageResponseDto = new ImageResponseDto(image);
+                imageResponseDtos.add(imageResponseDto);
             }
         }
 
+        VoteResponseDto voteResponseDto=null;
+        if (postRequestDto.getVoteRequestDto() != null) {
+            PostVote vote = new PostVote(postRequestDto.getVoteRequestDto(), post);
+            postVoteRepository.save(vote);
+            List<VoteOption> voteOptions = new ArrayList<>();
+            for (String optionText : postRequestDto.getVoteRequestDto().getVoteOption()) {
+                VoteOption voteOption = new VoteOption(vote, optionText);
+                voteOptionRepository.save(voteOption);
+                voteOptions.add(voteOption);
+            }
+            List<String> optionTexts = voteOptions.stream().map(VoteOption::getOptionText).toList();
+            voteResponseDto = new VoteResponseDto(vote, optionTexts);
+        }
+
         if (post instanceof MeetPost) {
-            return new MeetPostResponseDto((MeetPost) post);
+            return new MeetPostResponseDto((MeetPost) post, imageResponseDtos, voteResponseDto);
         } else if (post instanceof MeetNotice) {
-            boolean isRead = noticeReadRepository.findByUserAndNotice(loginUser, (MeetNotice) post) != null;
-            return new MeetNoticeResponseDto((MeetNotice) post, isRead);
+            boolean isRead =
+                noticeReadRepository.findByUserAndNotice(loginUser, (MeetNotice) post) != null;
+            return new MeetNoticeResponseDto((MeetNotice) post, isRead, imageResponseDtos,
+                voteResponseDto);
         } else {
-            return new PublicPostResponseDto((PublicPost) post);
+            return new PublicPostResponseDto((PublicPost) post, imageResponseDtos, voteResponseDto);
         }
     }
 
@@ -111,39 +130,61 @@ public abstract class PostService<T extends Post> {
         post.updatePost(postRequestDto);
         save(post);
 
-        for (String fileUrl : fileUrls) {
-            Image image = new Image(fileUrl, post);
-            imageRepository.save(image);
+        if(!fileUrls.isEmpty()){
+            imageRepository.deleteAllByPost(post);
+            for (String fileUrl : fileUrls) {
+                Image image = new Image(fileUrl, post);
+                imageRepository.save(image);
+            }
         }
 
-        if(postRequestDto.getVoteRequestDto()!=null){
+        List<Image> imageList = imageRepository.findAllByPost(post);
+        List<ImageResponseDto> imageResponseDtos = new ArrayList<>();
+        if(imageList!=null&&!imageList.isEmpty()){
+            for (Image image : imageList) {
+                ImageResponseDto imageResponseDto = new ImageResponseDto(image);
+                imageResponseDtos.add(imageResponseDto);
+            }
+        }
+
+        VoteResponseDto voteResponseDto=null;
+        if (postRequestDto.getVoteRequestDto() != null) {
             PostVote postVote = postVoteRepository.findByPost(post);
 
-            if(postVote==null){
-                PostVote vote = new PostVote(postRequestDto.getVoteRequestDto(),post);
+            if (postVote == null) {
+                PostVote vote = new PostVote(postRequestDto.getVoteRequestDto(), post);
                 postVoteRepository.save(vote);
+                List<VoteOption> voteOptions = new ArrayList<>();
                 for (String optionText : postRequestDto.getVoteRequestDto().getVoteOption()) {
-                    VoteOption voteOption = new VoteOption(vote,optionText);
+                    VoteOption voteOption = new VoteOption(vote, optionText);
                     voteOptionRepository.save(voteOption);
+                    voteOptions.add(voteOption);
                 }
+                List<String> optionTexts = voteOptions.stream().map(VoteOption::getOptionText).toList();
+                voteResponseDto = new VoteResponseDto(vote,optionTexts);
             } else {
                 postVote.updateVote(postRequestDto.getVoteRequestDto());
                 postVoteRepository.save(postVote);
 
                 voteOptionRepository.deleteAllByPostVote(postVote);
 
-                List<VoteOption> updatedVoteOptions = postRequestDto.getVoteRequestDto().getVoteOption().stream().map(optionText -> new VoteOption(postVote,optionText)).toList();
+                List<VoteOption> updatedVoteOptions = postRequestDto.getVoteRequestDto()
+                    .getVoteOption().stream()
+                    .map(optionText -> new VoteOption(postVote, optionText)).toList();
                 voteOptionRepository.saveAll(updatedVoteOptions);
+                List<String> optionTexts = updatedVoteOptions.stream().map(VoteOption::getOptionText).toList();
+                voteResponseDto=new VoteResponseDto(postVote,optionTexts);
             }
         }
 
         if (post instanceof MeetPost) {
-            return new MeetPostResponseDto((MeetPost) post);
+            return new MeetPostResponseDto((MeetPost) post,imageResponseDtos,voteResponseDto);
         } else if (post instanceof MeetNotice) {
-            boolean isRead = noticeReadRepository.findByUserAndNotice(loginUser, (MeetNotice) post) != null;
-            return new MeetNoticeResponseDto((MeetNotice) post, isRead);
+            boolean isRead =
+                noticeReadRepository.findByUserAndNotice(loginUser, (MeetNotice) post) != null;
+            return new MeetNoticeResponseDto((MeetNotice) post, isRead,imageResponseDtos,voteResponseDto);
         } else {
-            return new PublicPostResponseDto((PublicPost) post);
+            return new PublicPostResponseDto((PublicPost) post,imageResponseDtos,voteResponseDto);
         }
     }
 
@@ -162,36 +203,56 @@ public abstract class PostService<T extends Post> {
         T post = findById(postId);
         User loginUser = userService.findByUsername(user.getUsername());
 
+        List<Image> imageList = imageRepository.findAllByPost(post);
+        List<ImageResponseDto> imageResponseDtos = new ArrayList<>();
+        if (imageList != null && !imageList.isEmpty()) {
+            for (Image image : imageList) {
+                ImageResponseDto imageResponseDto = new ImageResponseDto(image);
+                imageResponseDtos.add(imageResponseDto);
+            }
+        }
+
+        PostVote postVote = postVoteRepository.findByPost(post);
+        VoteResponseDto voteResponseDto = null;
+        if (postVote != null) {
+            List<String> optionTexts = voteOptionRepository.findAllByPostVote(postVote).stream()
+                .map(VoteOption::getOptionText).toList();
+            voteResponseDto = new VoteResponseDto(postVote, optionTexts);
+        }
+
         if (post instanceof MeetPost) {
             Meet meet = meetService.findById(((MeetPost) post).getMeet().getId());
             checkMeetAuthorization(meet, loginUser);
             post.increaseClickCount();
             save(post);
-            return new MeetPostResponseDto((MeetPost) post);
+            return new MeetPostResponseDto((MeetPost) post, imageResponseDtos, voteResponseDto);
         }
 
         if (post instanceof MeetNotice) {
             Meet meet = meetService.findById(((MeetNotice) post).getMeet().getId());
             checkMeetAuthorization(meet, loginUser);
-            NoticeRead noticeRead =noticeReadRepository.findByUserAndNotice(loginUser,(MeetNotice) post);
-            if(noticeRead==null){
-                NoticeRead newNoticeRead = new NoticeRead(loginUser,meet,(MeetNotice) post);
+            NoticeRead noticeRead = noticeReadRepository.findByUserAndNotice(loginUser,
+                (MeetNotice) post);
+            if (noticeRead == null) {
+                NoticeRead newNoticeRead = new NoticeRead(loginUser, meet, (MeetNotice) post);
                 noticeReadRepository.save(newNoticeRead);
             }
             post.increaseClickCount();
             save(post);
-            return new MeetNoticeResponseDto((MeetNotice) post,true);
+            return new MeetNoticeResponseDto((MeetNotice) post, true, imageResponseDtos,
+                voteResponseDto);
         }
 
-        if(post instanceof PublicPost){
+        if (post instanceof PublicPost) {
             post.increaseClickCount();
             save(post);
         }
 
-        return new PublicPostResponseDto((PublicPost) post);
+        return new PublicPostResponseDto((PublicPost) post, imageResponseDtos, voteResponseDto);
     }
 
-    public Page<? extends PostResponseDto> getAllPost(int page, int size, String orderBy, String searchWord, String postType, User user, Long meetId) {
+    public Page<? extends PostResponseDto> getAllPost(int page, int size, String orderBy,
+        String searchWord, String postType, User user, Long meetId) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Direction.DESC, "createdAt"));
         User loginUser = userService.findByUsername(user.getUsername());
 
@@ -267,7 +328,7 @@ public abstract class PostService<T extends Post> {
         );
     }
 
-    public void save(T post){
+    public void save(T post) {
         postRepository.save(post);
     }
 }

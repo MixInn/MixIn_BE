@@ -56,7 +56,7 @@ public class ReplyCommentController {
     public ResponseEntity<CommonResponse<List<ReplyCommentResponseDto>>> getAllReplyComment(@PathVariable(name = "commentId")Long commentId,@AuthenticationPrincipal
     UserDetailsImpl userDetails){
         List<ReplyCommentResponseDto> responseDto = replyCommentService.getAllReplyComment(commentId,userDetails.getUser());
-        CommonResponse response = new CommonResponse("대댓글 전체 조회 성공",200,responseDto);
+        CommonResponse response = new CommonResponse("댓글별 대댓글 전체 조회 성공",200,responseDto);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -47,6 +48,7 @@ public class PostVoteService {
         return new VoteResponseDto(postVote, optionTextList);
     }
 
+    @Transactional
     public VoteResponseDto editPostVote(Long voteId, VoteRequestDto voteRequestDto, User user) {
         PostVote postVote = findById(voteId);
         User loginUser = userService.findByUsername(user.getUsername());
