@@ -130,9 +130,12 @@ public abstract class PostService<T extends Post> {
         post.updatePost(postRequestDto);
         save(post);
 
-        for (String fileUrl : fileUrls) {
-            Image image = new Image(fileUrl, post);
-            imageRepository.save(image);
+        if(!fileUrls.isEmpty()){
+            imageRepository.deleteAllByPost(post);
+            for (String fileUrl : fileUrls) {
+                Image image = new Image(fileUrl, post);
+                imageRepository.save(image);
+            }
         }
 
         List<Image> imageList = imageRepository.findAllByPost(post);
