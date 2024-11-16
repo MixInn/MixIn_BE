@@ -7,6 +7,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "Meet")
 @NoArgsConstructor
@@ -28,7 +31,10 @@ public class Meet extends Timestamped {
     private String rule;
     private String tag;
 
-    // Getters and setters
+
+    @OneToMany(mappedBy = "meet", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MeetAuthorization> authorizations = new ArrayList<>();
+
     @Builder
     public Meet(MeetType type,MeetCategory meetCategory, String image, String name, String info, String rule, String tag) {
         this.type = type;
@@ -63,5 +69,10 @@ public class Meet extends Timestamped {
         if (meetRequestDto.getTag() != null) {
             this.tag = meetRequestDto.getTag();
         }
+    }
+
+    // 모임의 총 멤버 수를 반환
+    public int getTotalMembers() {
+        return authorizations.size();
     }
 }

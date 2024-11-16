@@ -23,4 +23,5 @@ public class MeetRequestDto {
     private String meetTime;
     private String gender; // 성별
     private Integer numberOfPeople; // 인원수
+    private String location;
 }
