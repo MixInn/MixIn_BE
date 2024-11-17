@@ -9,6 +9,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.mapping.ToOne;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,7 +26,7 @@ public class MeetAnnouncement extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "meet_id", nullable = false)
     private Meet meet;
 
@@ -43,6 +44,9 @@ public class MeetAnnouncement extends Timestamped {
     private String applicationForm;
     private String tag;
     private String university;
+
+    @Column(nullable = false)
+    private int viewCount = 0;
 
     @OneToMany(mappedBy = "meetAnnouncement", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MeetApplication> meetApplications = new ArrayList<>();
@@ -97,5 +101,9 @@ public class MeetAnnouncement extends Timestamped {
         }
 
 
+    }
+
+    public void incrementViewCount() {
+        this.viewCount++;
     }
 }
