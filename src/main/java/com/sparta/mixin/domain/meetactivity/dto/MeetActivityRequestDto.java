@@ -3,11 +3,12 @@ package com.sparta.mixin.domain.meetactivity.dto;
 
 import lombok.Getter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 public class MeetActivityRequestDto {
-    private String activityPosition;
-    private LocalDateTime date;
+    private String title;
+    private String position;
+    private LocalDate date;
     private String content;
 }

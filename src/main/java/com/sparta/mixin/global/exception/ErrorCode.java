@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
 	// Basic HttpStatusCode
 	BAD_REQUEST(HttpStatus.BAD_REQUEST, "BAD REQUEST"),
-	FORBIDDEN(HttpStatus.FORBIDDEN, "FORBIDDEN"),
+	FORBIDDEN(HttpStatus.FORBIDDEN, "해당 작업을 수행할 권한이 없습니다."),
 	UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "UNAUTHORIZED"),
 	NOT_FOUND(HttpStatus.NOT_FOUND, "NOT FOUND"),
 	INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL SERVER ERROR"),
@@ -67,12 +67,32 @@ public enum ErrorCode {
 	ALREADY_REGISTERED_Like(HttpStatus.BAD_REQUEST,"이미 등록된 좋아요입니다."),
 	NOT_EXISTING_Like(HttpStatus.BAD_REQUEST,"존재하지 않는 좋아요입니다."),
 
+	// Meet
+	MEET_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 모임입니다."),
+
+	// meetAnnouncement
+	MEET_ANNOUNCEMENT_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "이미 존재하는 모임 공고입니다."),
+	MEET_ANNOUNCEMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 모임 공고입니다."),
+
+
+	// meetApplication
+	ALREADY_APPLIED(HttpStatus.BAD_REQUEST,"이미 모임신청하였습니다."),
+	GENDER_RESTRICTION_NOT_ALLOWED(HttpStatus.BAD_REQUEST,"해당 성별로 참여할 수 없습니다."),
+	USER_ALREADY_JOINED(HttpStatus.BAD_REQUEST,"이미 모임에 가입된 사용자입니다."),
+	APPLICATION_NOT_FOUND(HttpStatus.NOT_FOUND,"존재하지 않는 지원서입니다."),
+
+	// meetActivity
+	ACTIVITY_NOT_FOUND(HttpStatus.BAD_REQUEST,"존재하지 않는 활동입니다."),
+	PARTICIPATION_NOT_FOUND(HttpStatus.BAD_REQUEST,"활동에 참석하지 않은 사용자입니다."),
+	ALREADY_PARTICIPATING(HttpStatus.BAD_REQUEST,"이미 활동에 참석하였습니다."),
+
 	// 밋권한 관련
 	INCORRECT_MEET_USER(HttpStatus.UNAUTHORIZED, "해당 밋에 소속된 사용자가 아닙니다."),
 
 	// 투표
 	NOT_ALLOW_MULTIPLE_VOTES(HttpStatus.BAD_REQUEST,"다중 투표가 허용되지 않습니다."),
-	CLOSED_VOTE(HttpStatus.BAD_REQUEST,"투표가 마감되었습니다.");
+	CLOSED_VOTE(HttpStatus.BAD_REQUEST,"투표가 마감되었습니다."),
+	UNAUTHORIZED_USER(HttpStatus.FORBIDDEN, "권한이 없는 사용자입니다.");
 
     private final HttpStatus status;
 	private final String message;
