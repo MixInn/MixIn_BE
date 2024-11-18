@@ -30,11 +30,12 @@ public class MeetAnnouncementController {
             @RequestParam(required = false) String meetName,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "latest") String sortType, // 정렬 방식
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        log.info("모임 공고 목록 조회 시작 - 사용자 ID: {}, 필터 - 타입: {}, 카테고리: {}, 태그: {}, 이름: {}",
-                userDetails.getUser().getId(), meetType, category, tags, meetName);
-        MeetAnnouncementListRequestDto requestDto = new MeetAnnouncementListRequestDto(meetType, category, tags, meetName, page, size);
+        log.info("모임 공고 목록 조회 시작 - 사용자 ID: {}, 필터 - 타입: {}, 카테고리: {}, 태그: {}, 이름: {} 정렬타입: {}",
+                userDetails.getUser().getId(), meetType, category, tags, meetName, sortType);
+        MeetAnnouncementListRequestDto requestDto = new MeetAnnouncementListRequestDto(meetType, category, tags, meetName, sortType, page, size);
         Page<MeetAnnouncementResponseDto> responseDtoPage = meetAnnouncementService.getAnnouncementList(requestDto,userDetails.getUser());
 
         log.info("모임 공고 목록 조회 완료 - 조회된 공고 수: {}", responseDtoPage.getTotalElements());
@@ -42,13 +43,13 @@ public class MeetAnnouncementController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/{meetId}")
-    public ResponseEntity<CommonResponse> readMeetAnnouncement(@PathVariable(name = "meetId") Long meetId) {
-        log.info("모임 공고 조회 시작 - 모임 ID: {}", meetId);
+    @GetMapping("/{AnnouncementId}")
+    public ResponseEntity<CommonResponse> readMeetAnnouncement(@PathVariable(name = "AnnouncementId") Long AnnouncementId) {
+        log.info("모임 공고 조회 시작 - 모임 공고 ID: {}", AnnouncementId);
 
-        MeetAnnouncementResponseDto responseDto = meetAnnouncementService.readMeetAnnouncement(meetId);
+        MeetAnnouncementResponseDto responseDto = meetAnnouncementService.readMeetAnnouncement(AnnouncementId);
 
-        log.info("모임 공고 조회 완료 - 모임 ID: {}", meetId);
+        log.info("모임 공고 조회 완료 - 모임 공고 ID: {}", AnnouncementId);
         CommonResponse response = new CommonResponse<>("모임 공고 조회 성공", 200, responseDto);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

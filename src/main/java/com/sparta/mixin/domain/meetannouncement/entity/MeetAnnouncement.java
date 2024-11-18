@@ -48,6 +48,9 @@ public class MeetAnnouncement extends Timestamped {
     @Column(nullable = false)
     private int viewCount = 0;
 
+    @Column(nullable = false)
+    private int bookmarkCount = 0;
+
     @OneToMany(mappedBy = "meetAnnouncement", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MeetApplication> meetApplications = new ArrayList<>();
 
@@ -105,5 +108,15 @@ public class MeetAnnouncement extends Timestamped {
 
     public void incrementViewCount() {
         this.viewCount++;
+    }
+
+    public void incrementBookmarkCount() {
+        this.bookmarkCount++;
+    }
+
+    public void decrementBookmarkCount() {
+        if (this.bookmarkCount > 0) {
+            this.bookmarkCount--;
+        }
     }
 }

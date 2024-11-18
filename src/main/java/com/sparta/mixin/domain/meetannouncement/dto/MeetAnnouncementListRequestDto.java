@@ -12,12 +12,14 @@ public class MeetAnnouncementListRequestDto {
     private String category;
     private String tags;
     private String meetName;
+    private String sortType;
 
-    public MeetAnnouncementListRequestDto(String meetType, String category, String tags, String meetName, int page, int size) {
+    public MeetAnnouncementListRequestDto(String meetType, String category, String tags, String meetName,String sortType, int page, int size) {
         this.meetType = meetType;
         this.category = category;
         this.tags = tags;
         this.meetName = meetName;
+        this.sortType = sortType;
         this.page = page;
         this.size = size;
     }
