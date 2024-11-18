@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,6 +35,16 @@ public class CommentController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @PutMapping("/{commentId}")
+    public ResponseEntity<CommonResponse<CommentResponseDto>> editComment(
+        @PathVariable(name = "commentId") Long commentId, @RequestBody
+    CommentRequestDto commentRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        CommentResponseDto responseDto = commentService.editComment(commentId, commentRequestDto,
+            userDetails.getUser());
+        CommonResponse response = new CommonResponse("댓글 수정 성공", 200, responseDto);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @DeleteMapping("/{commentId}")
     public ResponseEntity<CommonResponse> deleteComment(
         @PathVariable(name = "commentId") Long commentId,
@@ -44,10 +55,10 @@ public class CommentController {
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<CommonResponse<List<CommentResponseDto>>> getComment(
+    public ResponseEntity<CommonResponse<List<CommentResponseDto>>> getAllComment(
         @PathVariable(name = "postId") Long postId,
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        List<CommentResponseDto> responseDto = commentService.getComment(postId,
+        List<CommentResponseDto> responseDto = commentService.getAllComment(postId,
             userDetails.getUser());
         CommonResponse response = new CommonResponse("댓글 전체 조회 성공", 200, responseDto);
         return new ResponseEntity<>(response, HttpStatus.OK);

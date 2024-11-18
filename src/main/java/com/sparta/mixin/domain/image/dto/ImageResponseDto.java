@@ -8,13 +8,9 @@ import lombok.Getter;
 public class ImageResponseDto {
     private Long id;
     private String imageUrl;
-    private PostType postType;
-    private Long postId;
 
     public ImageResponseDto(Image image) {
         this.id= image.getId();
         this.imageUrl= image.getImageUrl();
-        this.postType=image.getPostType();
-        this.postId=image.getPost().getId();
     }
 }

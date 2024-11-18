@@ -14,8 +14,6 @@ public enum ErrorCode {
 	NOT_FOUND(HttpStatus.NOT_FOUND, "NOT FOUND"),
 	INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL SERVER ERROR"),
 
-
-
 	// 각 Service에서 필요한 ErrorCode 추가
 
 	// Token
@@ -89,6 +87,11 @@ public enum ErrorCode {
 	ALREADY_PARTICIPATING(HttpStatus.BAD_REQUEST,"이미 활동에 참석하였습니다."),
 
 	// 밋권한 관련
+	INCORRECT_MEET_USER(HttpStatus.UNAUTHORIZED, "해당 밋에 소속된 사용자가 아닙니다."),
+
+	// 투표
+	NOT_ALLOW_MULTIPLE_VOTES(HttpStatus.BAD_REQUEST,"다중 투표가 허용되지 않습니다."),
+	CLOSED_VOTE(HttpStatus.BAD_REQUEST,"투표가 마감되었습니다."),
 	UNAUTHORIZED_USER(HttpStatus.FORBIDDEN, "권한이 없는 사용자입니다."),
 	INCORRECT_MEET_USER(HttpStatus.UNAUTHORIZED, "해당 밋에 소속된 사용자가 아닙니다.");
 
