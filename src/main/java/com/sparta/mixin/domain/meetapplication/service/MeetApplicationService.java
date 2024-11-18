@@ -3,6 +3,7 @@ package com.sparta.mixin.domain.meetapplication.service;
 import com.sparta.mixin.domain.meet.entity.AuthorizationLevel;
 import com.sparta.mixin.domain.meet.entity.Meet;
 import com.sparta.mixin.domain.meet.entity.MeetAuthorization;
+import com.sparta.mixin.domain.meet.entity.MeetRepository;
 import com.sparta.mixin.domain.meet.service.MeetAuthorizationService;
 import com.sparta.mixin.domain.meetannouncement.entity.ApprovalType;
 import com.sparta.mixin.domain.meetannouncement.entity.GenderRestriction;
@@ -30,6 +31,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MeetApplicationService {
     private final MeetApplicationRepository meetApplicationRepository;
+    private final MeetRepository meetRepository;
     private final MeetAuthorizationService meetAuthorizationService;
     private final MeetAnnouncementService meetAnnouncementService;
     private static final Logger log = LoggerFactory.getLogger(MeetApplicationService.class);
@@ -53,7 +55,7 @@ public class MeetApplicationService {
         boolean isMember = meetAuthorizationService.isUserMemberOfMeet(meet, user);
         if (isMember) {
             log.warn("이미 회원인 사용자 - 사용자 ID: {}", user.getId());
-            throw new CustomException(ErrorCode.FORBIDDEN);
+            throw new CustomException(ErrorCode.USER_ALREADY_JOINED);
         }
 
         // 이미 신청한 사용자 확인
@@ -66,7 +68,7 @@ public class MeetApplicationService {
         if (meetAnnouncement.getGender() != GenderRestriction.NO_RESTRICTION) {
             if (!isGenderMatch(meetAnnouncement.getGender(), user.getGender())) {
                 log.warn("성별 제한 불일치 - 사용자 성별: {}, 제한 성별: {}", user.getGender(), meetAnnouncement.getGender());
-                throw new CustomException(ErrorCode.FORBIDDEN);
+                throw new CustomException(ErrorCode.GENDER_RESTRICTION_NOT_ALLOWED);
             }
         }
 
@@ -100,7 +102,7 @@ public class MeetApplicationService {
 
         MeetApplication meetApplication = findById(meetApplicationId);
 
-        if (!meetApplication.getUser().equals(user)) {
+        if (!meetApplication.getUser().getId().equals(user.getId())) {
             log.error("지원서 소유자 불일치 - 사용자 ID: {}, 지원서 사용자 ID: {}", user.getId(), meetApplication.getUser().getId());
             throw new CustomException(ErrorCode.FORBIDDEN);
         }
@@ -219,8 +221,8 @@ public class MeetApplicationService {
     public List<MeetApplicationResponseDto> getApplicationsForMeet(Long meetId, User user) {
         log.info("모임 ID: {} 의 모든 지원서 조회 - 사용자 ID: {}", meetId, user.getId());
 
-        MeetAnnouncement meetAnnouncement = meetAnnouncementService.findByMeetId(meetId);
-        Meet meet = meetAnnouncement.getMeet();
+        Meet meet = meetRepository.findById(meetId).orElseThrow(() -> new CustomException(ErrorCode.MEET_NOT_FOUND));
+        MeetAnnouncement meetAnnouncement = meet.getMeetAnnouncement();
 
         AuthorizationLevel role = meetAuthorizationService.getUserRole(meet, user);
 
@@ -246,7 +248,7 @@ public class MeetApplicationService {
     public MeetApplication findById(Long meetApplicationId) {
         return meetApplicationRepository.findById(meetApplicationId)                .orElseThrow(() -> {
             log.error("지원서 조회 실패 - 지원서 ID: {}", meetApplicationId);
-            return new CustomException(ErrorCode.NOT_FOUND);
+            return new CustomException(ErrorCode.APPLICATION_NOT_FOUND);
         });
     }
 

@@ -76,13 +76,18 @@ public enum ErrorCode {
 	MEET_ANNOUNCEMENT_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "이미 존재하는 모임 공고입니다."),
 	MEET_ANNOUNCEMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 모임 공고입니다."),
 
+
 	// meetApplication
 	ALREADY_APPLIED(HttpStatus.BAD_REQUEST,"이미 모임신청하였습니다."),
+	GENDER_RESTRICTION_NOT_ALLOWED(HttpStatus.BAD_REQUEST,"해당 성별로 참여할 수 없습니다."),
+	USER_ALREADY_JOINED(HttpStatus.BAD_REQUEST,"이미 모임에 가입된 사용자입니다."),
+	APPLICATION_NOT_FOUND(HttpStatus.NOT_FOUND,"존재하지 않는 지원서입니다."),
 
 	// meetActivity
 	ACTIVITY_NOT_FOUND(HttpStatus.BAD_REQUEST,"존재하지 않는 활동입니다."),
 	PARTICIPATION_NOT_FOUND(HttpStatus.BAD_REQUEST,"활동에 참석하지 않은 사용자입니다."),
 	ALREADY_PARTICIPATING(HttpStatus.BAD_REQUEST,"이미 활동에 참석하였습니다."),
+
 	// 밋권한 관련
 	UNAUTHORIZED_USER(HttpStatus.FORBIDDEN, "권한이 없는 사용자입니다."),
 	INCORRECT_MEET_USER(HttpStatus.UNAUTHORIZED, "해당 밋에 소속된 사용자가 아닙니다.");

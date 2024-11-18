@@ -2,7 +2,6 @@ package com.sparta.mixin.domain.meetannouncement.service;
 
 import com.sparta.mixin.domain.meet.entity.*;
 import com.sparta.mixin.domain.meet.service.MeetAuthorizationService;
-import com.sparta.mixin.domain.meet.service.MeetService;
 import com.sparta.mixin.domain.meetannouncement.dto.MeetAnnouncementListRequestDto;
 import com.sparta.mixin.domain.meetannouncement.dto.MeetAnnouncementRequestDto;
 import com.sparta.mixin.domain.meetannouncement.dto.MeetAnnouncementResponseDto;
@@ -39,18 +38,20 @@ public class MeetAnnouncementService {
         Pageable pageable = PageRequest.of(requestDto.getPage(), requestDto.getSize());
 
         // 요청된 필터 값으로 필터링된 모임 공고를 조회
-        MeetType meetType = MeetType.fromString(requestDto.getMeetType());
-        MeetCategory category = MeetCategory.fromString(requestDto.getCategory());
+        MeetType meetType = (requestDto.getMeetType() != null) ? MeetType.fromString(requestDto.getMeetType()) : null;
+        MeetCategory category = (requestDto.getCategory() != null) ? MeetCategory.fromString(requestDto.getCategory()) : null;
+
 
         log.debug("모임 타입: {}, 카테고리: {}", meetType, category);
 
         // 페이징 및 필터링된 결과를 반환
-        Page<MeetAnnouncementResponseDto> announcements = meetAnnouncementRepository.findAnnouncementsWithFilters(
+        Page<MeetAnnouncementResponseDto> announcements = meetAnnouncementRepository.findAnnouncementsWithFiltersAndSort(
                 meetType,
                 category,
                 requestDto.getTags(),
                 requestDto.getMeetName(),
                 currentUser.getUniversity(),
+                requestDto.getSortType(),
                 pageable
         ).map(MeetAnnouncementResponseDto::new);
 
@@ -139,59 +140,49 @@ public class MeetAnnouncementService {
 
     /**
      * 모임 공고를 업데이트하는 메서드
-     * @param meetId 수정할 모임 공고의 ID
+     * @param meetAnnouncementId 수정할 모임 공고의 ID
      * @param requestDto 업데이트할 공고 데이터
      * @param currentUser 공고를 수정하는 사용자
      */
     @Transactional
-    public void updateMeetAnnouncement(Long meetId, MeetAnnouncementRequestDto requestDto, User currentUser) {
-        log.info("모임 공고 수정 시작 - 사용자 ID: {}, 모임 ID: {}", currentUser.getId(), meetId);
+    public void updateMeetAnnouncement(Long meetAnnouncementId, MeetAnnouncementRequestDto requestDto, User currentUser) {
+        log.info("모임 공고 수정 시작 - 사용자 ID: {}, 모임 공고 ID: {}", currentUser.getId(), meetAnnouncementId);
 
-        MeetAnnouncement meetAnnouncement = findByMeetId(meetId);
+        MeetAnnouncement meetAnnouncement = findById(meetAnnouncementId);
 
         AuthorizationLevel userRole = meetAuthorizationService.getUserRole(meetAnnouncement.getMeet(), currentUser);
 
         // 사용자 권한 확인 ( 리더 or 부리더인 경우 수정 가능 )
         if (userRole != AuthorizationLevel.LEADER && userRole != AuthorizationLevel.SUBLEADER) {
-            log.error("공고 수정 권한 없음 - 사용자 ID: {}, 모임 ID: {}", currentUser.getId(), meetId);
+            log.error("공고 수정 권한 없음 - 사용자 ID: {}, 모임 ID: {}", currentUser.getId(), meetAnnouncement.getMeet().getId());
             throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
         }
 
         // 모임 공고 수정
         meetAnnouncement.updateMeetAnnouncement(requestDto);
 
-        log.info("모임 공고 수정 완료 - 모임 ID: {} 공고 ID: {}", meetId, meetAnnouncement.getId());
+        log.info("모임 공고 수정 완료 - 모임 ID: {} 공고 ID: {}", meetAnnouncement.getMeet().getId(), meetAnnouncement.getId());
     }
 
     /**
      * 모임 공고를 조회하는 메서드
-     * @param meetId 조회할 모임 공고의 ID
+     * @param AnnouncementId 조회할 모임 공고의 ID
      * @return 모임 공고 DTO
      */
-    public MeetAnnouncementResponseDto readMeetAnnouncement(Long meetId) {
-        log.info("모임 공고 조회 시작 - 모임 ID: {}", meetId);
+    @Transactional
+    public MeetAnnouncementResponseDto readMeetAnnouncement(Long AnnouncementId) {
+        log.info("모임 공고 조회 시작 - 모임 공고 ID: {}", AnnouncementId);
 
-        MeetAnnouncement meetAnnouncement = findByMeetId(meetId);
+        MeetAnnouncement meetAnnouncement = findById(AnnouncementId);
         MeetAnnouncementResponseDto responseDto = new MeetAnnouncementResponseDto(meetAnnouncement);
 
-        log.info("모임 공고 조회 완료 - 모임 ID: {} 공고 ID: {}", meetId, meetAnnouncement.getId());
+        log.info("모임 공고 조회 완료 - 공고 ID: {}", meetAnnouncement.getId());
 
+        // 조회수 증가
+        meetAnnouncement.incrementViewCount();
         return responseDto;
     }
 
-    /**
-     * 모임 ID로 공고를 조회하는 유틸리티 메서드
-     * @param meetId 조회할 모임의 ID
-     * @return 조회된 모임 공고
-     */
-    public MeetAnnouncement findByMeetId(Long meetId) {
-        log.debug("모임 ID로 공고 조회 시작 - 모임 ID: {}", meetId);
-
-        return meetAnnouncementRepository.findByMeetId(meetId).orElseThrow(() -> {
-            log.error("모임 ID로 공고 조회 실패 - 모임 ID: {}", meetId);
-            return new CustomException(ErrorCode.MEET_ANNOUNCEMENT_NOT_FOUND);
-        });
-    }
 
     /**
      * 모임 공고 ID로 공고를 조회하는 메서드
