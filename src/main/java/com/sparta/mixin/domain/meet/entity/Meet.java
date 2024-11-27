@@ -1,6 +1,7 @@
 package com.sparta.mixin.domain.meet.entity;
 
 import com.sparta.mixin.domain.meet.dto.MeetRequestDto;
+import com.sparta.mixin.domain.meetactivity.entity.MeetActivity;
 import com.sparta.mixin.domain.meetannouncement.entity.MeetAnnouncement;
 import com.sparta.mixin.global.Timestamped;
 import jakarta.persistence.*;
@@ -38,6 +39,9 @@ public class Meet extends Timestamped {
 
     @OneToOne(mappedBy = "meet", cascade = CascadeType.ALL, orphanRemoval = true)
     private MeetAnnouncement meetAnnouncement;
+
+    @OneToMany(mappedBy = "meet", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MeetActivity> meetActivities = new ArrayList<>();
 
     @Builder
     public Meet(MeetType type,MeetCategory meetCategory, String image, String name, String info, String rule, String tag) {
