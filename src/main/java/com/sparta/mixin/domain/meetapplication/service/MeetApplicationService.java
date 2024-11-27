@@ -11,6 +11,7 @@ import com.sparta.mixin.domain.meetannouncement.entity.MeetAnnouncement;
 import com.sparta.mixin.domain.meetannouncement.service.MeetAnnouncementService;
 import com.sparta.mixin.domain.meetapplication.dto.MeetApplicationRequestDto;
 import com.sparta.mixin.domain.meetapplication.dto.MeetApplicationResponseDto;
+import com.sparta.mixin.domain.meetapplication.dto.RejectApplicationDto;
 import com.sparta.mixin.domain.meetapplication.entity.MeetApplication;
 import com.sparta.mixin.domain.meetapplication.entity.MeetApplicationRepository;
 import com.sparta.mixin.domain.user.entity.Gender;
@@ -180,10 +181,11 @@ public class MeetApplicationService {
      * 모임 지원서를 거절하고 거절 사유를 저장하는 메서드.
      *
      * @param meetApplicationId 거절할 모임 지원서 ID
-     * @param reason 거절 사유
+     * @param rejectApplicationDto 거절 사유 DTO
      */
     @Transactional
-    public void rejectMeetApplication(Long meetApplicationId, String reason) {
+    public void rejectMeetApplication(Long meetApplicationId, RejectApplicationDto rejectApplicationDto) {
+        String reason = rejectApplicationDto.getReason();
         log.info("모임 지원서 거절 시작 - 지원서 ID: {}, 사유: {}", meetApplicationId, reason);
 
         MeetApplication meetApplication = findById(meetApplicationId);

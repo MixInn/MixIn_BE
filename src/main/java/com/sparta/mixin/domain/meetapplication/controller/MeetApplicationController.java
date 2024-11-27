@@ -1,5 +1,6 @@
 package com.sparta.mixin.domain.meetapplication.controller;
 
+import com.sparta.mixin.domain.meetapplication.dto.RejectApplicationDto;
 import com.sparta.mixin.global.security.UserDetailsImpl;
 import com.sparta.mixin.domain.meetapplication.dto.MeetApplicationRequestDto;
 import com.sparta.mixin.domain.meetapplication.dto.MeetApplicationResponseDto;
@@ -73,11 +74,11 @@ public class MeetApplicationController {
 
     @PutMapping("/meet/application/{applicationId}/reject")
     public ResponseEntity<CommonResponse> rejectMeetApplication(@PathVariable(name = "applicationId") Long applicationId,
-                                                                @RequestBody String reason,
+                                                                @RequestBody RejectApplicationDto rejectApplicationDto,
                                                                 @AuthenticationPrincipal UserDetailsImpl userDetails) {
         log.info("모임 가입 신청 거절 시작 - 신청서 ID: {}, 사용자 ID: {}", applicationId, userDetails.getUser().getId());
 
-        meetApplicationService.rejectMeetApplication(applicationId, reason);
+        meetApplicationService.rejectMeetApplication(applicationId, rejectApplicationDto);
 
         log.info("모임 가입 신청 거절 완료 - 신청서 ID: {}, 사용자 ID: {}", applicationId, userDetails.getUser().getId());
         CommonResponse response = new CommonResponse<>("가입 신청서 거절 완료", 200, "");
