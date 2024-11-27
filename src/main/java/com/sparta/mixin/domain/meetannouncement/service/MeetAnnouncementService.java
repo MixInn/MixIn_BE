@@ -37,15 +37,14 @@ public class MeetAnnouncementService {
     public Page<MeetAnnouncementResponseDto> getAnnouncementList(MeetAnnouncementListRequestDto requestDto, User currentUser) {
         Pageable pageable = PageRequest.of(requestDto.getPage(), requestDto.getSize());
 
-        // 요청된 필터 값으로 필터링된 모임 공고를 조회
+        // 필터링된 모임 공고 조회
         MeetType meetType = (requestDto.getMeetType() != null) ? MeetType.fromString(requestDto.getMeetType()) : null;
         MeetCategory category = (requestDto.getCategory() != null) ? MeetCategory.fromString(requestDto.getCategory()) : null;
 
-
         log.debug("모임 타입: {}, 카테고리: {}", meetType, category);
 
-        // 페이징 및 필터링된 결과를 반환
-        Page<MeetAnnouncementResponseDto> announcements = meetAnnouncementRepository.findAnnouncementsWithFiltersAndSort(
+        // 페이징 및 필터링된 결과를 조회
+        Page<MeetAnnouncement> announcementsPage = meetAnnouncementRepository.findAnnouncementsWithFiltersAndSort(
                 meetType,
                 category,
                 requestDto.getTags(),
@@ -53,11 +52,17 @@ public class MeetAnnouncementService {
                 currentUser.getUniversity(),
                 requestDto.getSortType(),
                 pageable
-        ).map(MeetAnnouncementResponseDto::new);
+        );
 
-        log.info("모임 공고 목록 조회 완료 - 총 공고 수: {}, 사용자 ID: {}", announcements.getTotalElements(), currentUser.getId());
+        // 각 공고마다 리더 정보를 조회하여 DTO로 변환
+        Page<MeetAnnouncementResponseDto> responsePage = announcementsPage.map(meetAnnouncement -> {
+            User leader = meetAuthorizationService.getMeetLeader(meetAnnouncement.getMeet().getId()); // 리더 조회
+            return new MeetAnnouncementResponseDto(meetAnnouncement, leader); // DTO 생성
+        });
 
-        return announcements;
+        log.info("모임 공고 목록 조회 완료 - 총 공고 수: {}, 사용자 ID: {}", responsePage.getTotalElements(), currentUser.getId());
+
+        return responsePage;
     }
 
     /**
@@ -174,7 +179,10 @@ public class MeetAnnouncementService {
         log.info("모임 공고 조회 시작 - 모임 공고 ID: {}", AnnouncementId);
 
         MeetAnnouncement meetAnnouncement = findById(AnnouncementId);
-        MeetAnnouncementResponseDto responseDto = new MeetAnnouncementResponseDto(meetAnnouncement);
+
+        User leader = meetAuthorizationService.getMeetLeader(meetAnnouncement.getMeet().getId());
+
+        MeetAnnouncementResponseDto responseDto = new MeetAnnouncementResponseDto(meetAnnouncement,leader);
 
         log.info("모임 공고 조회 완료 - 공고 ID: {}", meetAnnouncement.getId());
 
