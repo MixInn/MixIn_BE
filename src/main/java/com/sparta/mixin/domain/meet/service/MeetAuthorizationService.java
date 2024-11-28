@@ -95,4 +95,19 @@ public class MeetAuthorizationService {
         log.info("모임 권한 삭제 - 모임 ID: {}", meetAuthorization.getMeet().getId()); // 간결한 로깅
         meetAuthorizationRepository.delete(meetAuthorization);
     }
+
+    /**
+     * 특정 모임의 리더를 조회하는 메서드
+     * @param meetId 모임 ID
+     * @return 모임 리더(User)
+     */
+    public User getMeetLeader(Long meetId) {
+        log.debug("모임 리더 조회 - 모임 ID: {}", meetId);
+        return meetAuthorizationRepository.findByMeetIdAndAuthorization(meetId, AuthorizationLevel.LEADER)
+                .map(MeetAuthorization::getUser)
+                .orElseThrow(() -> {
+                    log.error("모임 리더를 찾을 수 없습니다 - 모임 ID: {}", meetId);
+                    return new CustomException(ErrorCode.NOT_FOUND_USER);
+                });
+    }
 }

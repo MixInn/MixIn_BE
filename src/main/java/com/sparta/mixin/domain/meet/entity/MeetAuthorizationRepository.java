@@ -12,5 +12,7 @@ public interface MeetAuthorizationRepository extends JpaRepository<MeetAuthoriza
 
     Optional<MeetAuthorization> findByMeetAndUser(Meet meet, User user);
 
+    Optional<MeetAuthorization> findByMeetIdAndAuthorization(Long meetId, AuthorizationLevel authorization);
+
     boolean existsByMeetAndUser(Meet meet, User user);
 }

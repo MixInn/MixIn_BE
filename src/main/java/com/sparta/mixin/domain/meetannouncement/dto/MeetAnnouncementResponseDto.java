@@ -1,6 +1,8 @@
 package com.sparta.mixin.domain.meetannouncement.dto;
 
 import com.sparta.mixin.domain.meetannouncement.entity.MeetAnnouncement;
+import com.sparta.mixin.domain.user.dto.UserResponseDto;
+import com.sparta.mixin.domain.user.entity.User;
 import lombok.Getter;
 
 @Getter
@@ -14,8 +16,9 @@ public class MeetAnnouncementResponseDto {
     private String meetingFrequency; // 모임주기
     private String approvalType; // 승인여부
     private String applicationForm;
+    private UserResponseDto leader;
 
-    public MeetAnnouncementResponseDto(MeetAnnouncement meetAnnouncement) {
+    public MeetAnnouncementResponseDto(MeetAnnouncement meetAnnouncement, User user) {
         this.meetId = meetAnnouncement.getMeet().getId();
         this.meetAnnouncementId = meetAnnouncement.getId();
         this.recruitmentPeriod = meetAnnouncement.getRecruitmentPeriod().toString();
@@ -25,5 +28,6 @@ public class MeetAnnouncementResponseDto {
         this.meetingFrequency = meetAnnouncement.getMeetingFrequency();
         this.approvalType = meetAnnouncement.getApprovalType().getDescription();
         this.applicationForm = meetAnnouncement.getApplicationForm();
+        this.leader = new UserResponseDto(user);
     }
 }
