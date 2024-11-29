@@ -17,4 +17,6 @@ public interface VoteResultRepository extends JpaRepository<VoteResult,Long> {
     Long countByVoteOption(VoteOption voteOption);
 
     List<VoteResult> findAllByPostVoteAndUser(PostVote postVote, User loginUser);
+
+    boolean existsVoteResultByPostVoteAndUser(PostVote postVote, User user);
 }

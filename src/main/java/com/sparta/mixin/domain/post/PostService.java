@@ -5,6 +5,7 @@ import com.sparta.mixin.domain.image.dto.ImageResponseDto;
 import com.sparta.mixin.domain.image.entity.Image;
 import com.sparta.mixin.domain.meet.entity.Meet;
 import com.sparta.mixin.domain.meet.service.MeetService;
+import com.sparta.mixin.domain.post.bookmark.BookmarkRepository;
 import com.sparta.mixin.domain.post.bookmark.BookmarkService;
 import com.sparta.mixin.domain.post.dto.MeetNoticeResponseDto;
 import com.sparta.mixin.domain.post.dto.MeetPostResponseDto;
@@ -20,11 +21,13 @@ import com.sparta.mixin.domain.post.meetpost.MeetPostRepository;
 import com.sparta.mixin.domain.post.noticeread.NoticeRead;
 import com.sparta.mixin.domain.post.noticeread.NoticeReadRepository;
 import com.sparta.mixin.domain.post.publicpost.PublicPostRepository;
+import com.sparta.mixin.domain.post.vote.dto.VoteOptionResponseDto;
 import com.sparta.mixin.domain.post.vote.dto.VoteResponseDto;
 import com.sparta.mixin.domain.post.vote.entity.PostVote;
 import com.sparta.mixin.domain.post.vote.repository.PostVoteRepository;
 import com.sparta.mixin.domain.post.vote.entity.VoteOption;
 import com.sparta.mixin.domain.post.vote.repository.VoteOptionRepository;
+import com.sparta.mixin.domain.post.vote.repository.VoteResultRepository;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.domain.user.service.UserService;
 import com.sparta.mixin.global.exception.CustomException;
@@ -55,7 +58,8 @@ public abstract class PostService<T extends Post> {
     private final NoticeReadRepository noticeReadRepository;
     private final PostVoteRepository postVoteRepository;
     private final VoteOptionRepository voteOptionRepository;
-    private final BookmarkService bookmarkService;
+    private final BookmarkRepository bookmarkRepository;
+    private final VoteResultRepository voteResultRepository;
 
     public PostResponseDto createPost(
         PostRequestDto postRequestDto, String postType, List<String> fileUrls,
@@ -105,7 +109,7 @@ public abstract class PostService<T extends Post> {
                 voteOptions.add(voteOption);
             }
             List<String> optionTexts = voteOptions.stream().map(VoteOption::getOptionText).toList();
-            voteResponseDto = new VoteResponseDto(vote, optionTexts);
+            voteResponseDto = VoteResponseDto.fromVoteResponse(vote, optionTexts);
         }
 
         if (post instanceof MeetPost) {
@@ -163,7 +167,7 @@ public abstract class PostService<T extends Post> {
                     voteOptions.add(voteOption);
                 }
                 List<String> optionTexts = voteOptions.stream().map(VoteOption::getOptionText).toList();
-                voteResponseDto = new VoteResponseDto(vote,optionTexts);
+                voteResponseDto = VoteResponseDto.fromVoteResponse(vote,optionTexts);
             } else {
                 postVote.updateVote(postRequestDto.getVoteRequestDto());
                 postVoteRepository.save(postVote);
@@ -175,10 +179,10 @@ public abstract class PostService<T extends Post> {
                     .map(optionText -> new VoteOption(postVote, optionText)).toList();
                 voteOptionRepository.saveAll(updatedVoteOptions);
                 List<String> optionTexts = updatedVoteOptions.stream().map(VoteOption::getOptionText).toList();
-                voteResponseDto=new VoteResponseDto(postVote,optionTexts);
+                voteResponseDto=VoteResponseDto.fromVoteResponse(postVote,optionTexts);
             }
         }
-        boolean isBookmark = bookmarkService.existsByPostAndUser(post,loginUser);
+        boolean isBookmark = bookmarkRepository.existsByPostAndUser(post,loginUser);
 
         if (post instanceof MeetPost) {
             return new MeetPostResponseDto((MeetPost) post,imageResponseDtos,voteResponseDto,isBookmark);
@@ -217,13 +221,33 @@ public abstract class PostService<T extends Post> {
 
         PostVote postVote = postVoteRepository.findByPost(post);
         VoteResponseDto voteResponseDto = null;
+
         if (postVote != null) {
-            List<String> optionTexts = voteOptionRepository.findAllByPostVote(postVote).stream()
-                .map(VoteOption::getOptionText).toList();
-            voteResponseDto = new VoteResponseDto(postVote, optionTexts);
+            boolean isVote = voteResultRepository.existsVoteResultByPostVoteAndUser(postVote, loginUser);
+
+            if (isVote) {
+                List<VoteOptionResponseDto> responseDtos = voteOptionRepository.findAllByPostVote(postVote).stream()
+                    .map(voteOption -> {
+                        Long voteCount = voteResultRepository.countByVoteOption(voteOption);
+                        List<String> voteUsers = voteResultRepository.findUserByVoteOption(voteOption)
+                            .stream()
+                            .map(User::getName)
+                            .toList();
+                        return new VoteOptionResponseDto(voteOption, voteCount, voteUsers);
+                    })
+                    .toList();
+
+                voteResponseDto = VoteResponseDto.fromVoteResultResponse(postVote, responseDtos);
+            } else {
+                List<String> optionTexts = voteOptionRepository.findAllByPostVote(postVote).stream()
+                    .map(VoteOption::getOptionText)
+                    .toList();
+
+                voteResponseDto = VoteResponseDto.fromVoteResponse(postVote, optionTexts);
+            }
         }
 
-        boolean isBookmark = bookmarkService.existsByPostAndUser(post,loginUser);
+        boolean isBookmark = bookmarkRepository.existsByPostAndUser(post,loginUser);
 
         if (post instanceof MeetPost) {
             Meet meet = meetService.findById(((MeetPost) post).getMeet().getId());

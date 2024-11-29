@@ -5,12 +5,15 @@ import com.sparta.mixin.domain.meet.entity.Meet;
 import com.sparta.mixin.domain.meet.service.MeetService;
 import com.sparta.mixin.domain.post.PostRepository;
 import com.sparta.mixin.domain.post.PostService;
+import com.sparta.mixin.domain.post.bookmark.BookmarkRepository;
+import com.sparta.mixin.domain.post.bookmark.BookmarkService;
 import com.sparta.mixin.domain.post.entity.PublicPost;
 import com.sparta.mixin.domain.post.meetnotice.MeetNoticeRepository;
 import com.sparta.mixin.domain.post.meetpost.MeetPostRepository;
 import com.sparta.mixin.domain.post.noticeread.NoticeReadRepository;
 import com.sparta.mixin.domain.post.vote.repository.PostVoteRepository;
 import com.sparta.mixin.domain.post.vote.repository.VoteOptionRepository;
+import com.sparta.mixin.domain.post.vote.repository.VoteResultRepository;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.domain.user.service.UserService;
 import org.springframework.context.annotation.Primary;
@@ -28,10 +31,10 @@ public class PublicPostService extends PostService<PublicPost> {
         UserService userService, MeetService meetService,
         NoticeReadRepository noticeReadRepository,
         PostVoteRepository postVoteRepository,
-        VoteOptionRepository voteOptionRepository) {
+        VoteOptionRepository voteOptionRepository, BookmarkRepository bookmarkRepository,VoteResultRepository voteResultRepository) {
         super(postRepository, meetPostRepository, meetNoticeRepository, publicPostRepository,
             imageRepository, userService, meetService, noticeReadRepository, postVoteRepository,
-            voteOptionRepository);
+            voteOptionRepository,bookmarkRepository,voteResultRepository);
     }
 
     @Override
