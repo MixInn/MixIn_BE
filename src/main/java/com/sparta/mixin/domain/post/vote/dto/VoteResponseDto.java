@@ -6,18 +6,27 @@ import java.util.List;
 import lombok.Getter;
 
 @Getter
-public class VoteResponseDto {
+public class VoteResponseDto<T> {
     private Long id;
-    private List<String> voteOptions;
+    private List<T> voteOptions;
     private LocalDateTime deadline;
     private boolean isAnonymous;
     private boolean allowMultipleVotes;
 
-    public VoteResponseDto(PostVote postVote,List<String> optionTextList) {
+    private VoteResponseDto(PostVote postVote,List<T> voteOptions) {
         this.id = postVote.getId();
-        this.voteOptions = optionTextList;
+        this.voteOptions = voteOptions;
         this.deadline = postVote.getDeadline();
         this.isAnonymous = postVote.isAnonymous();
         this.allowMultipleVotes = postVote.isAllowMultipleVotes();
+    }
+
+    // 팩토리 메서드
+    public static VoteResponseDto fromVoteResponse(PostVote postVote,List<String> optionTextList){
+        return new VoteResponseDto(postVote,optionTextList);
+    }
+
+    public static VoteResponseDto  fromVoteResultResponse(PostVote postVote,List<VoteOptionResponseDto> voteOptionResponseDtos){
+        return new VoteResponseDto(postVote,voteOptionResponseDtos);
     }
 }

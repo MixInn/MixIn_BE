@@ -42,10 +42,28 @@ public class PostVoteService {
             throw new CustomException(ErrorCode.NOT_FOUND);
         }
 
-        List<String> optionTextList = voteOptionRepository.findAllByPostVote(postVote).stream()
-            .map(VoteOption::getOptionText).toList();
+        boolean isVote = voteResultRepository.existsVoteResultByPostVoteAndUser(postVote, user);
 
-        return new VoteResponseDto(postVote, optionTextList);
+        if (isVote) {
+            List<VoteOptionResponseDto> responseDtos = voteOptionRepository.findAllByPostVote(postVote).stream()
+                .map(voteOption -> {
+                    Long voteCount = voteResultRepository.countByVoteOption(voteOption);
+                    List<String> voteUsers = voteResultRepository.findUserByVoteOption(voteOption)
+                        .stream()
+                        .map(User::getName)
+                        .toList();
+                    return new VoteOptionResponseDto(voteOption, voteCount, voteUsers);
+                })
+                .toList();
+
+            return VoteResponseDto.fromVoteResultResponse(postVote, responseDtos);
+        } else {
+            List<String> optionTexts = voteOptionRepository.findAllByPostVote(postVote).stream()
+                .map(VoteOption::getOptionText)
+                .toList();
+
+            return VoteResponseDto.fromVoteResponse(postVote, optionTexts);
+        }
     }
 
     @Transactional
@@ -66,7 +84,7 @@ public class PostVoteService {
         List<String> optionTextList = updatedVoteOptions.stream().map(VoteOption::getOptionText)
             .toList();
 
-        return new VoteResponseDto(postVote, optionTextList);
+        return VoteResponseDto.fromVoteResponse(postVote, optionTextList);
     }
 
     public void deletePostVote(Long voteId, User user) {

@@ -6,12 +6,15 @@ import com.sparta.mixin.domain.meet.service.MeetAuthorizationService;
 import com.sparta.mixin.domain.meet.service.MeetService;
 import com.sparta.mixin.domain.post.PostRepository;
 import com.sparta.mixin.domain.post.PostService;
+import com.sparta.mixin.domain.post.bookmark.BookmarkRepository;
+import com.sparta.mixin.domain.post.bookmark.BookmarkService;
 import com.sparta.mixin.domain.post.entity.MeetPost;
 import com.sparta.mixin.domain.post.meetnotice.MeetNoticeRepository;
 import com.sparta.mixin.domain.post.noticeread.NoticeReadRepository;
 import com.sparta.mixin.domain.post.publicpost.PublicPostRepository;
 import com.sparta.mixin.domain.post.vote.repository.PostVoteRepository;
 import com.sparta.mixin.domain.post.vote.repository.VoteOptionRepository;
+import com.sparta.mixin.domain.post.vote.repository.VoteResultRepository;
 import com.sparta.mixin.domain.user.entity.User;
 import com.sparta.mixin.domain.user.service.UserService;
 import com.sparta.mixin.global.exception.CustomException;
@@ -32,8 +35,9 @@ public class MeetPostService extends PostService<MeetPost> {
         MeetService meetService,
         NoticeReadRepository noticeReadRepository,
         PostVoteRepository postVoteRepository,
-        VoteOptionRepository voteOptionRepository) {
-        super(postRepository, meetPostRepository, meetNoticeRepository,publicPostRepository,imageRepository, userService, meetService,noticeReadRepository,postVoteRepository,voteOptionRepository);
+        VoteOptionRepository voteOptionRepository, BookmarkRepository bookmarkRepository,
+        VoteResultRepository voteResultRepository) {
+        super(postRepository, meetPostRepository, meetNoticeRepository,publicPostRepository,imageRepository, userService, meetService,noticeReadRepository,postVoteRepository,voteOptionRepository,bookmarkRepository,voteResultRepository);
         this.meetAuthorizationService = meetAuthorizationService;
     }
 
