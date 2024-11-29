@@ -5,6 +5,7 @@ import com.sparta.mixin.domain.image.dto.ImageResponseDto;
 import com.sparta.mixin.domain.image.entity.Image;
 import com.sparta.mixin.domain.post.entity.Post;
 import com.sparta.mixin.domain.post.vote.dto.VoteResponseDto;
+import com.sparta.mixin.domain.user.dto.UserResponseDto;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Getter;
@@ -15,7 +16,7 @@ public abstract class PostResponseDto {
     private Long id;
     private String title;
     private String content;
-    private String userNickname;
+    private UserResponseDto userResponseDto;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
     private Long clickCount;
@@ -27,7 +28,7 @@ public abstract class PostResponseDto {
         this.id = post.getId();
         this.title = post.getTitle();
         this.content = post.getContent();
-        this.userNickname=post.getUser().getName();
+        this.userResponseDto=new UserResponseDto(post.getUser());
         this.createdAt = post.getCreatedAt();
         this.modifiedAt = post.getModifiedAt();
         this.clickCount= post.getClickCount();
@@ -38,7 +39,7 @@ public abstract class PostResponseDto {
         this.id = post.getId();
         this.title = post.getTitle();
         this.content = post.getContent();
-        this.userNickname=post.getUser().getName();
+        this.userResponseDto=new UserResponseDto(post.getUser());
         this.createdAt = post.getCreatedAt();
         this.modifiedAt = post.getModifiedAt();
         this.clickCount= post.getClickCount();
