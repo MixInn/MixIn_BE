@@ -11,6 +11,7 @@ public class PublicPostResponseDto extends PostResponseDto {
     private Long bookmarkCount;
     private Long likeCount;
     private Long commentCount;
+    private boolean isBookmark;
 
     public PublicPostResponseDto(PublicPost post) {
         super(post);
@@ -19,10 +20,11 @@ public class PublicPostResponseDto extends PostResponseDto {
         this.commentCount = post.getCommentCount();
     }
 
-    public PublicPostResponseDto(PublicPost post, List<ImageResponseDto> imageResponseDtos, VoteResponseDto voteResponseDto) {
+    public PublicPostResponseDto(PublicPost post, List<ImageResponseDto> imageResponseDtos, VoteResponseDto voteResponseDto,boolean isBookmark) {
         super(post,imageResponseDtos,voteResponseDto);
         this.bookmarkCount = post.getBookmarkCount();
         this.likeCount = post.getLikeCount();
         this.commentCount = post.getCommentCount();
+        this.isBookmark=isBookmark;
     }
 }

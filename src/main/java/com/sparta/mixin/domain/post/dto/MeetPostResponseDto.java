@@ -12,6 +12,7 @@ public class MeetPostResponseDto extends PostResponseDto{
     private Long likeCount;
     private Long commentCount;
     private Long meetId;
+    private boolean isBookmark;
 
     public MeetPostResponseDto(MeetPost post) {
         super(post);
@@ -21,11 +22,12 @@ public class MeetPostResponseDto extends PostResponseDto{
         this.meetId=post.getMeet().getId();
     }
 
-    public MeetPostResponseDto(MeetPost post, List<ImageResponseDto> imageResponseDtos, VoteResponseDto voteResponseDto) {
+    public MeetPostResponseDto(MeetPost post, List<ImageResponseDto> imageResponseDtos, VoteResponseDto voteResponseDto,boolean isBookmark) {
         super(post,imageResponseDtos,voteResponseDto);
         this.bookmarkCount = post.getBookmarkCount();
         this.likeCount = post.getLikeCount();
         this.commentCount = post.getCommentCount();
         this.meetId=post.getMeet().getId();
+        this.isBookmark=isBookmark;
     }
 }

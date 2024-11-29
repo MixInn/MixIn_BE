@@ -5,6 +5,7 @@ import com.sparta.mixin.domain.image.dto.ImageResponseDto;
 import com.sparta.mixin.domain.image.entity.Image;
 import com.sparta.mixin.domain.meet.entity.Meet;
 import com.sparta.mixin.domain.meet.service.MeetService;
+import com.sparta.mixin.domain.post.bookmark.BookmarkService;
 import com.sparta.mixin.domain.post.dto.MeetNoticeResponseDto;
 import com.sparta.mixin.domain.post.dto.MeetPostResponseDto;
 import com.sparta.mixin.domain.post.dto.PostRequestDto;
@@ -54,6 +55,7 @@ public abstract class PostService<T extends Post> {
     private final NoticeReadRepository noticeReadRepository;
     private final PostVoteRepository postVoteRepository;
     private final VoteOptionRepository voteOptionRepository;
+    private final BookmarkService bookmarkService;
 
     public PostResponseDto createPost(
         PostRequestDto postRequestDto, String postType, List<String> fileUrls,
@@ -107,14 +109,14 @@ public abstract class PostService<T extends Post> {
         }
 
         if (post instanceof MeetPost) {
-            return new MeetPostResponseDto((MeetPost) post, imageResponseDtos, voteResponseDto);
+            return new MeetPostResponseDto((MeetPost) post, imageResponseDtos, voteResponseDto,false);
         } else if (post instanceof MeetNotice) {
             boolean isRead =
                 noticeReadRepository.findByUserAndNotice(loginUser, (MeetNotice) post) != null;
             return new MeetNoticeResponseDto((MeetNotice) post, isRead, imageResponseDtos,
                 voteResponseDto);
         } else {
-            return new PublicPostResponseDto((PublicPost) post, imageResponseDtos, voteResponseDto);
+            return new PublicPostResponseDto((PublicPost) post, imageResponseDtos, voteResponseDto,false);
         }
     }
 
@@ -176,15 +178,16 @@ public abstract class PostService<T extends Post> {
                 voteResponseDto=new VoteResponseDto(postVote,optionTexts);
             }
         }
+        boolean isBookmark = bookmarkService.existsByPostAndUser(post,loginUser);
 
         if (post instanceof MeetPost) {
-            return new MeetPostResponseDto((MeetPost) post,imageResponseDtos,voteResponseDto);
+            return new MeetPostResponseDto((MeetPost) post,imageResponseDtos,voteResponseDto,isBookmark);
         } else if (post instanceof MeetNotice) {
             boolean isRead =
                 noticeReadRepository.findByUserAndNotice(loginUser, (MeetNotice) post) != null;
             return new MeetNoticeResponseDto((MeetNotice) post, isRead,imageResponseDtos,voteResponseDto);
         } else {
-            return new PublicPostResponseDto((PublicPost) post,imageResponseDtos,voteResponseDto);
+            return new PublicPostResponseDto((PublicPost) post,imageResponseDtos,voteResponseDto,isBookmark);
         }
     }
 
@@ -220,12 +223,14 @@ public abstract class PostService<T extends Post> {
             voteResponseDto = new VoteResponseDto(postVote, optionTexts);
         }
 
+        boolean isBookmark = bookmarkService.existsByPostAndUser(post,loginUser);
+
         if (post instanceof MeetPost) {
             Meet meet = meetService.findById(((MeetPost) post).getMeet().getId());
             checkMeetAuthorization(meet, loginUser);
             post.increaseClickCount();
             save(post);
-            return new MeetPostResponseDto((MeetPost) post, imageResponseDtos, voteResponseDto);
+            return new MeetPostResponseDto((MeetPost) post, imageResponseDtos, voteResponseDto,isBookmark);
         }
 
         if (post instanceof MeetNotice) {
@@ -248,7 +253,7 @@ public abstract class PostService<T extends Post> {
             save(post);
         }
 
-        return new PublicPostResponseDto((PublicPost) post, imageResponseDtos, voteResponseDto);
+        return new PublicPostResponseDto((PublicPost) post, imageResponseDtos, voteResponseDto,isBookmark);
     }
 
     public Page<? extends PostResponseDto> getAllPost(int page, int size, String orderBy,

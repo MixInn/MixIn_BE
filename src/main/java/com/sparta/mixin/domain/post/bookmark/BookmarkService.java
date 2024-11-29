@@ -74,4 +74,8 @@ public class BookmarkService {
             () -> new CustomException(ErrorCode.BAD_REQUEST)
         );
     }
+
+    public boolean existsByPostAndUser(Post post, User user){
+        return bookmarkRepository.existsByPostAndUser(post,user);
+    }
 }
