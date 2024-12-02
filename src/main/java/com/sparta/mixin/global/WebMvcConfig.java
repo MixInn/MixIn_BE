@@ -1,3 +1,4 @@
+/*
 package com.sparta.mixin.global;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -24,4 +25,4 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .resourceChain(true)
                 .addResolver(new PathResourceResolver());
     }
-}
+}*/
